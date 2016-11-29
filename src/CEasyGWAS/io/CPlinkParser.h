@@ -48,6 +48,8 @@ class CPlinkParser {
 			iupac_map["TG"] = 'K';
 			iupac_map["AC"] = 'M';
 			iupac_map["CA"] = 'M';
+			// missing genotype
+			iupac_map["00"] = 'U';
             //iupac_map["--"] = 'D';
 			return iupac_map;
 		}
@@ -55,15 +57,15 @@ class CPlinkParser {
 		const static std::map<std::string,char> __iupac_map;
 	public:
 		static void readPEDFile(std::string const&,
-					GWASData*) 
+					GWASData*)
 					throw (CPlinkParserException);
 		static void readMAPFile(std::string const&,
-					GWASData*) 
+					GWASData*)
 					throw (CPlinkParserException);
 		static void readPhenotypeFile(std::string const&,
-					      GWASData*) 
+					      GWASData*)
 					      throw (CPlinkParserException);
-	
+
 };
 
 #endif //CPLINKPARSER_CLASS
