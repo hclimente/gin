@@ -39,8 +39,8 @@ VectorXd CGWASDataHelper::getMAF() {
     return __data.MAF;
 }
 
-void CGWASDataHelper::encodeHomozygousData(std::vector< std::vector<char> > const& raw_snps,
-                       uint64 const& n_snps,
+void CGWASDataHelper::encodeHomozygousData(std::vector< std::vector<char> > const& raw_snps, 
+                       uint64 const& n_snps, 
                        uint64 const& n_samples) throw (CGWASDataException) {
     if(raw_snps.size()==0)
         throw CGWASDataException("Homozygous encoding error: GWASData object not initialized. raw_snps is empty.");
@@ -117,8 +117,8 @@ void CGWASDataHelper::encodeHomozygousData(std::vector< std::vector<char> > cons
     }
 }
 
-void CGWASDataHelper::encodeHeterozygousData(std::vector< std::vector<char> > const& raw_snps,
-                         uint64 const& n_snps,
+void CGWASDataHelper::encodeHeterozygousData(std::vector< std::vector<char> > const& raw_snps, 
+                         uint64 const& n_snps, 
                          uint64 const& n_samples,
                          uint const& encoding) throw (CGWASDataException) {
     if(raw_snps.size()==0)
@@ -159,7 +159,7 @@ void CGWASDataHelper::encodeHeterozygousData(std::vector< std::vector<char> > co
     } else {
         throw CGWASDataException("Encoding is wrong. Has to be [0: additive, 1: recessive, 2: dominant, 3: codominant]");
     }
-
+    
     __data.MAF.resize(__data.n_snps);
     for(uint64 i=0; i<__data.n_snps; i++) {
         index_T.clear();
@@ -359,7 +359,6 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
     std::vector<uint> index_W;
     std::vector<uint> index_K;
     std::vector<uint> index_M;
-    std::vector<uint> index_U;
     //Init X and MAF
     data->X = MatrixXd::Ones(data->n_samples,data->n_snps);
     uint het_encoding = 1;
@@ -381,7 +380,7 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
         data->X.array() *= 1;
         het_encoding = 0;
     }
-
+    
     data->MAF.resize(data->n_snps);
     for(uint64 i=0; i<data->n_snps; i++) {
         index_T.clear();
@@ -394,7 +393,6 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
         index_W.clear();
         index_K.clear();
         index_M.clear();
-        index_U.clear();
         for(uint j=0; j<data->n_samples; j++) {
             char nuc = std::toupper(data->raw_snps[j][i]);
             if(nuc == 'T') {
@@ -417,8 +415,6 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
                 index_K.push_back(j);
             } else if(nuc == 'M') {
                 index_M.push_back(j);
-            } else if(nuc == 'U') {
-                index_U.push_back(j);
             } else {
                 std::string tmp(1,nuc);
                 throw CGWASDataException("[Encode Heterozygous Data]: Unknown nucleotide: " + tmp + " (Line: " + StringHelper::to_string(j+1) + " , SNP-Position: " + StringHelper::to_string(i));
@@ -489,9 +485,6 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
         for(uint64 j=0; j < index_M.size(); j++) {
             data->X(index_M[j],i) = het_encoding;
         }
-        for(uint64 j=0; j < index_U.size(); j++) {
-            data->X(index_U[j],i) = het_encoding;
-        }
     }
 }
 
@@ -512,8 +505,8 @@ void CGWASDataHelper::filterNonInformativeSNPs(GWASData* data) throw (CGWASDataE
             positions.push_back(data->positions[i]);
             snp_distance.push_back(data->snp_distance[i]);
         }
-    }
-
+    }    
+    
     MatrixXd X(data->n_samples,indices_v.size());
     VectorXd MAF(indices_v.size());
     for(uint64 i=0; i<indices_v.size();i++) {
@@ -556,7 +549,7 @@ void CGWASDataHelper::filterSNPsByMAF(GWASData* data, float64 const& maf) throw 
             positions.push_back(data->positions[i]);
             snp_distance.push_back(data->snp_distance[i]);
         }
-    }
+    }    
     MatrixXd X(data->n_samples,maf_indices_v.size());
     VectorXd MAF(maf_indices_v.size());
     for(uint64 i=0; i<maf_indices_v.size();i++) {
@@ -587,7 +580,7 @@ void CGWASDataHelper::filterSNPsByMAF(GWASData* data, float64 const& maf) throw 
 void CGWASDataHelper::filterSNPsBySmallIndel(GWASData* data, int const& indel) throw (CGWASDataException) {
     if(data->small_indel.size()==0)
         throw CGWASDataException("Data object not initialized or SNP data not encoded!");
-    if(indel!=0 && indel!=1)
+    if(indel!=0 && indel!=1) 
         throw CGWASDataException("Indel flag can be only 0: Remove all Indels, or 1: Remove all SNPs");
 
     std::vector<uint64> indel_indices_v;
@@ -603,7 +596,7 @@ void CGWASDataHelper::filterSNPsBySmallIndel(GWASData* data, int const& indel) t
             positions.push_back(data->positions[i]);
             snp_distance.push_back(data->snp_distance[i]);
         }
-    }
+    }    
     MatrixXd X(data->n_samples,indel_indices_v.size());
     VectorXd MAF(indel_indices_v.size());
     VectorXd small_indel(indel_indices_v.size());
@@ -633,7 +626,7 @@ void CGWASDataHelper::filterSNPsBySmallIndel(GWASData* data, int const& indel) t
     data->n_snps = indel_indices_v.size();
 }
 */
-
+        
 //TODO: Implement filtering method
 void CGWASDataHelper::filterUniqueSNPs(GWASData* data) throw (CGWASDataException) {
     VectorXd randv = VectorXd::Random(data->X.rows());
@@ -652,7 +645,7 @@ void CGWASDataHelper::createSNPHash(GWASData* data) throw (CGWASDataException) {
             if((data->X.col(i)-data->X.col(j)).sum()==0) {
                 snp_hash(j)=snp_hash(i);
             } else {
-                data->n_unique_snps++;
+                data->n_unique_snps++;    
                 snp_hash(j)=data->n_unique_snps;
             }
         }
@@ -660,7 +653,7 @@ void CGWASDataHelper::createSNPHash(GWASData* data) throw (CGWASDataException) {
     logging(INFO,snp_hash.transpose());
     logging(STATUS,data->n_unique_snps);
     */
-
+    
     //Accurate but extremely slowely!!
     /*VectorXd snp_hash = VectorXd::Ones(data->X.cols()).array()*-1;
     for(int64 i=0; i<data->X.cols(); i++) {
@@ -683,7 +676,7 @@ void CGWASDataHelper::createSNPHash(GWASData* data) throw (CGWASDataException) {
     it = std::unique(tmp.begin(),tmp.end());
     data->n_unique_snps = std::distance(tmp.begin(),it);
     */
-
+    
     //FAST: Please check if accurate
     VectorXd hash = VectorXd::Ones(data->X.rows());
     for(int64 i=0; i<data->X.rows(); i++) {
@@ -740,7 +733,7 @@ GWASData CGWASDataHelper::removeSamples4MissingData(GWASData const& data, uint c
 
     newData.X = sliceRowsMatrix(data.X,sindices);
     newData.Y = sliceRowsMatrix(data.Y,sindices);
-
+    
     if (copy_raw==true) {
         std::vector<std::vector<char> > raw_snps;
         for(uint64 j=0; j<sindices.size(); j++) {
