@@ -18,8 +18,12 @@ for key in copy_env:
 	if key in os.environ.keys():
 		ENV[key] = os.environ[key]
 
-
 env = Environment(SHLIBPREFIX="",ENV=ENV)
+
+## BOOST
+boost_prefix = "/bioinfo/local/build/Centos/libboost_1.61.0/"
+env.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
+env.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
 
 #Add command line options to scons script
 build_types = ['debug','debug_optimized','release']
@@ -59,7 +63,7 @@ elif build_type == 'debug_optimized':
 else:
 	env.Append(CCFLAGS=optimize_flags)
 
-#env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=1 
+#env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=1
 
 conf = Configure(env)
 
