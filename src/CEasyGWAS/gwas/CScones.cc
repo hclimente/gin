@@ -1,8 +1,8 @@
 #include "CScones.h"
 #include "math.h"
-#include "CEasyGWAS/utils/CCrossValidation.h"
-#include "CEasyGWAS/utils/CMatrixHelper.h"
-#include "CEasyGWAS/utils/StringHelper.h"
+#include "../utils/CCrossValidation.h"
+#include "../utils/CMatrixHelper.h"
+#include "../utils/StringHelper.h"
 #include "maxflow/maxflow.h"
 /*
 *Initialize default scones settings
@@ -264,7 +264,7 @@ void CScones::__optimize_objective(VectorXd const& c, float64 const& lambda, Vec
 	MatrixXd T(__n_features,2);
 	//connect positive c values to sink
 	VectorXd posc = (c.array()<=0).select(0,c);
-	//connect nevative c values to source 
+	//connect negative c values to source
 	VectorXd negc = -c;
 	negc = (negc.array()<=0).select(0,negc);
 	//Store data
@@ -415,4 +415,39 @@ void CScones::test_associations(float64 const& lambda, float64 const& eta) {
 	VectorXd c = __computeScoreStatistic(__X,r).array() - eta;
 	//solve objective function
 	__optimize_objective(c, lambda, &__indicator_vector, &__objective_score);
+}
+
+VectorXd CScones::getObjectiveFunctionTerms(float64 const& lambda, float64 const& eta){
+	VectorXd terms(3);
+
+	double connectivity = lambda * __indicator_vector.transpose() * __L * __indicator_vector;;
+	double sparsity = __indicator_vector.sum();
+    double association;
+
+    // association
+	VectorXd r;
+	if(__covs_set) {
+		if(__binary_y) {
+			r = __logistic_regression.getResiduals();
+		} else {
+			r = __linear_regression.getResiduals();
+		}
+	} else {
+		r = __y.array() - __y.mean();
+	}
+
+	VectorXd c = __computeScoreStatistic(__X,r).array();
+
+    association = 0;
+	for(uint i=0; i<__indicator_vector.size(); i++) {
+		if(__indicator_vector(i)!=0) {
+			association += c(i);
+		}
+	}
+
+    sparsity = sparsity * eta;
+
+	terms << association, connectivity, sparsity;
+
+	return terms;
 }

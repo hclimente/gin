@@ -1,9 +1,9 @@
 #ifndef CSCONES_CLASS
 #define CSCONES_CLASS
 
-#include "CEasyGWAS/globals.h"
+#include "../globals.h"
 
-#include "CEasyGWAS/regression/CRegression.h"
+#include "../regression/CRegression.h"
 
 #define ROBUSTNESS 0
 #define CONSISTENCY 1
@@ -65,6 +65,8 @@ class CScones {
 		float64 __best_c; //best CONSISTENCY
 		MatrixXd __cMat; //matrix with all consistency values for eta x lambda
 		VectorXd __indicator_vector; //indicator vector
+		/* Structure:
+		 * */
 		float64 __objective_score; //objective value 
 		float64 __best_eta;
 		float64 __best_lambda;
@@ -93,6 +95,7 @@ class CScones {
 	
 		void test_associations() throw (CSconesException);
 		void test_associations(float64 const&, float64 const&);
+        VectorXd getObjectiveFunctionTerms(float64 const&, float64 const&);
 
 		//Setter and Getter
 		void setSKATWeights(VectorXd const&);

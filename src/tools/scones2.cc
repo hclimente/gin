@@ -1,15 +1,12 @@
 #include <iostream>
-#include <string>
-#include <time.h>
 #include "boost/program_options.hpp"
 
-#include "CEasyGWAS/gwas/CScones.h"
-#include "CEasyGWAS/io/CPlinkParser.h"
-#include "CEasyGWAS/kernel/CKernels.h"
-#include "CEasyGWAS/io/CGWASDataIO.h"
-#include "CEasyGWAS/io/CSconesIO.h"
-#include "CEasyGWAS/stats/CStats.h"
-#include "CEasyGWAS/utils/CMatrixHelper.h"
+#include "../CEasyGWAS/gwas/CScones.h"
+#include "../CEasyGWAS/io/CPlinkParser.h"
+#include "../CEasyGWAS/kernel/CKernels.h"
+#include "../CEasyGWAS/io/CSconesIO.h"
+#include "../CEasyGWAS/stats/CStats.h"
+#include "../CEasyGWAS/utils/CMatrixHelper.h"
 
 using namespace std;
 
@@ -63,7 +60,7 @@ int main(int argc, char* argv[]) {
 		exit(-1);
 	}
 
-	GWASData data;
+    GWASData data;
 
 	float64 begin;
 	begin = clock();
@@ -141,22 +138,33 @@ int main(int argc, char* argv[]) {
 			begin = clock();
 			string output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.txt";
 			logging(STATUS,"Writing output to " + output_str);
-			CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
+            if (lambda == -1 && eta == -1) CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
+            else CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),lambda,eta);
 			output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.pmatrix.txt";
 			logging(STATUS,"Writing pmatrix to " + output_str);
 			CSconesIO::writeCMatrix(output_str, scones.getCMatrix(),scones.getSettings());
 			logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+
 		} else {
 			logging(STATUS,"Running Scones for phenotype: " + data.phenotype_names[i]);
 			CScones scones(tmpData.Y.col(i),tmpData.X,tmpData.network);
-			if (lambda == -1 && eta == -1) scones.test_associations();
-			else scones.test_associations(lambda, eta);
+			if (lambda == -1 && eta == -1) {
+                scones.test_associations();
+                VectorXd terms = scones.getObjectiveFunctionTerms(scones.getBestLambda(), scones.getBestEta());
+                cout << terms(0) << "\t" << terms(1) << "\t" << terms(2) << "\n";
+            }
+			else {
+                scones.test_associations(lambda, eta);
+                VectorXd terms = scones.getObjectiveFunctionTerms(lambda,eta);
+                cout << terms(0) << "\t" << terms(1) << "\t" << terms(2) << "\n";
+            }
 			logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 			begin = clock();
 			string output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.txt";
 			logging(STATUS,"Writing output to " + output_str);
-			CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
+			if (lambda == -1 && eta == -1) CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
+			else CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),lambda,eta);
 			output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.pmatrix.txt";
 			logging(STATUS,"Writing pmatrix to " + output_str);
 			CSconesIO::writeCMatrix(output_str, scones.getCMatrix(),scones.getSettings());
