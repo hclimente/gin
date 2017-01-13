@@ -713,7 +713,7 @@ GWASData CGWASDataHelper::removeSamples4MissingData(GWASData const& data, uint c
     std::vector<uint> sex;
     std::vector<std::string> phenotype_names;
     for(uint i=0; i<data.X.rows(); i++) {
-        if(isnan(data.Y(i,phenotype_id))==false) {
+        if(std::isnan(data.Y(i,phenotype_id))==false) {
             splice_indices.push_back(i);
             sample_ids.push_back(data.sample_ids[i]);
             family_ids.push_back(data.family_ids[i]);
