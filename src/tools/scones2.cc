@@ -1,12 +1,12 @@
 #include <iostream>
 #include "boost/program_options.hpp"
 
-#include "../CEasyGWAS/gwas/CScones.h"
-#include "../CEasyGWAS/io/CPlinkParser.h"
-#include "../CEasyGWAS/kernel/CKernels.h"
-#include "../CEasyGWAS/io/CSconesIO.h"
-#include "../CEasyGWAS/stats/CStats.h"
-#include "../CEasyGWAS/utils/CMatrixHelper.h"
+#include "CEasyGWAS/gwas/CScones.h"
+#include "CEasyGWAS/io/CPlinkParser.h"
+#include "CEasyGWAS/kernel/CKernels.h"
+#include "CEasyGWAS/io/CSconesIO.h"
+#include "CEasyGWAS/stats/CStats.h"
+#include "CEasyGWAS/utils/CMatrixHelper.h"
 
 using namespace std;
 
@@ -65,14 +65,14 @@ int main(int argc, char* argv[]) {
 	float64 begin;
 	begin = clock();
 	logging(STATUS,"Reading Genotype file...");
-	CPlinkParser::readPEDFile(genotype_str + ".ped",&data);
+	CPlinkParser::readPEDFile(genotype_str + ".ped", &data);
 	logging(INFO,"Number of SNPs: " + StringHelper::to_string<uint64>(data.n_snps));
 	logging(INFO,"Number of Samples: " + StringHelper::to_string<uint64>(data.n_samples));
 	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 	begin = clock();
 	logging(STATUS,"Reading Mapping file...");
-	CPlinkParser::readMAPFile(genotype_str + ".map",&data);
+	CPlinkParser::readMAPFile(genotype_str + ".map", &data);
 	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 
