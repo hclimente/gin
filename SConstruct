@@ -21,7 +21,7 @@ for key in copy_env:
 env = Environment(SHLIBPREFIX="",ENV=ENV)
 
 ## BOOST
-boost_prefix = "/bioinfo/local/build/Centos/libboost_1.61.0/"
+boost_prefix = "/bioinfo/users/hcliment/libs/boost_1_63"
 env.Append(CPPPATH = [os.path.join(boost_prefix, "include")])
 env.Append(LIBPATH = [os.path.join(boost_prefix, "lib")])
 
