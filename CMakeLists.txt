@@ -12,7 +12,7 @@ add_subdirectory (${PROJECT_SOURCE_DIR}/External/Cephes)
 add_subdirectory (${PROJECT_SOURCE_DIR}/External/maxflow)
 
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/CEasyGWAS/*.cc ${PROJECT_SOURCE_DIR}/src/*.h
-        ${PROJECT_SOURCE_DIR}/External/Eigen/*.cc ${PROJECT_SOURCE_DIR}/External/Eigen/*.h)
+     ${PROJECT_SOURCE_DIR}/External/Eigen/*.cc ${PROJECT_SOURCE_DIR}/External/Eigen/*.h)
 
 # add extra lib directories
 link_directories(/bioinfo/users/hcliment/libs/boost_1_63/lib)
@@ -22,5 +22,3 @@ add_executable(scones2 ${PROJECT_SOURCE_DIR}/src/tools/scones2.cc ${SOURCES})
 target_link_libraries (scones2 boost_program_options)
 target_link_libraries (scones2 cephes)
 target_link_libraries (scones2 maxflow)
-
-# install(TARGETS scones2 DESTINATION "${PROJECT_SOURCE_DIR}/bin/linux2/tools")
