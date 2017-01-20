@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
 		("pc,c", po::value<int>()->default_value(0), "PC.")
 		("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
 		("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
+        ("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
 		("help,h", "Produce this help message and exit.")
 	;
 
@@ -49,6 +50,7 @@ int main(int argc, char* argv[]) {
 	int pcs = vm["pc"].as<int>();
 	double lambda = vm["lambda"].as<double>();
 	double eta = vm["eta"].as<double>();
+    bool debug = vm["debug"].as<bool>();
 
 	uint encoding = 0;
 	if(snp_encoding=="additive") encoding = 0;
@@ -148,15 +150,27 @@ int main(int argc, char* argv[]) {
 		} else {
 			logging(STATUS,"Running Scones for phenotype: " + data.phenotype_names[i]);
 			CScones scones(tmpData.Y.col(i),tmpData.X,tmpData.network);
-			if (lambda == -1 && eta == -1) {
-                scones.test_associations();
-                VectorXd terms = scones.getObjectiveFunctionTerms(scones.getBestLambda(), scones.getBestEta());
-                cout << terms(0) << "\t" << terms(1) << "\t" << terms(2) << "\n";
-            }
+			if (lambda == -1 && eta == -1) scones.test_associations();
 			else {
                 scones.test_associations(lambda, eta);
-                VectorXd terms = scones.getObjectiveFunctionTerms(lambda,eta);
-                cout << terms(0) << "\t" << terms(1) << "\t" << terms(2) << "\n";
+
+                if (debug){
+                    VectorXd terms = scones.getObjectiveFunctionTerms(lambda,eta);
+                    logging(DEBUG, "association = " + StringHelper::to_string(terms(0)));
+                    logging(DEBUG, "connectivity = " + StringHelper::to_string(terms(1)));
+                    logging(DEBUG, "sparsity = " + StringHelper::to_string(terms(2)));
+                    VectorXd indicator = scones.getIndicatorVector();
+                    VectorXd skats = scones.getScoreStatistic();
+                    logging(DEBUG, "Chosen SNPs\nid\tchr\tpos\tskat");
+                    for(uint j=0; j<indicator.rows();j++) {
+                        if(indicator(j)>=1) {
+                            logging(DEBUG, StringHelper::to_string(tmpData.snp_identifiers[j]) + "\t" +
+									StringHelper::to_string(tmpData.chromosomes[j]) + "\t" +
+									StringHelper::to_string(tmpData.positions[j]) + "\t" +
+									StringHelper::to_string(skats(j)));
+                        }
+                    }
+                }
             }
 			logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
@@ -170,8 +184,24 @@ int main(int argc, char* argv[]) {
 			CSconesIO::writeCMatrix(output_str, scones.getCMatrix(),scones.getSettings());
 			logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
-		}
+			if (debug){
+                VectorXd terms = scones.getObjectiveFunctionTerms(lambda,eta);
+                VectorXd skat = scones.getScoreStatistic();
+				output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.ext.txt";
+				logging(STATUS,"Writing extended output to " + output_str);
+                if (lambda == -1 && eta == -1) CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta(),terms,skat);
+                else CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),lambda,eta,terms,skat);
+				logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
+                output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.L.txt";
+                logging(STATUS,"Writing Laplacian matrix to " + output_str);
+                CSconesIO::writeLaplacianMatrix(output_str, tmpData, tmpData.network);
+                logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+
+			}
+
+
+		}
 
 		//logging(STATUS,"Indicator Vector:");
 		//logging(INFO,scones.getIndicatorVector().transpose());
