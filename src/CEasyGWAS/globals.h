@@ -40,6 +40,8 @@
 		std::cout << BLUE <<  C << BLACK << "\n";\
 	} else if((std::string)B==ATTENTION) {\
 		std::cout << RED <<  C << BLACK << "\n";\
+	} else if((std::string)B==DEBUG) {\
+		std::cout << RED <<  C << BLACK << "\n";\
 	} else {\
 		std::cout << C << "\n";\
 	}\
