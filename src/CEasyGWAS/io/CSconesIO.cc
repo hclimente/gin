@@ -19,7 +19,7 @@ void CSconesIO::readSparseNetworkFile(std::string const& file, GWASData* data) t
 	CIOProgress progress(ifs,1);
 	uint fsize = progress.getFileSize();
 	logging(INFO,"File Size: " + StringHelper::to_string<float64>(((float64)fsize)/1024.0/1024.0) + " MB");
-	//Create temprory positions map
+	//Create temporary positions map
 	std::map<std::string,uint64> position_map;
 	std::map<std::string,uint64>::iterator piter;
 	for(uint64 i=0; i<data->positions.size(); i++) {
@@ -91,6 +91,29 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
 	ofs.close();
 }
 
+void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, VectorXd const& indicator, float64 const& best_lambda, float64 const& best_eta, VectorXd const& terms, VectorXd const& skat) {
+    std::ofstream ofs;
+    ofs.open(outfile.c_str());
+    if(!ofs.is_open()) {
+        logging(ERROR,"Writing output failed!");
+        exit(-1);
+    }
+    ofs << "#Best Lambda:\t" << best_lambda << "\n";
+    ofs << "#Best Eta:\t" << best_eta << "\n";
+    ofs << "#Association:\t" << terms(0) << "\n";
+    ofs << "#Connectivity:\t" << terms(1) << "\n";
+    ofs << "#Sparsity:\t" << terms(2) << "\n";
+    ofs << "#SNP ID\tCHR\tPositions\tSelected\tSKAT" << "\n";
+    for(uint i=0; i<indicator.rows();i++) {
+        ofs << data.snp_identifiers[i] << "\t"
+            << data.chromosomes[i] << "\t"
+            << data.positions[i] << "\t"
+            << indicator(i) << "\t"
+            << skat(i) << "\n";
+    }
+    ofs.close();
+}
+
 void CSconesIO::writeCMatrix(std::string const& outfile, MatrixXd const& cmat, CSconesSettings const& settings) {
 	std::ofstream ofs;
 	ofs.open(outfile.c_str());
@@ -112,5 +135,33 @@ void CSconesIO::writeCMatrix(std::string const& outfile, MatrixXd const& cmat, C
         }
         ofs << "\n";
     }
+    ofs.close();
+}
+
+void CSconesIO::writeLaplacianMatrix(std::string const& outfile, GWASData const& data) {
+    std::ofstream ofs;
+    ofs.open(outfile.c_str());
+    if(!ofs.is_open()) {
+        logging(ERROR,"Writing output failed!");
+        exit(-1);
+    }
+
+    // convert sparse to dense matrix (painful)
+    MatrixXd dL = MatrixXd(data.network);
+
+    for(int j=0; j<dL.cols();j++) {
+        if(j==dL.cols()-1) ofs << data.snp_identifiers[j];
+        else ofs << data.snp_identifiers[j] << "\t";
+    }
+    ofs << "\n";
+
+    for(int i=0; i<dL.rows(); i++) {
+        for(int j=0; j<dL.cols();j++) {
+            if(j==dL.cols()-1) ofs << dL(i,j);
+            else ofs << dL(i,j) << "\t";
+        }
+        ofs << "\n";
+    }
+
     ofs.close();
 }

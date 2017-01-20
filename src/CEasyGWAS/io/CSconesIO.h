@@ -29,7 +29,9 @@ class CSconesIO {
 		static void readSparseNetworkFile(std::string const&,
 						 	    GWASData*) throw (CSconesIOException);
         static void writeOutput(std::string const&, GWASData const&, VectorXd const&, float64 const&, float64 const&);
+		static void writeOutput(std::string const&, GWASData const&, VectorXd const&, float64 const&, float64 const&, VectorXd const&, VectorXd const&);
         static void writeCMatrix(std::string const&, MatrixXd const&, CSconesSettings const&);
+		static void writeLaplacianMatrix(std::string const&, GWASData const&);
 };
 
 #endif //CSCONESIO_CLASS
