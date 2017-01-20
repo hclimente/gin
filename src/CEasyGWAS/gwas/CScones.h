@@ -101,9 +101,11 @@ class CScones {
 		void setSKATWeights(VectorXd const&);
 		CSconesSettings getSettings();
         VectorXd getIndicatorVector();
+		VectorXd getScoreStatistic();
 		float64 getObjectiveScore();
 		float64 getBestLambda();
 		float64 getBestEta();
+        SparseMatrixXd getLaplacian();
 		MatrixXd getCMatrix(); //Matrix with all consistency/stability values for all etas x lambdas 
 		std::vector<std::vector<std::vector<SparseMatrixXd> > > getResultStack(); //get sparse output of all indicator vectors evaluated in cross-validation and gridsearch
 };

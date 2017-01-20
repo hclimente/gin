@@ -147,6 +147,10 @@ float64 CScones::getBestEta() {
 	return __best_eta;
 }
 
+SparseMatrixXd CScones::getLaplacian() {
+    return __L;
+}
+
 MatrixXd CScones::getCMatrix() {
 	return __cMat;
 }
@@ -420,11 +424,26 @@ void CScones::test_associations(float64 const& lambda, float64 const& eta) {
 VectorXd CScones::getObjectiveFunctionTerms(float64 const& lambda, float64 const& eta){
 	VectorXd terms(3);
 
-	double connectivity = lambda * __indicator_vector.transpose() * __L * __indicator_vector;;
-	double sparsity = __indicator_vector.sum();
-    double association;
+	double connectivity = lambda * __indicator_vector.transpose() * __L * __indicator_vector;
+	double sparsity = eta * __indicator_vector.sum();
 
     // association
+    double association = 0;
+	VectorXd c = getScoreStatistic();
+
+
+	for(uint i=0; i<__indicator_vector.size(); i++) {
+		if(__indicator_vector(i)!=0) {
+			association += c(i);
+		}
+	}
+
+	terms << association, connectivity, sparsity;
+
+	return terms;
+}
+
+VectorXd CScones::getScoreStatistic() {
 	VectorXd r;
 	if(__covs_set) {
 		if(__binary_y) {
@@ -436,18 +455,7 @@ VectorXd CScones::getObjectiveFunctionTerms(float64 const& lambda, float64 const
 		r = __y.array() - __y.mean();
 	}
 
-	VectorXd c = __computeScoreStatistic(__X,r).array();
+	VectorXd c = __computeScoreStatistic(__X,r);
 
-    association = 0;
-	for(uint i=0; i<__indicator_vector.size(); i++) {
-		if(__indicator_vector(i)!=0) {
-			association += c(i);
-		}
-	}
-
-    sparsity = sparsity * eta;
-
-	terms << association, connectivity, sparsity;
-
-	return terms;
+	return c;
 }
