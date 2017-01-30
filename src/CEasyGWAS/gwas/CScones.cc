@@ -1,4 +1,5 @@
 #include "CScones.h"
+#include "../io/CSconesIO.h"
 #include "math.h"
 #include "../utils/CCrossValidation.h"
 #include "../utils/CMatrixHelper.h"
@@ -187,11 +188,72 @@ VectorXd CScones::__computeSKATScore(MatrixXd const& X, VectorXd const& r) {
 	return __W*nonweighted_skat;
 }
 
+VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
+    VectorXd chisq(X.rows());
+
+    // get counts per snp
+    // check that cases are > 0
+    MatrixXd X_cases((r.array() > 0).count(), X.cols());
+    MatrixXd X_controls((r.array() < 0).count(), X.cols());
+
+    int case_idx = 0;
+    int ctrl_idx = 0;
+    for (int i = 0; i < r.size(); i++){
+        if (r(i) > 0){
+            X_cases.row(case_idx) = X.row(i);
+            case_idx++;
+        } else if(r(i) < 0) {
+            X_controls.row(ctrl_idx) = X.row(i);
+            ctrl_idx++;
+        }
+    }
+
+    MatrixXd cases0 = (X_cases.array() == 0).colwise().count().cast<double>();
+    MatrixXd cases1 = (X_cases.array() == 1).colwise().count().cast<double>();
+    MatrixXd cases2 = (X_cases.array() == 2).colwise().count().cast<double>();
+
+    MatrixXd controls0 = (X_controls.array() == 0).colwise().count().cast<double>();
+    MatrixXd controls1 = (X_controls.array() == 1).colwise().count().cast<double>();
+    MatrixXd controls2 = (X_controls.array() == 2).colwise().count().cast<double>();
+
+    MatrixXd cases(3, X.cols());
+    cases << cases0,
+              cases1,
+              cases2;
+
+    MatrixXd controls(3, X.cols());
+    controls << controls0,
+                controls1,
+                controls2;
+
+    for (int i = 0; i < X.cols(); i++){
+        MatrixXd O(3,2);
+        O << cases.col(i), controls.col(i);
+
+        double N = O.sum();
+
+        MatrixXd p_pheno = O.rowwise().sum() / N;
+        MatrixXd p_geno = O.colwise().sum() / N;
+        MatrixXd p(3,2);
+        p = p_pheno * p_geno;
+
+        MatrixXd numerator = (O/N - p).array().square();
+
+        chisq(i) = N * numerator.cwiseQuotient(p).sum();
+        cout << chisq(i) << "\n";
+
+    }
+
+    return chisq;
+}
+
 VectorXd CScones::__computeScoreStatistic(MatrixXd const& X, VectorXd const& r) {
 	VectorXd score;
-	if(__settings.test_statistic==SKAT) {
-		score = __computeSKATScore(X,r);
-	}
+	if(__settings.test_statistic==SKAT)
+        score = __computeSKATScore(X,r);
+    else if(__settings.test_statistic==CHISQ)
+        score = __computeChisqScore(X,r);
+
 	return score;
 }
 
@@ -223,7 +285,7 @@ void CScones::__autoParameters() {
 //void CScones::__maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* indicator_vector) {
 void CScones::__maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* indicator_vector) {
 	indicator_vector->resize(__n_features);
-	//create graph out of ajdencency matrix
+	//create graph out of adjacency matrix
 	typedef Graph<float64, float64, float64> MaxGraph;
 	MaxGraph *g = new MaxGraph(A.rows(),A.nonZeros());
 	//Initialize nodes
@@ -395,7 +457,7 @@ void CScones::test_associations() throw (CSconesException) {
                 if(__indicator_vector(i)!=1) __indicator_vector(i)=0;
             }
         }
-        //ALTERNATIVE TO GET THE FINAL INDICATOR VECTOR, retrain model using the optimized paramters: HOWEVER this sometimes leads to different selections.
+        //ALTERNATIVE TO GET THE FINAL INDICATOR VECTOR, retrain model using the optimized parameters: HOWEVER this sometimes leads to different selections.
         //test_associations(__best_lambda,__best_eta);
 	}
 }
@@ -424,13 +486,18 @@ void CScones::test_associations(float64 const& lambda, float64 const& eta) {
 VectorXd CScones::getObjectiveFunctionTerms(float64 const& lambda, float64 const& eta){
 	VectorXd terms(3);
 
-	double connectivity = lambda * __indicator_vector.transpose() * __L * __indicator_vector;
+	SparseMatrixXd W = __L;
+	MatrixXd D = MatrixXd::Zero(__indicator_vector.size(), __indicator_vector.size());
+	D.diagonal() = MatrixXd(W).rowwise().sum();
+	MatrixXd L = D;
+	L -= W;
+
+	double connectivity = lambda * __indicator_vector.transpose() * L * __indicator_vector;
 	double sparsity = eta * __indicator_vector.sum();
 
     // association
     double association = 0;
 	VectorXd c = getScoreStatistic();
-
 
 	for(uint i=0; i<__indicator_vector.size(); i++) {
 		if(__indicator_vector(i)!=0) {

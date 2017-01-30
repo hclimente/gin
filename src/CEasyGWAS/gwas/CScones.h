@@ -9,6 +9,7 @@
 #define CONSISTENCY 1
 
 #define SKAT 0
+#define CHISQ 1
 
 /*
  *CSconesException Class
@@ -84,6 +85,7 @@ class CScones {
 	
 		VectorXd __computeScoreStatistic(MatrixXd const&, VectorXd const&);
 		VectorXd __computeSKATScore(MatrixXd const&, VectorXd const&);
+		VectorXd __computeChisqScore(MatrixXd const&, VectorXd const&);
 	public:
 		CScones();
 		CScones(VectorXd const&, MatrixXd const&, SparseMatrixXd const&) throw (CSconesException);
