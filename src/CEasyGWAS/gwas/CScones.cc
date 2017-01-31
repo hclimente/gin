@@ -189,7 +189,7 @@ VectorXd CScones::__computeSKATScore(MatrixXd const& X, VectorXd const& r) {
 }
 
 VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
-    VectorXd chisq(X.rows());
+    VectorXd chisq(X.cols());
 
     // get counts per snp
     // check that cases are > 0
@@ -208,39 +208,27 @@ VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
         }
     }
 
-    MatrixXd cases0 = (X_cases.array() == 0).colwise().count().cast<double>();
-    MatrixXd cases1 = (X_cases.array() == 1).colwise().count().cast<double>();
-    MatrixXd cases2 = (X_cases.array() == 2).colwise().count().cast<double>();
+	MatrixXd cases(3, X.cols());
+	MatrixXd controls(3, X.cols());
 
-    MatrixXd controls0 = (X_controls.array() == 0).colwise().count().cast<double>();
-    MatrixXd controls1 = (X_controls.array() == 1).colwise().count().cast<double>();
-    MatrixXd controls2 = (X_controls.array() == 2).colwise().count().cast<double>();
-
-    MatrixXd cases(3, X.cols());
-    cases << cases0,
-              cases1,
-              cases2;
-
-    MatrixXd controls(3, X.cols());
-    controls << controls0,
-                controls1,
-                controls2;
+	for(int i = 0; i <= 2; i++){
+		cases.row(i) = (X_cases.array() == i).colwise().count().cast<float64>();
+		controls.row(i) = (X_controls.array() == i).colwise().count().cast<float64>();
+	}
 
     for (int i = 0; i < X.cols(); i++){
-        MatrixXd O(3,2);
-        O << cases.col(i), controls.col(i);
+        MatrixXd cc(3,2);
+        cc << cases.col(i), controls.col(i);
 
-        double N = O.sum();
+        double N = cc.sum();
 
-        MatrixXd p_pheno = O.rowwise().sum() / N;
-        MatrixXd p_geno = O.colwise().sum() / N;
+        MatrixXd p_phenotype = cc.rowwise().sum() / N;
+        MatrixXd p_genotype = cc.colwise().sum() / N;
         MatrixXd p(3,2);
-        p = p_pheno * p_geno;
+        p = p_phenotype * p_genotype;
 
-        MatrixXd numerator = (O/N - p).array().square();
-
+        MatrixXd numerator = (cc/N - p).array().square();
         chisq(i) = N * numerator.cwiseQuotient(p).sum();
-        cout << chisq(i) << "\n";
 
     }
 
@@ -404,7 +392,7 @@ void CScones::test_associations() throw (CSconesException) {
 		if(__settings.etas.rows() == 0 || __settings.lambdas.rows() == 0)
 			throw CSconesException("Array of lambda or eta values cannot be empty!");
 	}
-	//Perform crossvalidated gridsearch to find parameters 
+	//Perform crossvalidated gridsearch to find parameters
 	CCrossValidation cv(__settings.seed);
 	cv.kFold(__settings.folds,__n_samples);
 	
