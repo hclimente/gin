@@ -65,14 +65,15 @@ int main(int argc, char* argv[]) {
 	}
 
     CSconesSettings settings;
-    if (lambda != -1 && eta == -1){
-        settings.autoParameters = false;
+    if (lambda != -1 & eta != -1){
         VectorXd l(1);
         l(0) = lambda;
         VectorXd e(1);
         e(0) = eta;
         settings.lambdas = l;
         settings.etas = e;
+        // avoid gridsearch
+        settings.autoParameters = false;
     }
 
     if (association_score == "chisq")
