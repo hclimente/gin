@@ -103,7 +103,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
     ofs << "#Association:\t" << terms(0) << "\n";
     ofs << "#Connectivity:\t" << terms(1) << "\n";
     ofs << "#Sparsity:\t" << terms(2) << "\n";
-    ofs << "#SNP ID\tCHR\tPositions\tSelected\tSKAT" << "\n";
+    ofs << "#SNP ID\tCHR\tPositions\tSelected\tScore" << "\n";
     for(uint i=0; i<indicator.rows();i++) {
         ofs << data.snp_identifiers[i] << "\t"
             << data.chromosomes[i] << "\t"
