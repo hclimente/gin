@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
 		("outdir,o", po::value<string>()->default_value("."), "Output directory.")
 		("encoding,s", po::value<string>()->default_value("additive"), "snp_encoding.")
 		("pc,c", po::value<int>()->default_value(0), "PC.")
+        ("score,t", po::value<string>()->default_value("skat"), "Association score.")
 		("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
 		("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
         ("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
@@ -48,6 +49,7 @@ int main(int argc, char* argv[]) {
 	string outfolder_str = vm["outdir"].as<string>();
 	string snp_encoding = vm["encoding"].as<string>();
 	int pcs = vm["pc"].as<int>();
+    string association_score = vm["score"].as<string>();
 	double lambda = vm["lambda"].as<double>();
 	double eta = vm["eta"].as<double>();
     bool debug = vm["debug"].as<bool>();
@@ -61,6 +63,20 @@ int main(int argc, char* argv[]) {
 		logging(ERROR,"Encoding does not exist!");
 		exit(-1);
 	}
+
+    CSconesSettings settings;
+    if (lambda != -1 && eta == -1){
+        settings.autoParameters = false;
+        VectorXd l(1);
+        l(0) = lambda;
+        VectorXd e(1);
+        e(0) = eta;
+        settings.lambdas = l;
+        settings.etas = e;
+    }
+
+    if (association_score == "chisq")
+        settings.test_statistic = 1;
 
     GWASData data;
 
@@ -131,17 +147,14 @@ int main(int argc, char* argv[]) {
 			logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 			logging(STATUS,"Running Scones for phenotype: " + data.phenotype_names[i]);
-			CSconesSettings settings;
-			CScones scones(tmpData.Y.col(i),tmpData.X,tmpData.network,PCs,settings);
-			if (lambda == -1 && eta == -1) scones.test_associations();
-			else scones.test_associations(lambda, eta);
+            CScones scones(tmpData.Y.col(i),tmpData.X,tmpData.network,PCs,settings);
+            scones.test_associations();
 			logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 			begin = clock();
 			string output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.txt";
 			logging(STATUS,"Writing output to " + output_str);
-            if (lambda == -1 && eta == -1) CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
-            else CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),lambda,eta);
+            CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
 			output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.pmatrix.txt";
 			logging(STATUS,"Writing pmatrix to " + output_str);
 			CSconesIO::writeCMatrix(output_str, scones.getCMatrix(),scones.getSettings());
@@ -149,26 +162,23 @@ int main(int argc, char* argv[]) {
 
 		} else {
 			logging(STATUS,"Running Scones for phenotype: " + data.phenotype_names[i]);
-			CScones scones(tmpData.Y.col(i),tmpData.X,tmpData.network);
-			if (lambda == -1 && eta == -1) scones.test_associations();
-			else {
-                scones.test_associations(lambda, eta);
+            CScones scones(tmpData.Y.col(i),tmpData.X,tmpData.network,settings);
+			scones.test_associations();
 
-                if (debug){
-                    VectorXd terms = scones.getObjectiveFunctionTerms(lambda,eta);
-                    logging(DEBUG, "association = " + StringHelper::to_string(terms(0)));
-                    logging(DEBUG, "connectivity = " + StringHelper::to_string(terms(1)));
-                    logging(DEBUG, "sparsity = " + StringHelper::to_string(terms(2)));
-                    VectorXd indicator = scones.getIndicatorVector();
-                    VectorXd skats = scones.getScoreStatistic();
-                    logging(DEBUG, "Chosen SNPs\nid\tchr\tpos\tskat");
-                    for(uint j=0; j<indicator.rows();j++) {
-                        if(indicator(j)>=1) {
-                            logging(DEBUG, StringHelper::to_string(tmpData.snp_identifiers[j]) + "\t" +
-									StringHelper::to_string(tmpData.chromosomes[j]) + "\t" +
-									StringHelper::to_string(tmpData.positions[j]) + "\t" +
-									StringHelper::to_string(skats(j)));
-                        }
+            if (debug){
+                VectorXd terms = scones.getObjectiveFunctionTerms(lambda,eta);
+                logging(DEBUG, "association = " + StringHelper::to_string(terms(0)));
+                logging(DEBUG, "connectivity = " + StringHelper::to_string(terms(1)));
+                logging(DEBUG, "sparsity = " + StringHelper::to_string(terms(2)));
+                VectorXd indicator = scones.getIndicatorVector();
+                VectorXd skats = scones.getScoreStatistic();
+                logging(DEBUG, "Chosen SNPs\nid\tchr\tpos\tskat");
+                for(uint j=0; j<indicator.rows();j++) {
+                    if(indicator(j)>=1) {
+                        logging(DEBUG, StringHelper::to_string(tmpData.snp_identifiers[j]) + "\t" +
+                                       StringHelper::to_string(tmpData.chromosomes[j]) + "\t" +
+                                       StringHelper::to_string(tmpData.positions[j]) + "\t" +
+                                       StringHelper::to_string(skats(j)));
                     }
                 }
             }
@@ -177,8 +187,7 @@ int main(int argc, char* argv[]) {
 			begin = clock();
 			string output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.txt";
 			logging(STATUS,"Writing output to " + output_str);
-			if (lambda == -1 && eta == -1) CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
-			else CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),lambda,eta);
+			CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
 			output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.pmatrix.txt";
 			logging(STATUS,"Writing pmatrix to " + output_str);
 			CSconesIO::writeCMatrix(output_str, scones.getCMatrix(),scones.getSettings());
@@ -189,8 +198,7 @@ int main(int argc, char* argv[]) {
                 VectorXd skat = scones.getScoreStatistic();
 				output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.ext.txt";
 				logging(STATUS,"Writing extended output to " + output_str);
-                if (lambda == -1 && eta == -1) CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta(),terms,skat);
-                else CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),lambda,eta,terms,skat);
+                CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta(),terms,skat);
 				logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
                 output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.L.txt";
