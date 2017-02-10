@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
 
                 output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.L.txt";
                 logging(STATUS,"Writing Laplacian matrix to " + output_str);
-                CSconesIO::writeLaplacianMatrix(output_str, tmpData, tmpData.network);
+                // CSconesIO::writeLaplacianMatrix(output_str, tmpData, tmpData.network);
                 logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 			}
