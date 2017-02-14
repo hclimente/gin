@@ -1,9 +1,8 @@
 #ifndef CSCONES_CLASS
 #define CSCONES_CLASS
 
-#include "../globals.h"
-
-#include "../regression/CRegression.h"
+#include "CEasyGWAS/globals.h"
+#include "CEasyGWAS/regression/CRegression.h"
 
 #define ROBUSTNESS 0
 #define CONSISTENCY 1
