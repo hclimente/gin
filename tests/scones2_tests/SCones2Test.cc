@@ -71,9 +71,6 @@ TEST_F(CSconesTest, integrity_bestLambdaAndEta) {
     float64 lambda = scones -> getBestLambda();
     float64 eta = scones -> getBestEta();
 
-    cout << lambda << "\n";
-    cout << eta << "\n";
-
     EXPECT_NEAR(278.25, lambda , 0.1);
     EXPECT_NEAR(16681, eta, 0.1);
 
@@ -90,7 +87,7 @@ TEST_F(CSconesTest, integrity_objectiveFunctionTerms) {
     double sparsity = terms(2);
 
     EXPECT_NEAR(724379, association, 1);
-    EXPECT_NEAR(25043, connectivity, 1);
+    EXPECT_NEAR(44799.20, connectivity, 1);
     EXPECT_NEAR(166810, sparsity, 1);
 
 }
