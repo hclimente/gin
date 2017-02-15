@@ -1,3 +1,7 @@
 *.pyc
 ._*
 *.swp
+*CMakeFiles*
+*.cmake
+Makefile
+*.a
