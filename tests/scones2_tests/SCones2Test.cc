@@ -4,10 +4,6 @@
 #include "CEasyGWAS/io/CPlinkParser.h"
 #include "CEasyGWAS/globals.h"
 
-struct CSconesData {
-
-};
-
 struct CSconesTest : public ::testing::Test {
     CSconesSettings settings;
     CScones* scones;
@@ -67,6 +63,22 @@ TEST_F(CSconesTest, integrity_selectedSNPs) {
     EXPECT_EQ(1, scones -> getIndicatorVector()(690));
     EXPECT_EQ(1, scones -> getIndicatorVector()(695));
     EXPECT_EQ(1, scones -> getIndicatorVector()(696));
+
+}
+
+TEST_F(CSconesTest, integrity_objectiveFunctionTerms) {
+    scones -> test_associations();
+    float64 lambda = scones -> getBestLambda();
+    float64 eta = scones -> getBestEta();
+    VectorXd terms = scones -> getObjectiveFunctionTerms(lambda,eta);
+
+    double association = terms(0);
+    double connectivity = terms(1);
+    double sparsity = terms(2);
+
+    EXPECT_NEAR(724379, association, 1);
+    EXPECT_NEAR(25043, connectivity, 1);
+    EXPECT_NEAR(166810, sparsity, 1);
 
 }
 
