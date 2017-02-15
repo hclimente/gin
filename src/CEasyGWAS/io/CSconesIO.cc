@@ -103,7 +103,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
     ofs << "#Association:\t" << terms(0) << "\n";
     ofs << "#Connectivity:\t" << terms(1) << "\n";
     ofs << "#Sparsity:\t" << terms(2) << "\n";
-    ofs << "#SNP ID\tCHR\tPositions\tSelected\tSKAT" << "\n";
+    ofs << "#SNP ID\tCHR\tPositions\tSelected\tScore" << "\n";
     for(uint i=0; i<indicator.rows();i++) {
         ofs << data.snp_identifiers[i] << "\t"
             << data.chromosomes[i] << "\t"
@@ -138,7 +138,7 @@ void CSconesIO::writeCMatrix(std::string const& outfile, MatrixXd const& cmat, C
     ofs.close();
 }
 
-void CSconesIO::writeLaplacianMatrix(std::string const& outfile, GWASData const& data) {
+void CSconesIO::writeAdjacencyMatrix(std::string const &outfile, GWASData const &data) {
     std::ofstream ofs;
     ofs.open(outfile.c_str());
     if(!ofs.is_open()) {
@@ -164,4 +164,23 @@ void CSconesIO::writeLaplacianMatrix(std::string const& outfile, GWASData const&
     }
 
     ofs.close();
+}
+
+void CSconesIO::writeAdjacencyMatrix(std::string const &outfile, MatrixXd const& M) {
+	std::ofstream ofs;
+	ofs.open(outfile.c_str());
+	if(!ofs.is_open()) {
+		logging(ERROR,"Writing output failed!");
+		exit(-1);
+	}
+
+	for(int i=0; i<M.rows(); i++) {
+		for(int j=0; j<M.cols();j++) {
+			if(j==M.cols()-1) ofs << M(i,j);
+			else ofs << M(i,j) << "\t";
+		}
+		ofs << "\n";
+	}
+
+	ofs.close();
 }
