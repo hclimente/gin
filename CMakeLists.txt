@@ -10,7 +10,7 @@ include_directories(/bioinfo/users/hcliment/libs/boost_1_63/include ${PROJECT_SO
         ${PROJECT_SOURCE_DIR}/External ${PROJECT_SOURCE_DIR}/External/Eigen
         ${PROJECT_SOURCE_DIR}/External/maxflow ${PROJECT_SOURCE_DIR}/External/Cephes)
 
-add_library(CEasyGWAS STATIC ${SOURCES})
+add_library(CEasyGWAS SHARED ${SOURCES})
 target_link_libraries (CEasyGWAS cephes maxflow)
 
 add_subdirectory (${PROJECT_SOURCE_DIR}/External/Cephes)
