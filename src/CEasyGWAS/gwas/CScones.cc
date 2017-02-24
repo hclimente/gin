@@ -47,15 +47,15 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L) 
 	
 	__y = y;
 	__X = X;
-	__L = L;
+	__W = L;
 
 	__checkdata();
 
 	__n_samples = X.rows();
 	__n_features = X.cols();
 
-	__W = DiagXd(__n_features);
-	__W.diagonal() = VectorXd::Ones(__n_features);
+	__sW = DiagXd(__n_features);
+	__sW.diagonal() = VectorXd::Ones(__n_features);
 }
 
 CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, CSconesSettings const& settings) throw (CSconesException) {
@@ -65,15 +65,15 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 	
 	__y = y;
 	__X = X;
-	__L = L;
+	__W = L;
 
 	__checkdata();
 
 	__n_samples = X.rows();
 	__n_features = X.cols();
 
-	__W = DiagXd(__n_features);
-	__W.diagonal() = VectorXd::Ones(__n_features);
+	__sW = DiagXd(__n_features);
+	__sW.diagonal() = VectorXd::Ones(__n_features);
 }
 
 CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, MatrixXd const& covs) throw (CSconesException) {
@@ -85,15 +85,15 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 	__covs = covs;
 	__y = y;
 	__X = X;
-	__L = L;
+	__W = L;
 	
 	__checkdata();
 
 	__n_samples = X.rows();
 	__n_features = X.cols();
 
-	__W = DiagXd(__n_features);
-	__W.diagonal() = VectorXd::Ones(__n_features);
+	__sW = DiagXd(__n_features);
+	__sW.diagonal() = VectorXd::Ones(__n_features);
 }
 
 CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, MatrixXd const& covs, CSconesSettings const& settings) throw (CSconesException) {
@@ -104,22 +104,22 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 	__covs = covs;
 	__y = y;
 	__X = X;
-	__L = L;
+	__W = L;
 	
 	__checkdata();
 
 	__n_samples = X.rows();
 	__n_features = X.cols();
 
-	__W = DiagXd(__n_features);
-	__W.diagonal() = VectorXd::Ones(__n_features);
+	__sW = DiagXd(__n_features);
+	__sW.diagonal() = VectorXd::Ones(__n_features);
 }
 
 void CScones::__checkdata() throw (CSconesException) {
 	if(__y.cols()>1) throw CSconesException("Phenotype y has wrong dimensions! (n x 1)!");
 	if(__X.rows() != __y.rows()) throw CSconesException("Genotype X and Phenotype y must have the same number of samples n!");
-	if(__L.rows() != __L.cols()) throw CSconesException("Network L must be a squared matrix with size features m x m!");
-	//if(__L.rows() != __X.cols()) throw CSconesException("Network L and Genotype X must have the same number of features m!");
+	if(__W.rows() != __W.cols()) throw CSconesException("Network L must be a squared matrix with size features m x m!");
+	//if(__W.rows() != __X.cols()) throw CSconesException("Network L and Genotype X must have the same number of features m!");
 	if(__covs_set==true) {
 		if (__covs.rows()!=__X.rows()) throw CSconesException("Covariates and genotype must have the same number of samples n!");
 	}
@@ -132,8 +132,8 @@ void CScones::__checkdata() throw (CSconesException) {
 //Set weight vector for SKAT association test
 void CScones::setSKATWeights(VectorXd const& w) {
 	if(w.rows()!=__X.cols()) throw CSconesException("Weight vector w has wrong dimensions");
-	__W = DiagXd(__n_features);
-	__W.diagonal() = VectorXd::Ones(__n_features).cwiseProduct(w);
+	__sW = DiagXd(__n_features);
+	__sW.diagonal() = VectorXd::Ones(__n_features).cwiseProduct(w);
 }
 
 VectorXd CScones::getIndicatorVector() {
@@ -148,8 +148,8 @@ float64 CScones::getBestEta() {
 	return __best_eta;
 }
 
-SparseMatrixXd CScones::getLaplacian() {
-    return __L;
+SparseMatrixXd CScones::getW() {
+    return __W;
 }
 
 MatrixXd CScones::getCMatrix() {
@@ -185,7 +185,26 @@ void CScones::__selectRegressionModel() {
 
 VectorXd CScones::__computeSKATScore(MatrixXd const& X, VectorXd const& r) {
 	VectorXd nonweighted_skat = ((X.transpose()*r).array().pow(2));
-	return __W*nonweighted_skat;
+	return __sW*nonweighted_skat;
+}
+
+void CScones::__removeZeroRows(Eigen::MatrixXd& mat)
+{
+	Eigen::Matrix<bool, Eigen::Dynamic, 1> empty = (mat.array() == 0).rowwise().all();
+
+	size_t last = mat.rows() - 1;
+	for (size_t i = 0; i < last + 1;)
+	{
+		if (empty(i))
+		{
+			mat.row(i).swap(mat.row(last));
+			empty.segment<1>(i).swap(empty.segment<1>(last));
+			--last;
+		}
+		else
+			++i;
+	}
+	mat.conservativeResize(last + 1, mat.cols());
 }
 
 VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
@@ -219,6 +238,7 @@ VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
     for (int i = 0; i < X.cols(); i++){
         MatrixXd cc(3,2);
         cc << cases.col(i), controls.col(i);
+		__removeZeroRows(cc);
 
         double N = cc.sum();
 
@@ -228,9 +248,10 @@ VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
         p = p_phenotype * p_genotype;
 
         MatrixXd numerator = (cc/N - p).array().square();
-        chisq(i) = N * numerator.cwiseQuotient(p).sum();
+        // chisq(i) = pow((N * numerator.cwiseQuotient(p).sum()), 5);
+		chisq(i) = N * numerator.cwiseQuotient(p).sum();
 
-    }
+	}
 
     return chisq;
 }
@@ -264,14 +285,16 @@ void CScones::__autoParameters() {
 	VectorXd tmpc = (c.array()==0).select(c.maxCoeff(),c);
 	float64 minc = floor(log10(tmpc.minCoeff()));
 	float64 maxc = ceil(log10(c.maxCoeff()));
-	__settings.etas = VectorXd::LinSpaced(__settings.nParameters,minc,maxc);
+    float64 delta = abs(minc - maxc)/(__settings.nParameters - 1) ;
+    int n = ceil(5/(delta)) ;
+	__settings.etas = VectorXd::LinSpaced(__settings.nParameters + 2 * n, minc - n * delta , maxc + n * delta );
 	for(int i=0; i<__settings.etas.rows(); i++)
 		__settings.etas(i) = pow(10,__settings.etas(i));
 	__settings.lambdas = __settings.etas;
 }
 
-//void CScones::__maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* indicator_vector) {
-void CScones::__maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* indicator_vector) {
+//void CScones::maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* indicator_vector) {
+void CScones::maxflow(SparseMatrixXd const &A, MatrixXd const &T, VectorXd *indicator_vector) {
 	indicator_vector->resize(__n_features);
 	//create graph out of adjacency matrix
 	typedef Graph<float64, float64, float64> MaxGraph;
@@ -309,24 +332,25 @@ void CScones::__maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* in
 }
 
 void CScones::__optimize_objective(VectorXd const& c, float64 const& lambda, VectorXd* indicator_vector, float64* objective_score) {
-	//Main Graph
-	SparseMatrixXd A = lambda * __L;
+	// Main Graph W: edges multiplied by lambda
+	SparseMatrixXd lW = lambda * __W;
 	//Add source and sink
 	//if((c.array()>0).count()==0 || (c.array()<=0).count()==0)
 	//	logging(WARNING,"WARNING: Trivial solution ahead!");
-	
-	MatrixXd T(__n_features,2);
+
+	// Matrix A containing As and At
+	MatrixXd A(__n_features,2);
 	//connect positive c values to sink
-	VectorXd posc = (c.array()<=0).select(0,c);
+	VectorXd pos_c = (c.array()<=0).select(0,c);
 	//connect negative c values to source
-	VectorXd negc = -c;
-	negc = (negc.array()<=0).select(0,negc);
+	VectorXd neg_c = -c;
+	neg_c = (neg_c.array()<=0).select(0,neg_c);
 	//Store data
-	T.col(0) = negc;
-	T.col(1) = posc;
+	A.col(0) = neg_c;
+	A.col(1) = pos_c;
 	
 	//compute maxflow
-	__maxflow(A,T,indicator_vector);	
+	maxflow(lW, A, indicator_vector);
 	
 	//compute objective score
 	if(__settings.evaluateObjective) {
@@ -337,8 +361,8 @@ void CScones::__optimize_objective(VectorXd const& c, float64 const& lambda, Vec
 			}
 		}
 	
-		for(int64 k=0; k<A.outerSize(); k++) {
-			for(Eigen::SparseMatrix<float64>::InnerIterator it(A,k); it; ++it) {
+		for(int64 k=0; k<lW.outerSize(); k++) {
+			for(Eigen::SparseMatrix<float64>::InnerIterator it(lW,k); it; ++it) {
 				if((*indicator_vector)(it.row())==1)
 					if((*indicator_vector)(it.col())==0)
 						(*objective_score) += it.value();
@@ -409,7 +433,8 @@ void CScones::test_associations() throw (CSconesException) {
 	}
 	//Evaluate all solutions and select the best eta and lambda according to the selection criterion
 	if(__settings.selection_criterion==CONSISTENCY) {
-		float64 n = __L.outerSize();
+		// number of features
+		float64 n = __W.outerSize();
         float64 n1 = ceil(n*0.01);
 		__cMat = MatrixXd::Zero(__settings.etas.rows(),__settings.lambdas.rows());
 		for(int i=0; i<__settings.etas.rows();i++){
@@ -474,7 +499,7 @@ void CScones::test_associations(float64 const& lambda, float64 const& eta) {
 VectorXd CScones::getObjectiveFunctionTerms(float64 const& lambda, float64 const& eta){
 	VectorXd terms(3);
 
-	SparseMatrixXd W = __L;
+	SparseMatrixXd W = __W;
 	MatrixXd D = MatrixXd::Zero(__indicator_vector.size(), __indicator_vector.size());
 	D.diagonal() = MatrixXd(W).rowwise().sum();
 	MatrixXd L = D;

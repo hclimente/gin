@@ -50,8 +50,8 @@ class CScones {
 		CSconesSettings __settings; //Scones settings struct
 		MatrixXd __X; //Genotype Matrix
 		VectorXd __y; //Phenotype Vector
-		SparseMatrixXd __L; //Sparse Network Adjacency Matrix
-		DiagXd __W; //Diagonal Matrix with weights for SCAT statistic
+		SparseMatrixXd __W; //Sparse Network Adjacency Matrix
+		DiagXd __sW; //Diagonal Matrix with weights for SCAT statistic
 		MatrixXd __covs; //Covariate MatrixXd
 
 		//Store results in datastructure
@@ -75,11 +75,12 @@ class CScones {
 		CLinearRegression __linear_regression; //Regression model, either LinearRegression for continuous phenotypes or LogisticRegression for binary
 		CLogisticRegression __logistic_regression; //Regression model, either LinearRegression for continuous phenotypes or LogisticRegression for binary
 
+        void __removeZeroRows(MatrixXd&);
+
 		void __checkdata() throw (CSconesException);
 		void __autoParameters();
 		void __selectRegressionModel();
 		void __optimize_objective(VectorXd const&, float64 const&, VectorXd*, float64*);
-		void __maxflow(SparseMatrixXd const&, MatrixXd const&, VectorXd*);
 		void __gridsearch(VectorXd const&, MatrixXd const&, MatrixXd const&) throw (CSconesException);
 	
 		VectorXd __computeScoreStatistic(MatrixXd const&, VectorXd const&);
@@ -96,6 +97,7 @@ class CScones {
 	
 		void test_associations() throw (CSconesException);
 		void test_associations(float64 const&, float64 const&);
+		void maxflow(SparseMatrixXd const &, MatrixXd const &, VectorXd *);
         VectorXd getObjectiveFunctionTerms(float64 const&, float64 const&);
 
 		//Setter and Getter
@@ -106,7 +108,7 @@ class CScones {
 		float64 getObjectiveScore();
 		float64 getBestLambda();
 		float64 getBestEta();
-        SparseMatrixXd getLaplacian();
+        SparseMatrixXd getW();
 		MatrixXd getCMatrix(); //Matrix with all consistency/stability values for all etas x lambdas 
 		std::vector<std::vector<std::vector<SparseMatrixXd> > > getResultStack(); //get sparse output of all indicator vectors evaluated in cross-validation and gridsearch
 };
