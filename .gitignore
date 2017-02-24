@@ -5,3 +5,5 @@
 *.cmake
 Makefile
 *.a
+.Rproj.user
+*.so
