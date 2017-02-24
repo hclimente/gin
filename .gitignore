@@ -7,3 +7,13 @@ Makefile
 *.a
 .Rproj.user
 *.so
+.Rhistory
+.idea/
+*.cbp
+*CMakeCache.txt
+*.Rproj
+*.Rbuildignore
+build/*
+cmake-build-debug/*
+nbproject/*
+rscones2.Rcheck/*
