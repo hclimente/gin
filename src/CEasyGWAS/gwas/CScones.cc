@@ -163,6 +163,10 @@ std::vector<std::vector<std::vector<SparseMatrixXd> > > CScones::getResultStack(
 	return __result_stack;
 }
 
+float64 CScones::getObjectiveScore() {
+    return __objective_score;
+}
+
 /*
 * Main algorithm
 */
