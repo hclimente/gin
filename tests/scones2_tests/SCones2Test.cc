@@ -125,12 +125,12 @@ TEST_P(SearchMarkers, checkSelectedSNPS) {
 TEST_P(SearchMarkers, checkSelectedSNPs_fixedParameters) {
     auto as = GetParam();
 
+    scones -> test_associations();
+    VectorXd indicator_gridsearch = scones -> getIndicatorVector();
     scones -> test_associations(as.expected_lambda, as.expected_eta);
-    int out = scones -> getIndicatorVector().sum();
-    EXPECT_EQ(10, out);
-    for (unsigned int i = 0; i < sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]); i++){
-        EXPECT_EQ(1, scones -> getIndicatorVector()(as.expected_causal_SNPs[i]));
-    }
+    VectorXd indicator_fixed = scones -> getIndicatorVector();
+
+    EXPECT_EQ(indicator_gridsearch, indicator_fixed);
 }
 
 TEST_P(SearchMarkers, checkOutputFiles) {
