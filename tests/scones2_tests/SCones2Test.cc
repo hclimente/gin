@@ -107,8 +107,8 @@ TEST_P(SearchMarkers, checkLambdaAndEta) {
     float64 lambda = scones -> getBestLambda();
     float64 eta = scones -> getBestEta();
 
-    EXPECT_NEAR(as.expected_lambda, lambda , 1);
-    EXPECT_NEAR(as.expected_eta, eta, 1);
+    EXPECT_NEAR(as.expected_lambda, lambda , 0.001);
+    EXPECT_NEAR(as.expected_eta, eta, 0.001);
 }
 
 TEST_P(SearchMarkers, checkSelectedSNPS) {
@@ -122,11 +122,22 @@ TEST_P(SearchMarkers, checkSelectedSNPS) {
     }
 }
 
+TEST_P(SearchMarkers, checkSelectedSNPs_fixedParameters) {
+    auto as = GetParam();
+
+    scones -> test_associations(as.expected_lambda, as.expected_eta);
+    int out = scones -> getIndicatorVector().sum();
+    EXPECT_EQ(10, out);
+    for (unsigned int i = 0; i < sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]); i++){
+        EXPECT_EQ(1, scones -> getIndicatorVector()(as.expected_causal_SNPs[i]));
+    }
+}
+
 TEST_P(SearchMarkers, checkOutputFiles) {
     auto as = GetParam();
 
     scones -> test_associations();
-    VectorXd terms = scones -> getObjectiveFunctionTerms(lambda,eta);
+    VectorXd terms = scones -> getObjectiveFunctionTerms(scones -> getBestLambda(), scones -> getBestEta());
     VectorXd skat = scones -> getScoreStatistic();
 
     string output_str = as.path_prefix + "/" + tmpData.phenotype_names[0] + ".scones.out.ext.txt";
@@ -138,9 +149,9 @@ TEST_P(SearchMarkers, checkOutputFiles) {
 
 CSconesInitialSettings gridSearchParams_skat = CSconesInitialSettings {
         -1, // eta
-        16681, // expected_eta
+        16681.00537, // expected_eta
         -1, // lambda
-        278.25, // expected_lambda
+        278.25594, // expected_lambda
         SKAT, // test_statistic
         724379, // expected_association
         44799.20, // expected_connectivity
@@ -164,9 +175,9 @@ CSconesInitialSettings fixedParams_skat = CSconesInitialSettings {
 
 CSconesInitialSettings gridSearchParams_chisq = CSconesInitialSettings {
         41.25, // eta
-        16681, // expected_eta
+        16681.00537, // expected_eta
         8.38e-12, // lambda
-        278.25, // expected_lambda
+        278.25594, // expected_lambda
         CHISQ, // test_statistic
         724379, // expected_association
         44799.20, // expected_connectivity
