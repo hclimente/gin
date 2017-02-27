@@ -29,15 +29,15 @@ class CSconesException {
 typedef class CSconesSettings {
 	public:
 		uint folds; //Number of folds for cross-validation
-		float64 seed; //Seed for cross-validation 
+		float64 seed; //Seed for cross-validation
 		bool dump_intermediate_results; //results can easily get very large in memory space, if true results are dumped
-		std::string dump_path; //path to folder for dumping results 
+		std::string dump_path; //path to folder for dumping results
 		uint selection_criterion; //Selection criterion
-		float64 selection_ratio; //ONLY for ROBUSTNESS selection: ratio of hits e.g. in more than 0.8 of all folds 
+		float64 selection_ratio; //ONLY for ROBUSTNESS selection: ratio of hits e.g. in more than 0.8 of all folds
 		uint test_statistic; //Test statistic for computation: SKAT
 		bool autoParameters; //set parameters (lambda and eta) values automatically
 		//if autoParameters == True
-		uint nParameters; //number of parameters 
+		uint nParameters; //number of parameters
 		VectorXd lambdas; //vector of lambda values
 		VectorXd etas; //vector of eta values
 		bool evaluateObjective; //flag if objective function should be evaluated
@@ -54,12 +54,16 @@ class CScones {
 		DiagXd __sW; //Diagonal Matrix with weights for SCAT statistic
 		MatrixXd __covs; //Covariate MatrixXd
 
-		//Store results in datastructure
+		/* Store results in data structure with the following format
+		 * vector for the same kfold
+		 * vector for the same lambda
+		 * vector for the same eta
+		 */
 		std::vector<std::vector<std::vector<SparseMatrixXd> > > __result_stack;
 		//std::vector<std::vector<MatrixXd>> results_stack;
 		//std::vector<MatrixXd> lambda_stack;
 
-		bool __covs_set; //flag if covariates are set 
+		bool __covs_set; //flag if covariates are set
 		uint64 __n_samples; //number of samples
 		uint64 __n_features; //number of features
 		float64 __best_c; //best CONSISTENCY
@@ -67,7 +71,7 @@ class CScones {
 		VectorXd __indicator_vector; //indicator vector
 		/* Structure:
 		 * */
-		float64 __objective_score; //objective value 
+		float64 __objective_score; //objective value
 		float64 __best_eta;
 		float64 __best_lambda;
 
@@ -82,7 +86,7 @@ class CScones {
 		void __selectRegressionModel();
 		void __optimize_objective(VectorXd const&, float64 const&, VectorXd*, float64*);
 		void __gridsearch(VectorXd const&, MatrixXd const&, MatrixXd const&) throw (CSconesException);
-	
+
 		VectorXd __computeScoreStatistic(MatrixXd const&, VectorXd const&);
 		VectorXd __computeSKATScore(MatrixXd const&, VectorXd const&);
 		VectorXd __computeChisqScore(MatrixXd const&, VectorXd const&);
@@ -90,11 +94,11 @@ class CScones {
 		CScones();
 		CScones(VectorXd const&, MatrixXd const&, SparseMatrixXd const&) throw (CSconesException);
 		CScones(VectorXd const&, MatrixXd const&, SparseMatrixXd const&, MatrixXd const&) throw (CSconesException);
-		
+
 		CScones(CSconesSettings const&);
 		CScones(VectorXd const&, MatrixXd const&, SparseMatrixXd const&, CSconesSettings const&) throw (CSconesException);
 		CScones(VectorXd const&, MatrixXd const&, SparseMatrixXd const&, MatrixXd const&, CSconesSettings const&) throw (CSconesException);
-	
+
 		void test_associations() throw (CSconesException);
 		void test_associations(float64 const&, float64 const&);
 		void maxflow(SparseMatrixXd const &, MatrixXd const &, VectorXd *);
@@ -109,8 +113,10 @@ class CScones {
 		float64 getBestLambda();
 		float64 getBestEta();
         SparseMatrixXd getW();
-		MatrixXd getCMatrix(); //Matrix with all consistency/stability values for all etas x lambdas 
+		MatrixXd getCMatrix(); //Matrix with all consistency/stability values for all etas x lambdas
 		std::vector<std::vector<std::vector<SparseMatrixXd> > > getResultStack(); //get sparse output of all indicator vectors evaluated in cross-validation and gridsearch
+
+        void setNFeatures(uint64 n_features){ __n_features = n_features;};
 };
 
 #endif //CSCONES_CLASS

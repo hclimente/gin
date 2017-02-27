@@ -437,21 +437,28 @@ void CScones::test_associations() throw (CSconesException) {
 		float64 n = __W.outerSize();
         float64 n1 = ceil(n*0.01);
 		__cMat = MatrixXd::Zero(__settings.etas.rows(),__settings.lambdas.rows());
-		for(int i=0; i<__settings.etas.rows();i++){
-			for(int j=0; j<__settings.lambdas.rows();j++) {
+		for(int e=0; e<__settings.etas.rows();e++){
+			for(int l=0; l<__settings.lambdas.rows();l++) {
 				float64 cindex = 0.0;
-				for(uint k=0; k<__settings.folds; k++) {
-					//inds.push_back(__result_stack[k][j][i]);
-					float64 si = __result_stack[k][j][i].nonZeros();
-                    if (si==0 || si == n || si > n1) continue;
-					for(uint h=k+1; h<__settings.folds; h++) {
-						float64 sj = __result_stack[h][j][i].nonZeros();
-						if (sj==0 || sj == n || sj > n1) continue;
-						cindex += (n*(__result_stack[k][j][i].cwiseProduct(__result_stack[h][j][i])).sum() - si * sj)/(n*fmin(si,sj)-si*sj);
+				for(uint k1=0; k1<__settings.folds; k1++) {
+					//inds.push_back(__result_stack[k1][l][e]);
+                    // count number of non-zero coefficients in sparse matrix
+					float64 n0_k1 = __result_stack[k1][l][e].nonZeros();
+                    // if trivial solutions (no SNP/all SNPs/more than 1% of SNPs), skip this fold
+                    if (n0_k1==0 || n0_k1 == n || n0_k1 > n1) continue;
+                    // else scan what happens in folds with an index > than the current one
+					for(uint k2=k1+1; k2<__settings.folds; k2++) {
+						float64 n0_k2 = __result_stack[k2][l][e].nonZeros();
+						if (n0_k2==0 || n0_k2 == n || n0_k2 > n1) continue;
+
+                        // normalize the consistency using the maximum possible consistency ie max 1
+                        float64 consistency = n * (__result_stack[k1][l][e].cwiseProduct(__result_stack[k2][l][e])).sum() - n0_k1 * n0_k2;
+                        float64 maxConsistency = n * fmin(n0_k1, n0_k2) - n0_k1 * n0_k2;
+						cindex += consistency/maxConsistency;
 					}
 				}
 				cindex = 2.0 * cindex / (__settings.folds * (__settings.folds - 1));
-				__cMat(i,j) = cindex;
+				__cMat(e,l) = cindex;
 			}
 		}
 		MatrixXd::Index best_eta_index, best_lambda_index;
