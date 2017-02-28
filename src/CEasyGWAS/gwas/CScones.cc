@@ -345,10 +345,10 @@ void CScones::__optimize_objective(VectorXd const& c, float64 const& lambda, Vec
 	// Matrix A containing As and At
 	MatrixXd A(__n_features,2);
 	//connect positive c values to sink
-	VectorXd pos_c = (c.array()<=0).select(0,c);
+	VectorXd pos_c = (c.array() <= 0).select(0, c);
 	//connect negative c values to source
 	VectorXd neg_c = -c;
-	neg_c = (neg_c.array()<=0).select(0,neg_c);
+	neg_c = (c.array() > 0).select(0, neg_c);
 	//Store data
 	A.col(0) = neg_c;
 	A.col(1) = pos_c;
@@ -436,7 +436,8 @@ void CScones::test_associations() throw (CSconesException) {
 		__gridsearch(y_train,x_train,cov_train);
 	}
 	//Evaluate all solutions and select the best eta and lambda according to the selection criterion
-	if(__settings.selection_criterion==CONSISTENCY) {
+	if(__settings.selection_criterion==CONSISTENCY)
+    {
 		// number of features
 		float64 n = __W.outerSize();
         float64 n1 = ceil(n*0.01);
@@ -465,25 +466,61 @@ void CScones::test_associations() throw (CSconesException) {
 				__cMat(e,l) = cindex;
 			}
 		}
-		MatrixXd::Index best_eta_index, best_lambda_index;
-		__best_c = __cMat.maxCoeff(&best_eta_index,&best_lambda_index);
-		__best_lambda = __settings.lambdas[best_lambda_index];
-		__best_eta = __settings.etas[best_eta_index];
-		//Selected Features for the best eta and lambda are those selected in all folds
-        __indicator_vector = VectorXd::Zero(__n_features);
-        if(__best_lambda>0.0 && __best_eta>0) { 
-            for(uint k=0; k<__settings.folds; k++) {
-                __indicator_vector += __result_stack[k][best_lambda_index][best_eta_index];
-            }
-            //Select only those features selected in all folds
-            __indicator_vector /= __settings.folds;
-            for(uint64 i=0; i<__indicator_vector.rows();i++) {
-                if(__indicator_vector(i)!=1) __indicator_vector(i)=0;
+	}
+    else if(__settings.selection_criterion==OBJECTIVE)
+    {
+        // number of features
+        float64 n = __W.outerSize();
+        float64 n1 = ceil(n*0.01);
+        __cMat = MatrixXd::Zero(__settings.etas.rows(),__settings.lambdas.rows());
+        for(int e=0; e<__settings.etas.rows();e++){
+            float64 eta = __settings.etas[e];
+
+            for(int l=0; l<__settings.lambdas.rows();l++) {
+                float64 lambda = __settings.lambdas[l];
+                float64 cindex = 0.0;
+                for(uint k1=0; k1<__settings.folds; k1++) {
+                    //inds.push_back(__result_stack[k1][l][e]);
+                    // count number of non-zero coefficients in sparse matrix
+                    float64 n0_k1 = __result_stack[k1][l][e].nonZeros();
+                    // if trivial solutions (no SNP/all SNPs/more than 1% of SNPs), skip this fold
+                    if (n0_k1==0 || n0_k1 == n || n0_k1 > n1) continue;
+                    // else scan what happens in folds with an index > than the current one
+                    for(uint k2=k1+1; k2<__settings.folds; k2++) {
+                        float64 n0_k2 = __result_stack[k2][l][e].nonZeros();
+                        if (n0_k2==0 || n0_k2 == n || n0_k2 > n1) continue;
+
+                        VectorXd terms = getObjectiveFunctionTerms(lambda, eta);
+                        cindex += terms.sum();
+                    }
+                }
+                cindex = 2.0 * cindex / (__settings.folds * (__settings.folds - 1));
+                __cMat(e,l) = cindex;
             }
         }
-        //ALTERNATIVE TO GET THE FINAL INDICATOR VECTOR, retrain model using the optimized parameters: HOWEVER this sometimes leads to different selections.
-        //test_associations(__best_lambda,__best_eta);
-	}
+    }
+
+    MatrixXd::Index best_eta_index, best_lambda_index;
+    __best_c = __cMat.maxCoeff(&best_eta_index,&best_lambda_index);
+    __best_lambda = __settings.lambdas[best_lambda_index];
+    __best_eta = __settings.etas[best_eta_index];
+    //Selected Features for the best eta and lambda are those selected in all folds
+    __indicator_vector = VectorXd::Zero(__n_features);
+    if(__best_lambda>0.0 && __best_eta>0) {
+        for(uint k=0; k<__settings.folds; k++) {
+            __indicator_vector += __result_stack[k][best_lambda_index][best_eta_index];
+        }
+        //Select only those features selected in all folds
+        __indicator_vector /= __settings.folds;
+        for(uint64 i=0; i<__indicator_vector.rows();i++) {
+            if(__indicator_vector(i)!=1) __indicator_vector(i)=0;
+        }
+    }
+
+    /*ALTERNATIVE TO GET THE FINAL INDICATOR VECTOR, retrain model using the optimized parameters:
+     *     test_associations(__best_lambda,__best_eta);
+     * HOWEVER this sometimes leads to different selections when some solutions are not picked
+     * in all folds but are in the global training. */
 }
 
 void CScones::test_associations(float64 const& lambda, float64 const& eta) {

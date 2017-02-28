@@ -6,6 +6,7 @@
 
 #define ROBUSTNESS 0
 #define CONSISTENCY 1
+#define OBJECTIVE 2
 
 #define SKAT 0
 #define CHISQ 1
