@@ -44,7 +44,7 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L) 
 	__settings = settings;
 	__covs_set = false;
     __binary_y = false;
-	
+
 	__y = y;
 	__X = X;
 	__W = L;
@@ -62,7 +62,7 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 	__settings = settings;
 	__covs_set = false;
     __binary_y = false;
-	
+
 	__y = y;
 	__X = X;
 	__W = L;
@@ -81,12 +81,12 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 	__settings = settings;
 	__covs_set = true;
     __binary_y = false;
-	
+
 	__covs = covs;
 	__y = y;
 	__X = X;
 	__W = L;
-	
+
 	__checkdata();
 
 	__n_samples = X.rows();
@@ -100,12 +100,12 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 	__settings = settings;
 	__covs_set = true;
     __binary_y = false;
-	
+
 	__covs = covs;
 	__y = y;
 	__X = X;
 	__W = L;
-	
+
 	__checkdata();
 
 	__n_samples = X.rows();
@@ -322,7 +322,7 @@ void CScones::maxflow(SparseMatrixXd const &A, MatrixXd const &T, VectorXd *indi
 				if(T(k,i)!=0) {
 					g->add_tweights(k,0.0,T(k,i));
 				}
-			}	
+			}
 		}
 	}
 	//Run maxflow algorithm
@@ -352,19 +352,19 @@ void CScones::__optimize_objective(VectorXd const& c, float64 const& lambda, Vec
 	//Store data
 	A.col(0) = neg_c;
 	A.col(1) = pos_c;
-	
+
 	//compute maxflow
 	maxflow(lW, A, indicator_vector);
-	
+
 	//compute objective score
 	if(__settings.evaluateObjective) {
 		(*objective_score) = 0.0;
 		for(uint i=0; i<c.rows(); i++) {
 			if((*indicator_vector)(i)==0) {
-				(*objective_score) += c(i); 
+				(*objective_score) += c(i);
 			}
 		}
-	
+
 		for(int64 k=0; k<lW.outerSize(); k++) {
 			for(Eigen::SparseMatrix<float64>::InnerIterator it(lW,k); it; ++it) {
 				if((*indicator_vector)(it.row())==1)
@@ -394,7 +394,7 @@ void CScones::__gridsearch(VectorXd const& y, MatrixXd const& x, MatrixXd const&
 	VectorXd c = __computeScoreStatistic(x,r);
 	VectorXd c_transformed;
 	std::vector<std::vector<SparseMatrixXd> > lambda_stack;
-	//Perform gridsearch to find optimal lambda and eta values 
+	//Perform gridsearch to find optimal lambda and eta values
 	for(uint i=0; i<__settings.lambdas.rows(); i++) {
 		std::vector<SparseMatrixXd> eta_stack;
 		for(uint j=0;j<__settings.etas.rows(); j++) {
@@ -423,7 +423,7 @@ void CScones::test_associations() throw (CSconesException) {
 	//Perform crossvalidated gridsearch to find parameters
 	CCrossValidation cv(__settings.seed);
 	cv.kFold(__settings.folds,__n_samples);
-	
+
 	for(uint k=0;k<__settings.folds;k++) {
 		VectorXd tr_indices = cv.getTrainingIndices(k);
 		//Slice data according to the indices
@@ -435,12 +435,14 @@ void CScones::test_associations() throw (CSconesException) {
 		}
 		__gridsearch(y_train,x_train,cov_train);
 	}
+
+	MatrixXd::Index best_eta_index, best_lambda_index;
 	//Evaluate all solutions and select the best eta and lambda according to the selection criterion
 	if(__settings.selection_criterion==CONSISTENCY)
     {
-		// number of features
-		float64 n = __W.outerSize();
-        float64 n1 = ceil(n*0.01);
+		// N number of features
+		float64 N = __W.outerSize();
+        float64 maxn = ceil(N*0.01);
 		__cMat = MatrixXd::Zero(__settings.etas.rows(),__settings.lambdas.rows());
 		for(int e=0; e<__settings.etas.rows();e++){
 			for(int l=0; l<__settings.lambdas.rows();l++) {
@@ -448,17 +450,17 @@ void CScones::test_associations() throw (CSconesException) {
 				for(uint k1=0; k1<__settings.folds; k1++) {
 					//inds.push_back(__result_stack[k1][l][e]);
                     // count number of non-zero coefficients in sparse matrix
-					float64 n0_k1 = __result_stack[k1][l][e].nonZeros();
-                    // if trivial solutions (no SNP/all SNPs/more than 1% of SNPs), skip this fold
-                    if (n0_k1==0 || n0_k1 == n || n0_k1 > n1) continue;
+					float64 n_k1 = __result_stack[k1][l][e].nonZeros();
+                    // if trivial solutions (no SNP/all SNPs/more than a threshold), skip this fold
+                    if (n_k1==0 || n_k1 == N || n_k1 > maxn) continue;
                     // else scan what happens in folds with an index > than the current one
 					for(uint k2=k1+1; k2<__settings.folds; k2++) {
-						float64 n0_k2 = __result_stack[k2][l][e].nonZeros();
-						if (n0_k2==0 || n0_k2 == n || n0_k2 > n1) continue;
+						float64 n_k2 = __result_stack[k2][l][e].nonZeros();
+						if (n_k2==0 || n_k2 == N || n_k2 > maxn) continue;
 
                         // normalize the consistency using the maximum possible consistency ie max 1
-                        float64 consistency = n * (__result_stack[k1][l][e].cwiseProduct(__result_stack[k2][l][e])).sum() - n0_k1 * n0_k2;
-                        float64 maxConsistency = n * fmin(n0_k1, n0_k2) - n0_k1 * n0_k2;
+                        float64 consistency = N * (__result_stack[k1][l][e].cwiseProduct(__result_stack[k2][l][e])).sum() - n_k1 * n_k2;
+                        float64 maxConsistency = N * fmin(n_k1, n_k2) - n_k1 * n_k2;
 						cindex += consistency/maxConsistency;
 					}
 				}
@@ -466,42 +468,55 @@ void CScones::test_associations() throw (CSconesException) {
 				__cMat(e,l) = cindex;
 			}
 		}
+		__best_c = __cMat.maxCoeff(&best_eta_index,&best_lambda_index);
 	}
-    else if(__settings.selection_criterion==OBJECTIVE)
+    else if(__settings.selection_criterion==INFORMATION)
     {
         // number of features
-        float64 n = __W.outerSize();
-        float64 n1 = ceil(n*0.01);
+        float64 N = __W.outerSize();
+        float64 maxn = ceil(N*0.1);
         __cMat = MatrixXd::Zero(__settings.etas.rows(),__settings.lambdas.rows());
         for(int e=0; e<__settings.etas.rows();e++){
             float64 eta = __settings.etas[e];
 
             for(int l=0; l<__settings.lambdas.rows();l++) {
                 float64 lambda = __settings.lambdas[l];
-                float64 cindex = 0.0;
-                for(uint k1=0; k1<__settings.folds; k1++) {
-                    //inds.push_back(__result_stack[k1][l][e]);
-                    // count number of non-zero coefficients in sparse matrix
-                    float64 n0_k1 = __result_stack[k1][l][e].nonZeros();
-                    // if trivial solutions (no SNP/all SNPs/more than 1% of SNPs), skip this fold
-                    if (n0_k1==0 || n0_k1 == n || n0_k1 > n1) continue;
-                    // else scan what happens in folds with an index > than the current one
-                    for(uint k2=k1+1; k2<__settings.folds; k2++) {
-                        float64 n0_k2 = __result_stack[k2][l][e].nonZeros();
-                        if (n0_k2==0 || n0_k2 == n || n0_k2 > n1) continue;
+				VectorXd indicator_vector = VectorXd::Zero(__n_features);
+				for(uint k = 0; k < __settings.folds; k++){
+					float64 n = __result_stack[k][l][e].nonZeros();
+					// if trivial solutions (no SNP/all SNPs/more than a threshold), skip this fold
+					if (n==0 || n == N || n > maxn) continue;
+					indicator_vector += __result_stack[k][l][e];
+				}
 
-                        VectorXd terms = getObjectiveFunctionTerms(lambda, eta);
-                        cindex += terms.sum();
-                    }
-                }
-                cindex = 2.0 * cindex / (__settings.folds * (__settings.folds - 1));
-                __cMat(e,l) = cindex;
+				// take only features picked across all folds
+				indicator_vector /= __settings.folds;
+				for(uint64 i=0; i<indicator_vector.rows();i++) {
+					if(indicator_vector(i)!=1) indicator_vector(i)=0;
+				}
+
+				// fit a model to the selected features
+				float64 AICc;
+				// max possible value if no features selected
+				if (indicator_vector.sum() == 0)
+					AICc = 1e31;
+				else
+				{
+					MatrixXd x_tr = sliceColsMatrixByBinaryVector(__X, indicator_vector);
+					if(__binary_y==true) {
+						__logistic_regression.fit(__y, x_tr);
+						AICc = __logistic_regression.getAICc();
+					} else {
+						__linear_regression.fit(__y, x_tr);
+						AICc = __linear_regression.getAICc();
+					}
+				}
+				__cMat(e,l) = AICc;
             }
         }
+		__best_c = __cMat.minCoeff(&best_eta_index,&best_lambda_index);
     }
 
-    MatrixXd::Index best_eta_index, best_lambda_index;
-    __best_c = __cMat.maxCoeff(&best_eta_index,&best_lambda_index);
     __best_lambda = __settings.lambdas[best_lambda_index];
     __best_eta = __settings.etas[best_eta_index];
     //Selected Features for the best eta and lambda are those selected in all folds

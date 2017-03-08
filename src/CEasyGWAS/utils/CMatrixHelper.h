@@ -27,6 +27,20 @@ inline MatrixXd sliceColsMatrix(MatrixXd const& m, VectorXd const& indices) {
 	return out;
 }
 
+inline MatrixXd sliceColsMatrixByBinaryVector(MatrixXd const &m, VectorXd const &binaryVec) {
+
+	int ncols = binaryVec.sum();
+	MatrixXd out(m.rows(), ncols);
+	int j = 0;
+	for(int64 i=0; i<m.cols(); i++) {
+		if (binaryVec(i) == 1) {
+			out.col(j) = m.col(i);
+			j++;
+		}
+	}
+	return out;
+}
+
 /*
 *Insert data at indices ind 
 */
