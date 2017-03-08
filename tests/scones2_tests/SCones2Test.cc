@@ -208,9 +208,9 @@ CSconesInitialSettings gridSearchParams_chisq = CSconesInitialSettings {
 
 INSTANTIATE_TEST_CASE_P(checkParameters, SearchMarkers,
     testing::Values(
-            /* gridSearchParams_skat,
+            gridSearchParams_skat,
             fixedParams_skat,
-            gridSearchParams_chisq,*/
+            gridSearchParams_chisq,
             gridSearchParams_information
     ));
 
