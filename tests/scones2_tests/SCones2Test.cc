@@ -117,7 +117,7 @@ TEST_P(SearchMarkers, checkSelectedSNPS) {
 
     scones -> test_associations();
     int out = scones -> getIndicatorVector().sum();
-    EXPECT_EQ(10, out);
+    EXPECT_EQ(sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]), out);
     for (unsigned int i = 0; i < sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]); i++){
         EXPECT_EQ(1, scones -> getIndicatorVector()(as.expected_causal_SNPs[i]));
     }
@@ -129,7 +129,7 @@ TEST_P(SearchMarkers, checkSelectedSNPs_fixedParameters) {
     scones -> test_associations(as.expected_lambda, as.expected_eta);
     VectorXd indicator = scones -> getIndicatorVector();
 
-    EXPECT_NEAR(10, indicator.sum(), 4);
+    EXPECT_NEAR(sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]), indicator.sum(), 4);
     for (unsigned int i = 0; i < sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]); i++) {
         EXPECT_EQ(1, indicator(as.expected_causal_SNPs[i]));
     }
@@ -167,11 +167,11 @@ CSconesInitialSettings gridSearchParams_information = CSconesInitialSettings {
         -1, // eta
         16681.00537, // expected_eta
         -1, // lambda
-        278.25594, // expected_lambda
+        2154.43469, // expected_lambda
         SKAT, // test_statistic
-        724379, // expected_association
-        44799.20, // expected_connectivity
-        166810, // expected_sparsity
+        820863, // expected_association
+        4308, // expected_connectivity
+        433706, // expected_sparsity
         "data/testing/scones/skat/", // path_prefix
         INFORMATION, // selection_criterion
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
