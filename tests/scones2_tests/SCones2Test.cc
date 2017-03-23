@@ -10,13 +10,14 @@ struct CSconesInitialSettings{
     float64 expected_eta;
     float64 lambda;
     float64 expected_lambda;
+    int griddepth;
     uint test_statistic;
     float64 expected_association;
     float64 expected_connectivity;
     float64 expected_sparsity;
     string path_prefix;
     int selection_criterion;
-    int expected_causal_SNPs[10];
+    vector<int> expected_causal_SNPs;
 
 };
 
@@ -59,6 +60,7 @@ struct SearchMarkers : public ::testing::Test, testing::WithParamInterface<CScon
         settings.evaluateObjective = true;
         settings.dump_intermediate_results = true;
         settings.dump_path = "tmp/";
+        settings.gridsearch_depth = GetParam().griddepth;
 
         if (eta >= 0 & lambda >= 0) {
             // set up specific lambda and eta
@@ -117,8 +119,8 @@ TEST_P(SearchMarkers, checkSelectedSNPS) {
 
     scones -> test_associations();
     int out = scones -> getIndicatorVector().sum();
-    EXPECT_EQ(10, out);
-    for (unsigned int i = 0; i < sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]); i++){
+    EXPECT_EQ(as.expected_causal_SNPs.size(), out);
+    for (unsigned int i = 0; i < as.expected_causal_SNPs.size(); i++){
         EXPECT_EQ(1, scones -> getIndicatorVector()(as.expected_causal_SNPs[i]));
     }
 }
@@ -129,8 +131,8 @@ TEST_P(SearchMarkers, checkSelectedSNPs_fixedParameters) {
     scones -> test_associations(as.expected_lambda, as.expected_eta);
     VectorXd indicator = scones -> getIndicatorVector();
 
-    EXPECT_NEAR(10, indicator.sum(), 4);
-    for (unsigned int i = 0; i < sizeof(as.expected_causal_SNPs)/sizeof(as.expected_causal_SNPs[0]); i++) {
+    EXPECT_EQ(as.expected_causal_SNPs.size(), indicator.sum());
+    for (unsigned int i = 0; i < as.expected_causal_SNPs.size(); i++){
         EXPECT_EQ(1, indicator(as.expected_causal_SNPs[i]));
     }
 }
@@ -149,11 +151,12 @@ TEST_P(SearchMarkers, checkOutputFiles) {
     CSconesIO::writeCMatrix(output_str, scones -> getCMatrix(), scones -> getSettings());
 }
 
-CSconesInitialSettings gridSearchParams_skat = CSconesInitialSettings {
+CSconesInitialSettings skat_grid_consistency = CSconesInitialSettings {
         -1, // eta
         16681.00537, // expected_eta
         -1, // lambda
         278.25594, // expected_lambda
+        1, // griddepth
         SKAT, // test_statistic
         724379, // expected_association
         44799.20, // expected_connectivity
@@ -163,25 +166,27 @@ CSconesInitialSettings gridSearchParams_skat = CSconesInitialSettings {
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
 };
 
-CSconesInitialSettings gridSearchParams_information = CSconesInitialSettings {
+CSconesInitialSettings skat_grid_information = CSconesInitialSettings {
         -1, // eta
         16681.00537, // expected_eta
         -1, // lambda
-        278.25594, // expected_lambda
+        2154.43469, // expected_lambda
+        1, // griddepth
         SKAT, // test_statistic
-        724379, // expected_association
-        44799.20, // expected_connectivity
-        166810, // expected_sparsity
+        820863, // expected_association
+        4308, // expected_connectivity
+        433706, // expected_sparsity
         "data/testing/scones/skat/", // path_prefix
         INFORMATION, // selection_criterion
-        {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
+        {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
 };
 
-CSconesInitialSettings fixedParams_skat = CSconesInitialSettings {
+CSconesInitialSettings skat_fixed = CSconesInitialSettings {
         17000, // eta
         17000, // expected_eta
         300, // lambda
         300, // expected_lambda
+        1, // griddepth
         SKAT, // test_statistic
         724379, // expected_association
         48300, // expected_connectivity
@@ -191,11 +196,12 @@ CSconesInitialSettings fixedParams_skat = CSconesInitialSettings {
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
 };
 
-CSconesInitialSettings gridSearchParams_chisq = CSconesInitialSettings {
+CSconesInitialSettings chisq_fixed = CSconesInitialSettings {
         13.0694, // eta
         13.0694, // expected_eta
         0.218, // lambda
         0.218, // expected_lambda
+        1, // griddepth
         CHISQ, // test_statistic
         517.83, // expected_association
         35.1, // expected_connectivity
@@ -206,12 +212,29 @@ CSconesInitialSettings gridSearchParams_chisq = CSconesInitialSettings {
 
 };
 
+CSconesInitialSettings chisq_grid5_information = CSconesInitialSettings {
+        -1, // eta
+        6.339, // expected_eta
+        -1, // lambda
+        0.467, // expected_lambda
+        5, // griddepth
+        SKAT, // test_statistic
+        606.48, // expected_association
+        1.20, // expected_connectivity
+        164, // expected_sparsity
+        "data/testing/scones/skat/", // path_prefix
+        CONSISTENCY, // selection_criterion
+        {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
+
+};
+
 INSTANTIATE_TEST_CASE_P(checkParameters, SearchMarkers,
     testing::Values(
-            gridSearchParams_skat,
-            fixedParams_skat,
-            gridSearchParams_chisq,
-            gridSearchParams_information
+            skat_fixed,
+            skat_grid_consistency,
+            skat_grid_information,
+            chisq_fixed,
+            chisq_grid5_information
     ));
 
 
