@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD 11)
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/CEasyGWAS/*.cc ${PROJECT_SOURCE_DIR}/src/*.h
         ${PROJECT_SOURCE_DIR}/src/CEasyGWAS/*/*.cc ${PROJECT_SOURCE_DIR}/src/*/*.h
         ${PROJECT_SOURCE_DIR}/src/External/Eigen/*.cc ${PROJECT_SOURCE_DIR}/src/External/Eigen/*.h)
-
-include_directories(/bioinfo/users/hcliment/libs/boost_1_63/include ${PROJECT_SOURCE_DIR}/src/
+find_package(Boost)
+include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src/
         ${PROJECT_SOURCE_DIR}/External ${PROJECT_SOURCE_DIR}/External/Eigen
         ${PROJECT_SOURCE_DIR}/External/maxflow ${PROJECT_SOURCE_DIR}/External/Cephes)
 
