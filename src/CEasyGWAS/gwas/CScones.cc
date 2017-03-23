@@ -298,13 +298,6 @@ void CScones::__autoParameters() {
 	__settings.lambdas = __settings.etas;
 }
 
-void CScones::__autoParameters(float64 minc, float64 maxc) {
-    __settings.etas = VectorXd::LinSpaced(__settings.nParameters, minc, maxc);
-    for(int i=0; i<__settings.etas.rows(); i++)
-        __settings.etas(i) = pow(10,__settings.etas(i));
-    __settings.lambdas = __settings.etas;
-}
-
 //void CScones::maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* indicator_vector) {
 void CScones::maxflow(SparseMatrixXd const &A, MatrixXd const &T, VectorXd *indicator_vector) {
 	indicator_vector->resize(__n_features);
@@ -432,8 +425,9 @@ void CScones::test_associations() throw (CSconesException) {
     //Perform crossvalidated gridsearch to find parameters
     CCrossValidation cv(__settings.seed);
     cv.kFold(__settings.folds,__n_samples);
+    MatrixXd::Index best_eta_index, best_lambda_index;
 
-    for (int i=0; i < __settings.gridsearch_depth; i++){
+    for (int i=1; i <= __settings.gridsearch_depth; i++){
         for(uint k=0;k<__settings.folds;k++) {
             VectorXd tr_indices = cv.getTrainingIndices(k);
             //Slice data according to the indices
@@ -446,7 +440,6 @@ void CScones::test_associations() throw (CSconesException) {
             __gridsearch(y_train,x_train,cov_train);
         }
 
-        MatrixXd::Index best_eta_index, best_lambda_index;
         //Evaluate all solutions and select the best eta and lambda according to the selection criterion
         if(__settings.selection_criterion==CONSISTENCY)
         {
@@ -461,17 +454,37 @@ void CScones::test_associations() throw (CSconesException) {
 
         __best_lambda = __settings.lambdas[best_lambda_index];
         __best_eta = __settings.etas[best_eta_index];
-        //Selected Features for the best eta and lambda are those selected in all folds
-        __indicator_vector = VectorXd::Zero(__n_features);
-        if(__best_lambda>0.0 && __best_eta>0) {
-            for(uint k=0; k<__settings.folds; k++) {
-                __indicator_vector += __result_stack[k][best_lambda_index][best_eta_index];
-            }
-            //Select only those features selected in all folds
-            __indicator_vector /= __settings.folds;
-            for(uint64 i=0; i<__indicator_vector.rows();i++) {
-                if(__indicator_vector(i)!=1) __indicator_vector(i)=0;
-            }
+
+        // if it's not the last iteration,
+        // recalculate lambda and eta ranges according to best lambda and eta found
+        if (i < __settings.gridsearch_depth){
+            float64 best_lambda_mag = log10(__best_lambda);
+            float64 deltal = (log10(__settings.lambdas.maxCoeff()) - log10(__settings.lambdas.minCoeff())) * 0.2;
+            __settings.lambdas = VectorXd::LinSpaced(__settings.nParameters, best_lambda_mag - deltal, best_lambda_mag + deltal);
+            for(int i=0; i<__settings.lambdas.rows(); i++)
+                __settings.lambdas(i) = pow(10,__settings.lambdas(i));
+
+            float64 best_eta_mag = log10(__best_eta);
+            float64 deltae = (log10(__settings.etas.maxCoeff()) - log10(__settings.etas.minCoeff())) * 0.2;
+            __settings.etas = VectorXd::LinSpaced(__settings.nParameters, best_eta_mag - deltae, best_eta_mag + deltae);
+            for(int i=0; i<__settings.etas.rows(); i++)
+                __settings.etas(i) = pow(10,__settings.etas(i));
+
+            // clear __result_stack for next iteration
+            __result_stack.clear();
+        }
+    }
+
+    //Selected Features for the best eta and lambda are those selected in all folds
+    __indicator_vector = VectorXd::Zero(__n_features);
+    if(__best_lambda>0.0 && __best_eta>0) {
+        for(uint k=0; k<__settings.folds; k++) {
+            __indicator_vector += __result_stack[k][best_lambda_index][best_eta_index];
+        }
+        //Select only those features selected in all folds
+        __indicator_vector /= __settings.folds;
+        for(uint64 i=0; i<__indicator_vector.rows();i++) {
+            if(__indicator_vector(i)!=1) __indicator_vector(i)=0;
         }
     }
 

@@ -42,7 +42,7 @@ typedef class CSconesSettings {
 		VectorXd lambdas; //vector of lambda values
 		VectorXd etas; //vector of eta values
 		bool evaluateObjective; //flag if objective function should be evaluated
-        int gridsearch_depth = 1; // number of times a gridsearch must be performed, zooming in every time
+        int gridsearch_depth; // number of times a gridsearch must be performed, zooming in every time
 
 		CSconesSettings();
 } scones_settings;
@@ -85,7 +85,6 @@ class CScones {
 
 		void __checkdata() throw (CSconesException);
 		void __autoParameters();
-        void __autoParameters(float64, float64);
 		void __selectRegressionModel();
 		void __optimize_objective(VectorXd const&, float64 const&, VectorXd*, float64*);
 		void __gridsearch(VectorXd const&, MatrixXd const&, MatrixXd const&) throw (CSconesException);
