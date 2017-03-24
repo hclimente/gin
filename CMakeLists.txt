@@ -18,3 +18,7 @@ add_subdirectory (${PROJECT_SOURCE_DIR}/External/Cephes)
 add_subdirectory (${PROJECT_SOURCE_DIR}/External/maxflow)
 add_subdirectory (${PROJECT_SOURCE_DIR}/tests)
 add_subdirectory (${PROJECT_SOURCE_DIR}/src)
+
+install(TARGETS CEasyGWAS
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib)
