@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
 		("outdir,o", po::value<string>()->default_value("."), "Output directory.")
 		("encoding,s", po::value<string>()->default_value("additive"), "snp_encoding.")
 		("pc,c", po::value<int>()->default_value(0), "PC.")
+		("seed,z", po::value<int>()->default_value(0), "Random state seed.")
         ("score,t", po::value<string>()->default_value("skat"), "Association score.")
 		("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
 		("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
@@ -49,6 +50,7 @@ int main(int argc, char* argv[]) {
 	string outfolder_str = vm["outdir"].as<string>();
 	string snp_encoding = vm["encoding"].as<string>();
 	int pcs = vm["pc"].as<int>();
+	int seed = vm["seed"].as<int>();
     string association_score = vm["score"].as<string>();
 	double lambda = vm["lambda"].as<double>();
 	double eta = vm["eta"].as<double>();
@@ -65,6 +67,7 @@ int main(int argc, char* argv[]) {
 	}
 
     CSconesSettings settings;
+	settings.seed = seed;
     if (lambda != -1 & eta != -1){
         VectorXd l(1);
         l(0) = lambda;
