@@ -13,7 +13,6 @@ include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src/
 add_library(CEasyGWAS SHARED ${SOURCES})
 target_link_libraries (CEasyGWAS cephes maxflow)
 
-add_subdirectory (${PROJECT_SOURCE_DIR}/rscones2)
 add_subdirectory (${PROJECT_SOURCE_DIR}/External/Cephes)
 add_subdirectory (${PROJECT_SOURCE_DIR}/External/maxflow)
 add_subdirectory (${PROJECT_SOURCE_DIR}/tests)
