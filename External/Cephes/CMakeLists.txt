@@ -1,4 +1,4 @@
-add_library(cephes SHARED cephes.h double/acosh.c double/airy.c double/asin.c double/asinh.c
+add_library(cephes STATIC cephes.h double/acosh.c double/airy.c double/asin.c double/asinh.c
         double/atan.c double/atanh.c double/bdtr.c double/beta.c
         double/btdtr.c double/chbevl.c double/chdtr.c double/clog.c
         double/cmplx.c double/const.c double/cosh.c double/dawsn.c
