@@ -6,7 +6,9 @@
 
 #define ROBUSTNESS 0
 #define CONSISTENCY 1
-#define INFORMATION 2
+#define AICc 2
+#define BIC 3
+#define AICcn 4
 
 #define SKAT 0
 #define CHISQ 1
@@ -89,7 +91,7 @@ class CScones {
 		void __optimize_objective(VectorXd const&, float64 const&, VectorXd*, float64*);
 		void __gridsearch(VectorXd const&, MatrixXd const&, MatrixXd const&) throw (CSconesException);
         MatrixXd __evaluateConsistency() throw (CSconesException);
-        MatrixXd __evaluateAICc() throw (CSconesException);
+        MatrixXd __evaluateInformation() throw (CSconesException);
 
 		VectorXd __computeScoreStatistic(MatrixXd const&, VectorXd const&);
 		VectorXd __computeSKATScore(MatrixXd const&, VectorXd const&);

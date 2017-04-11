@@ -446,9 +446,9 @@ void CScones::test_associations() throw (CSconesException) {
             __cMat = __evaluateConsistency();
             __best_c = __cMat.maxCoeff(&best_eta_index,&best_lambda_index);
         }
-        else if(__settings.selection_criterion==INFORMATION)
+        else if(__settings.selection_criterion == AICc | __settings.selection_criterion == BIC | __settings.selection_criterion == AICcn)
         {
-            __cMat = __evaluateAICc();
+            __cMat = __evaluateInformation();
             __best_c = __cMat.minCoeff(&best_eta_index,&best_lambda_index);
         }
 
@@ -528,8 +528,15 @@ MatrixXd CScones::__evaluateConsistency() throw (CSconesException){
     return gridResults;
 }
 
-MatrixXd CScones::__evaluateAICc() throw (CSconesException) {
+MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
     MatrixXd gridResults;
+
+	SparseMatrixXd W = __W;
+	MatrixXd D = MatrixXd::Zero(__indicator_vector.size(), __indicator_vector.size());
+	D.diagonal() = MatrixXd(W).rowwise().sum();
+	MatrixXd L = D;
+	L -= W;
+
     // number of features
     float64 N = __W.outerSize();
     float64 maxn = ceil(N*0.1);
@@ -554,22 +561,32 @@ MatrixXd CScones::__evaluateAICc() throw (CSconesException) {
             }
 
             // fit a model to the selected features
-            float64 AICc;
+            float64 informationMetric;
             // max possible value if no features selected
             if (indicator_vector.sum() == 0)
-                AICc = 1e31;
+				informationMetric = 1e31;
             else
             {
                 MatrixXd x_tr = sliceColsMatrixByBinaryVector(__X, indicator_vector);
                 if(__binary_y==true) {
                     __logistic_regression.fit(__y, x_tr);
-                    AICc = __logistic_regression.getAICc();
+					if(__settings.selection_criterion == AICc)
+						informationMetric = __logistic_regression.getAICc();
+					else if(__settings.selection_criterion == BIC)
+						informationMetric = __logistic_regression.getBIC();
+					else if(__settings.selection_criterion == AICcn)
+						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * L * indicator_vector;
                 } else {
                     __linear_regression.fit(__y, x_tr);
-                    AICc = __linear_regression.getAICc();
+					if(__settings.selection_criterion == AICc)
+						informationMetric = __linear_regression.getAICc();
+					else if(__settings.selection_criterion == BIC)
+						informationMetric = __linear_regression.getBIC();
+					else if(__settings.selection_criterion == AICcn)
+						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * L * indicator_vector;
                 }
             }
-            gridResults(e,l) = AICc;
+            gridResults(e,l) = informationMetric;
         }
     }
 

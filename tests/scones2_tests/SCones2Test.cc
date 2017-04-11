@@ -177,7 +177,7 @@ CSconesInitialSettings skat_grid_information = CSconesInitialSettings {
         4308, // expected_connectivity
         433706, // expected_sparsity
         "data/testing/scones/skat/", // path_prefix
-        INFORMATION, // selection_criterion
+        AICc, // selection_criterion
         {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
 };
 
