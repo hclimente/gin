@@ -29,6 +29,8 @@ int main(int argc, char* argv[]) {
 		("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
 		("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
         ("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
+		("model_selection,x", po::value<string>()->default_value("cons"), "Metric to evaluate models.")
+		("depth,y", po::value<int>()->default_value(3), "Depth of the grid search.")
 		("help,h", "Produce this help message and exit.")
 	;
 
@@ -55,6 +57,8 @@ int main(int argc, char* argv[]) {
 	double lambda = vm["lambda"].as<double>();
 	double eta = vm["eta"].as<double>();
     bool debug = vm["debug"].as<bool>();
+	string model_selection = vm["model_selection"].as<string>();
+	int depth = vm["depth"].as<int>();
 
 	uint encoding = 0;
 	if(snp_encoding=="additive") encoding = 0;
@@ -80,9 +84,16 @@ int main(int argc, char* argv[]) {
     }
 
     if (association_score == "chisq")
-        settings.test_statistic = 1;
+        settings.test_statistic = CHISQ;
 
-    GWASData data;
+	settings.gridsearch_depth = depth;
+
+	if (model_selection == "cons") settings.selection_criterion = CONSISTENCY;
+	else if (model_selection == "aicc") settings.selection_criterion = AICc;
+	else if (model_selection == "bic") settings.selection_criterion = BIC;
+	else if (model_selection == "aiccn") settings.selection_criterion = AICcn;
+
+	GWASData data;
 
 	float64 begin;
 	begin = clock();
