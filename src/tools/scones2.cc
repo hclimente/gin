@@ -20,17 +20,17 @@ int main(int argc, char* argv[]) {
 		("ped,p", po::value<string>(), "Plink genotype file.")
 		("pheno,f", po::value<string>(), "Plink phenotype file.")
 		("net,n", po::value<string>(), "Sparse network file.")
+		("association_score,t", po::value<string>()->default_value("skat"), "Association score.")
+		("model_selection,x", po::value<string>()->default_value("cons"), "Metric to evaluate models.")
+		("depth,y", po::value<int>()->default_value(3), "Depth of the grid search.")
 		("maf,m", po::value<double>()->default_value(0.05), "Float minor allele frequency filter.")
+		("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
+		("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
 		("outdir,o", po::value<string>()->default_value("."), "Output directory.")
 		("encoding,s", po::value<string>()->default_value("additive"), "snp_encoding.")
 		("pc,c", po::value<int>()->default_value(0), "PC.")
 		("seed,z", po::value<int>()->default_value(0), "Random state seed.")
-        ("score,t", po::value<string>()->default_value("skat"), "Association score.")
-		("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
-		("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
         ("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
-		("model_selection,x", po::value<string>()->default_value("cons"), "Metric to evaluate models.")
-		("depth,y", po::value<int>()->default_value(3), "Depth of the grid search.")
 		("help,h", "Produce this help message and exit.")
 	;
 
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 	string snp_encoding = vm["encoding"].as<string>();
 	int pcs = vm["pc"].as<int>();
 	int seed = vm["seed"].as<int>();
-    string association_score = vm["score"].as<string>();
+    string association_score = vm["association_score"].as<string>();
 	double lambda = vm["lambda"].as<double>();
 	double eta = vm["eta"].as<double>();
     bool debug = vm["debug"].as<bool>();
