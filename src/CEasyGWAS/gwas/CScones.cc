@@ -428,6 +428,9 @@ void CScones::test_associations() throw (CSconesException) {
     MatrixXd::Index best_eta_index, best_lambda_index;
 
     for (int i=1; i <= __settings.gridsearch_depth; i++){
+
+		logging(STATUS, "Exploring grid. Step " + StringHelper::to_string<int>(i) + " of " + StringHelper::to_string<int>(__settings.gridsearch_depth) + ".");
+
         for(uint k=0;k<__settings.folds;k++) {
             VectorXd tr_indices = cv.getTrainingIndices(k);
             //Slice data according to the indices
@@ -532,7 +535,7 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
     MatrixXd gridResults;
 
 	SparseMatrixXd W = __W;
-	MatrixXd D = MatrixXd::Zero(__indicator_vector.size(), __indicator_vector.size());
+	MatrixXd D = MatrixXd::Zero(__n_features, __n_features);
 	D.diagonal() = MatrixXd(W).rowwise().sum();
 	MatrixXd L = D;
 	L -= W;
