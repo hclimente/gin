@@ -461,15 +461,15 @@ void CScones::test_associations() throw (CSconesException) {
         // if it's not the last iteration,
         // recalculate lambda and eta ranges according to best lambda and eta found
         if (i < __settings.gridsearch_depth){
-            float64 best_lambda_mag = log10(__best_lambda);
-            float64 deltal = (log10(__settings.lambdas.maxCoeff()) - log10(__settings.lambdas.minCoeff())) * 0.2;
-            __settings.lambdas = VectorXd::LinSpaced(__settings.nParameters, best_lambda_mag - deltal, best_lambda_mag + deltal);
+            float64 order_lambdas = log10(__best_lambda);
+            float64 incr_lambdas = (log10(__settings.lambdas.maxCoeff()) - log10(__settings.lambdas.minCoeff())) * 0.2;
+            __settings.lambdas = VectorXd::LinSpaced(__settings.nParameters, order_lambdas - incr_lambdas, order_lambdas + incr_lambdas);
             for(int i=0; i<__settings.lambdas.rows(); i++)
                 __settings.lambdas(i) = pow(10,__settings.lambdas(i));
 
-            float64 best_eta_mag = log10(__best_eta);
-            float64 deltae = (log10(__settings.etas.maxCoeff()) - log10(__settings.etas.minCoeff())) * 0.2;
-            __settings.etas = VectorXd::LinSpaced(__settings.nParameters, best_eta_mag - deltae, best_eta_mag + deltae);
+            float64 order_etas = log10(__best_eta);
+            float64 incr_etas = (log10(__settings.etas.maxCoeff()) - log10(__settings.etas.minCoeff())) * 0.2;
+            __settings.etas = VectorXd::LinSpaced(__settings.nParameters, order_etas - incr_etas, order_etas + incr_etas);
             for(int i=0; i<__settings.etas.rows(); i++)
                 __settings.etas(i) = pow(10,__settings.etas(i));
 
