@@ -57,6 +57,7 @@ class CScones {
 		SparseMatrixXd __W; //Sparse Network Adjacency Matrix
 		DiagXd __sW; //Diagonal Matrix with weights for SCAT statistic
 		MatrixXd __covs; //Covariate MatrixXd
+		SparseMatrixXd __L; // Laplacian matrix
 
 		/* Store results in data structure with the following format
 		 * vector for the same kfold
@@ -96,6 +97,7 @@ class CScones {
 		VectorXd __computeScoreStatistic(MatrixXd const&, VectorXd const&);
 		VectorXd __computeSKATScore(MatrixXd const&, VectorXd const&);
 		VectorXd __computeChisqScore(MatrixXd const&, VectorXd const&);
+		SparseMatrixXd __computeLaplacianMatrix();
 	public:
 		CScones();
 		CScones(VectorXd const&, MatrixXd const&, SparseMatrixXd const&) throw (CSconesException);
@@ -115,7 +117,7 @@ class CScones {
 		CSconesSettings getSettings();
         VectorXd getIndicatorVector();
 		VectorXd getScoreStatistic();
-        SparseMatrixXd getLaplacianMatrix();
+        
         float64 getObjectiveScore();
 		float64 getBestLambda();
 		float64 getBestEta();

@@ -57,6 +57,7 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L) 
 
 	__sW = DiagXd(__n_features);
 	__sW.diagonal() = VectorXd::Ones(__n_features);
+	__L = __computeLaplacianMatrix();
 }
 
 CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, CSconesSettings const& settings) throw (CSconesException) {
@@ -75,6 +76,7 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 
 	__sW = DiagXd(__n_features);
 	__sW.diagonal() = VectorXd::Ones(__n_features);
+	__L = __computeLaplacianMatrix();
 }
 
 CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, MatrixXd const& covs) throw (CSconesException) {
@@ -95,6 +97,7 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 
 	__sW = DiagXd(__n_features);
 	__sW.diagonal() = VectorXd::Ones(__n_features);
+	__L = __computeLaplacianMatrix();
 }
 
 CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, MatrixXd const& covs, CSconesSettings const& settings) throw (CSconesException) {
@@ -114,6 +117,7 @@ CScones::CScones(VectorXd const& y, MatrixXd const& X, SparseMatrixXd const& L, 
 
 	__sW = DiagXd(__n_features);
 	__sW.diagonal() = VectorXd::Ones(__n_features);
+	__L = __computeLaplacianMatrix();
 }
 
 void CScones::__checkdata() throw (CSconesException) {
@@ -534,21 +538,6 @@ MatrixXd CScones::__evaluateConsistency() throw (CSconesException){
 MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
     MatrixXd gridResults;
 
-	SparseMatrixXd W = __W;
-    SparseMatrixXd D(__n_features, __n_features);
-
-	typedef Eigen::Triplet<double> T;
-	std::vector<T> diagonal;
-	diagonal.reserve(__n_features);
-	VectorXd degree = MatrixXd(W).rowwise().sum();
-
-	for (int i = 0; i < __n_features; i++)
-		diagonal.push_back(T(i, i, degree(i)));
-
-	D.setFromTriplets(diagonal.begin(), diagonal.end());
-    SparseMatrixXd L = D;
-	L -= W;
-
     // number of features
     float64 N = __W.outerSize();
     float64 maxn = ceil(N*0.1);
@@ -587,7 +576,7 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
 					else if(__settings.selection_criterion == BIC)
 						informationMetric = __logistic_regression.getBIC();
 					else if(__settings.selection_criterion == AICcn)
-						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * L * indicator_vector;
+						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * __L * indicator_vector;
                 } else {
                     __linear_regression.fit(__y, x_tr);
 					if(__settings.selection_criterion == AICc)
@@ -595,7 +584,7 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
 					else if(__settings.selection_criterion == BIC)
 						informationMetric = __linear_regression.getBIC();
 					else if(__settings.selection_criterion == AICcn)
-						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * L * indicator_vector;
+						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * __L * indicator_vector;
                 }
             }
             gridResults(e,l) = informationMetric;
@@ -629,9 +618,7 @@ void CScones::test_associations(float64 const& lambda, float64 const& eta) {
 VectorXd CScones::getObjectiveFunctionTerms(float64 const& lambda, float64 const& eta){
 	VectorXd terms(3);
 
-	SparseMatrixXd L = getLaplacianMatrix();
-
-	double connectivity = lambda * __indicator_vector.transpose() * L * __indicator_vector;
+	double connectivity = lambda * __indicator_vector.transpose() * __L * __indicator_vector;
 	double sparsity = eta * __indicator_vector.sum();
 
     // association
@@ -666,7 +653,7 @@ VectorXd CScones::getScoreStatistic() {
 	return c;
 }
 
-SparseMatrixXd CScones::getLaplacianMatrix() {
+SparseMatrixXd CScones::__computeLaplacianMatrix() {
 
 	SparseMatrixXd W = __W;
 	SparseMatrixXd D(__n_features, __n_features);
