@@ -7,6 +7,10 @@ file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/CEasyGWAS/*.cc ${PROJECT_SOU
      ${PROJECT_SOURCE_DIR}/src/CEasyGWAS/*/*.cc ${PROJECT_SOURCE_DIR}/src/*/*.h
      ${PROJECT_SOURCE_DIR}/src/External/eigen/*.cc ${PROJECT_SOURCE_DIR}/src/External/eigen/*.h)
 
+if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+    SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -g" )
+endif (CMAKE_BUILD_TYPE EQUAL "DEBUG")
+
 find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src/
         ${PROJECT_SOURCE_DIR}/External ${PROJECT_SOURCE_DIR}/External/eigen
