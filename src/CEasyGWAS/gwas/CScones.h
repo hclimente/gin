@@ -115,7 +115,8 @@ class CScones {
 		CSconesSettings getSettings();
         VectorXd getIndicatorVector();
 		VectorXd getScoreStatistic();
-		float64 getObjectiveScore();
+        SparseMatrixXd getLaplacianMatrix();
+        float64 getObjectiveScore();
 		float64 getBestLambda();
 		float64 getBestEta();
         SparseMatrixXd getW();

@@ -535,9 +535,18 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
     MatrixXd gridResults;
 
 	SparseMatrixXd W = __W;
-	MatrixXd D = MatrixXd::Zero(__n_features, __n_features);
-	D.diagonal() = MatrixXd(W).rowwise().sum();
-	MatrixXd L = D;
+    SparseMatrixXd D(__n_features, __n_features);
+
+	typedef Eigen::Triplet<double> T;
+	std::vector<T> diagonal;
+	diagonal.reserve(__n_features);
+	VectorXd degree = MatrixXd(W).rowwise().sum();
+
+	for (int i = 0; i < __n_features; i++)
+		diagonal.push_back(T(i, i, degree(i)));
+
+	D.setFromTriplets(diagonal.begin(), diagonal.end());
+    SparseMatrixXd L = D;
 	L -= W;
 
     // number of features
@@ -620,11 +629,7 @@ void CScones::test_associations(float64 const& lambda, float64 const& eta) {
 VectorXd CScones::getObjectiveFunctionTerms(float64 const& lambda, float64 const& eta){
 	VectorXd terms(3);
 
-	SparseMatrixXd W = __W;
-	MatrixXd D = MatrixXd::Zero(__indicator_vector.size(), __indicator_vector.size());
-	D.diagonal() = MatrixXd(W).rowwise().sum();
-	MatrixXd L = D;
-	L -= W;
+	SparseMatrixXd L = getLaplacianMatrix();
 
 	double connectivity = lambda * __indicator_vector.transpose() * L * __indicator_vector;
 	double sparsity = eta * __indicator_vector.sum();
@@ -659,4 +664,24 @@ VectorXd CScones::getScoreStatistic() {
 	VectorXd c = __computeScoreStatistic(__X,r);
 
 	return c;
+}
+
+SparseMatrixXd CScones::getLaplacianMatrix() {
+
+	SparseMatrixXd W = __W;
+	SparseMatrixXd D(__n_features, __n_features);
+
+	typedef Eigen::Triplet<double> T;
+	std::vector<T> diagonal;
+	diagonal.reserve(__n_features);
+	VectorXd degree = MatrixXd(W).rowwise().sum();
+
+	for (int i = 0; i < __n_features; i++)
+		diagonal.push_back(T(i, i, degree(i)));
+
+	D.setFromTriplets(diagonal.begin(), diagonal.end());
+	SparseMatrixXd L = D;
+	L -= W;
+
+	return L;
 }
