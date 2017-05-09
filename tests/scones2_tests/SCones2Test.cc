@@ -214,14 +214,14 @@ CSconesInitialSettings chisq_fixed = CSconesInitialSettings {
 
 CSconesInitialSettings chisq_grid5_information = CSconesInitialSettings {
         -1, // eta
-        6.339, // expected_eta
+        33435.468, // expected_eta
         -1, // lambda
-        0.467, // expected_lambda
+        3.385, // expected_lambda
         5, // griddepth
         SKAT, // test_statistic
-        606.48, // expected_association
-        1.20, // expected_connectivity
-        164, // expected_sparsity
+        625692, // expected_association
+        453.695, // expected_connectivity
+        234048, // expected_sparsity
         "data/testing/scones/skat/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
