@@ -661,7 +661,11 @@ SparseMatrixXd CScones::__computeLaplacianMatrix() {
 	typedef Eigen::Triplet<double> T;
 	std::vector<T> diagonal;
 	diagonal.reserve(__n_features);
-	VectorXd degree = MatrixXd(W).rowwise().sum();
+
+	VectorXd degree = VectorXd::Zero(__n_features);
+	for (int k = 0; k < W.outerSize(); ++k)
+		for (SparseMatrixXd::InnerIterator it(W, k); it; ++it)
+			degree(it.row()) += 1;
 
 	for (int i = 0; i < __n_features; i++)
 		diagonal.push_back(T(i, i, degree(i)));
