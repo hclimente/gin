@@ -1,6 +1,6 @@
 [submodule "tests/lib/googletest"]
 	path = tests/lib/googletest
-	url = https://github.com/google/googletest.git
+	url = ssh://git@github.com/google/googletest.git
 [submodule "External/eigen"]
 	path = External/eigen
-	url = https://github.com/RLovelett/eigen.git
+	url = ssh://git@github.com/RLovelett/eigen.git
