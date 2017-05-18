@@ -1,4 +1,0 @@
-Import('env','easycore')
-env_copy = env.Clone()
-program = env_copy.Program('fastanova.cc')
-Return('program')
