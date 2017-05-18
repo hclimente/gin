@@ -1,6 +1,6 @@
-project(scones2)
+project(gin)
 
 # add extra lib directories
-add_executable(scones2 ${PROJECT_SOURCE_DIR}/tools/scones2.cc ${SOURCES})
+add_executable(gin ${PROJECT_SOURCE_DIR}/tools/gin.cc ${SOURCES})
 
-target_link_libraries (scones2 boost_program_options cephes maxflow CEasyGWAS)
+target_link_libraries (gin boost_program_options cephes maxflow CEasyGWAS)
