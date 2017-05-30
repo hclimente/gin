@@ -17,7 +17,8 @@ build/*
 cmake-build-debug/*
 nbproject/*
 rscones2.Rcheck/*
-
+.DS_Store
+bin/*
 
 # Created by https://www.gitignore.io/api/clion,r,python,c++,git
 
