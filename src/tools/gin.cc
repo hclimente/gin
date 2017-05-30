@@ -200,13 +200,9 @@ int main(int argc, char* argv[]) {
 			logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 			begin = clock();
-			string output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.txt";
-			logging(STATUS,"Writing output to " + output_str);
-			CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
-			output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.pmatrix.txt";
+            string output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.pmatrix.txt";
 			logging(STATUS,"Writing pmatrix to " + output_str);
 			CSconesIO::writeCMatrix(output_str, scones.getCMatrix(),scones.getSettings());
-			logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 			if (debug){
                 VectorXd terms = scones.getObjectiveFunctionTerms(lambda,eta);
@@ -214,17 +210,15 @@ int main(int argc, char* argv[]) {
 				output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.ext.txt";
 				logging(STATUS,"Writing extended output to " + output_str);
                 CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta(),terms,skat);
-				logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
-                output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.L.txt";
-                logging(STATUS,"Writing Laplacian matrix to " + output_str);
-				CSconesIO::writeAdjacencyMatrix(output_str, tmpData);
-                logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
-
-			}
-
-
-		}
+			} else {
+                output_str = outfolder_str + "/" + data.phenotype_names[i] + ".scones.out.txt";
+                logging(STATUS,"Writing output to " + output_str);
+                CSconesIO::writeOutput(output_str, tmpData, scones.getIndicatorVector(),scones.getBestLambda(),scones.getBestEta());
+            }
+            logging(WARNING,"Finished in " + StringHelper::to_string<clock_t>((clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+            
+        }
 
 		//logging(STATUS,"Indicator Vector:");
 		//logging(INFO,scones.getIndicatorVector().transpose());
