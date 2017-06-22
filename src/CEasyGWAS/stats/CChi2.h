@@ -1,6 +1,12 @@
 #ifndef CCHI2_CLASS
 #define CCHI2_CLASS
 
+#include <cmath>
+#include <iostream>
+#include <iterator>
+#include <set>
+
+#include "Cephes/cephes.h"
 #include "CEasyGWAS/globals.h"
 
 
@@ -24,18 +30,22 @@ class CChi2Exception {
 * CChi2 Class: Chi2 Distribution class
 */
 class CChi2 {
-	
-	private:
-		static void __checkParameters(float64 const&) throw (CChi2Exception);
 
-	public:
-		static float64 cdf(float64 const&, float64 const&) throw (CChi2Exception);
-		static float64 logcdf(float64 const&, float64 const&) throw (CChi2Exception);
-		static float64 pdf(float64 const&, float64 const&) throw (CChi2Exception);
-		static float64 logpdf(float64 const&, float64 const&) throw (CChi2Exception);
-		static float64 sf(float64 const&, float64 const&) throw (CChi2Exception);
-		static float64 isf(float64 const&, float64 const&) throw (CChi2Exception);
-		static float64 logsf(float64 const&, float64 const&) throw (CChi2Exception);
+private:
+	static void __checkParameters(float64 const &) throw(CChi2Exception);
+
+public:
+	static float64 cdf(float64 const &, float64 const &) throw(CChi2Exception);
+	static float64 logcdf(float64 const &, float64 const &) throw(CChi2Exception);
+	static float64 pdf(float64 const &, float64 const &) throw(CChi2Exception);
+	static float64 logpdf(float64 const &, float64 const &) throw(CChi2Exception);
+	static float64 sf(float64 const &, float64 const &) throw(CChi2Exception);
+	static float64 isf(float64 const &, float64 const &) throw(CChi2Exception);
+	static float64 logsf(float64 const &, float64 const &) throw(CChi2Exception);
+	static MatrixXd get2DContingencyTable(VectorXd const &, VectorXd const &) throw(CChi2Exception);
+	static float64 calculateChi2(MatrixXd const &) throw(CChi2Exception);
+	static float64 calculateChi2Trend(MatrixXd const &, VectorXd const &) throw(CChi2Exception);
+
 };
 
 
