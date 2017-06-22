@@ -3,6 +3,7 @@
 
 #include "CEasyGWAS/globals.h"
 #include "CEasyGWAS/regression/CRegression.h"
+#include "CEasyGWAS/stats/CChi2.h"
 
 #define ROBUSTNESS 0
 #define CONSISTENCY 1
@@ -12,6 +13,7 @@
 
 #define SKAT 0
 #define CHISQ 1
+#define TREND 2
 
 /*
  *CSconesException Class
@@ -97,7 +99,8 @@ class CScones {
 		VectorXd __computeScoreStatistic(MatrixXd const&, VectorXd const&);
 		VectorXd __computeSKATScore(MatrixXd const&, VectorXd const&);
 		VectorXd __computeChisqScore(MatrixXd const&, VectorXd const&);
-		SparseMatrixXd __computeLaplacianMatrix();
+        VectorXd __computeCochranArmitageT(MatrixXd const&, VectorXd const&, std::string const&);
+        SparseMatrixXd __computeLaplacianMatrix();
 	public:
 		CScones();
 		CScones(VectorXd const&, MatrixXd const&, SparseMatrixXd const&) throw (CSconesException);

@@ -219,50 +219,30 @@ void CScones::__removeZeroRows(Eigen::MatrixXd& mat)
 VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
     VectorXd chisq(X.cols());
 
-    // get counts per snp
-    // check that cases are > 0
-    MatrixXd X_cases((r.array() > 0).count(), X.cols());
-    MatrixXd X_controls((r.array() < 0).count(), X.cols());
-
-    int case_idx = 0;
-    int ctrl_idx = 0;
-    for (int i = 0; i < r.size(); i++){
-        if (r(i) > 0){
-            X_cases.row(case_idx) = X.row(i);
-            case_idx++;
-        } else if(r(i) < 0) {
-            X_controls.row(ctrl_idx) = X.row(i);
-            ctrl_idx++;
-        }
+    for (int i = 0; i < X.cols(); i++) {
+        MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i));
+        chisq(i) = CChi2::calculateChi2(tab);
     }
 
-	MatrixXd cases(3, X.cols());
-	MatrixXd controls(3, X.cols());
-
-	for(int i = 0; i <= 2; i++){
-		cases.row(i) = (X_cases.array() == i).colwise().count().cast<float64>();
-		controls.row(i) = (X_controls.array() == i).colwise().count().cast<float64>();
-	}
-
-    for (int i = 0; i < X.cols(); i++){
-        MatrixXd cc(3,2);
-        cc << cases.col(i), controls.col(i);
-		__removeZeroRows(cc);
-
-        double N = cc.sum();
-
-        MatrixXd p_phenotype = cc.rowwise().sum() / N;
-        MatrixXd p_genotype = cc.colwise().sum() / N;
-        MatrixXd p(3,2);
-        p = p_phenotype * p_genotype;
-
-        MatrixXd numerator = (cc/N - p).array().square();
-        // chisq(i) = pow((N * numerator.cwiseQuotient(p).sum()), 5);
-		chisq(i) = N * numerator.cwiseQuotient(p).sum();
-
-	}
-
     return chisq;
+
+}
+
+VectorXd CScones::__computeCochranArmitageT(MatrixXd const& X, VectorXd const& r, string const& geneticModel) {
+    VectorXd T(X.cols());
+    VectorXd model;
+
+    if(geneticModel == "dominance")
+        model = VectorXd::Ones(3); // change
+    else
+        model = VectorXd::Ones(3);
+
+    for (int i = 0; i < X.cols(); i++) {
+		MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i));
+        T(i) = CChi2::calculateChi2Trend(tab, model);
+    }
+
+    return T;
 }
 
 VectorXd CScones::__computeScoreStatistic(MatrixXd const& X, VectorXd const& r) {
@@ -271,7 +251,8 @@ VectorXd CScones::__computeScoreStatistic(MatrixXd const& X, VectorXd const& r) 
         score = __computeSKATScore(X,r);
     else if(__settings.test_statistic==CHISQ)
         score = __computeChisqScore(X,r);
-
+    else if(__settings.test_statistic==TREND)
+        score = __computeCochranArmitageT(X, r, "dominance");
 	return score;
 }
 
@@ -294,12 +275,19 @@ void CScones::__autoParameters() {
 	VectorXd tmpc = (c.array()==0).select(c.maxCoeff(),c);
 	float64 minc = floor(log10(tmpc.minCoeff()));
 	float64 maxc = ceil(log10(c.maxCoeff()));
-    float64 delta = abs(minc - maxc)/(__settings.nParameters - 1) ;
-    int n = ceil(5/(delta)) ;
-	__settings.etas = VectorXd::LinSpaced(__settings.nParameters + 2 * n, minc - n * delta , maxc + n * delta );
+
+	// etas: minc to maxc
+	__settings.etas = VectorXd::LinSpaced(__settings.nParameters, minc, maxc);
 	for(int i=0; i<__settings.etas.rows(); i++)
 		__settings.etas(i) = pow(10,__settings.etas(i));
-	__settings.lambdas = __settings.etas;
+
+	// lambdas: expanded range
+	float64 delta = abs(minc - maxc)/(__settings.nParameters - 1) ;
+	int n = ceil(5/(delta)) ;
+
+	__settings.lambdas = VectorXd::LinSpaced(__settings.nParameters + 2 * n, minc - n * delta , maxc + n * delta );
+	for(int i=0; i<__settings.lambdas.rows(); i++)
+		__settings.lambdas(i) = pow(10,__settings.lambdas(i));
 }
 
 //void CScones::maxflow(SparseMatrixXd const& A, MatrixXd const& T, VectorXd* indicator_vector) {
