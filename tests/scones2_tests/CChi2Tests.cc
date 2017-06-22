@@ -3,19 +3,18 @@
 #include "CEasyGWAS/globals.h"
 
 TEST(CChi2Test, ContingencyTable) {
-    VectorXd v1(14);
-    VectorXd v2(14);
+    VectorXd x(14);
+    VectorXd y(14);
 
-    v1 << 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5;
-    v2 << 2, 2, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2;
+    x << 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2;
+    y << 2, 2, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2;
 
-    MatrixXd table = CChi2::get2DContingencyTable(v1, v2);
+    MatrixXd table = CChi2::get2DContingencyTable(x, y);
 
-    MatrixXd exp(3,2);
-    exp << 1, 4,
-           2, 3,
-           1, 3;
-
+    MatrixXd exp(2,3);
+    exp << 1, 2, 1,
+           4, 3, 3;
+    
     ASSERT_EQ(table, exp);
 
 }

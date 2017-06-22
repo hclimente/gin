@@ -53,28 +53,25 @@ float64 CChi2::logpdf(float64 const& x, float64 const& k) throw (CChi2Exception)
 	return log(pdf(x,k));
 }
 
-MatrixXd CChi2::get2DContingencyTable(VectorXd const& var1, VectorXd const& var2) throw (CChi2Exception) {
+MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y) throw (CChi2Exception) {
 
-	if (var1.size() != var2.size()) throw CChi2Exception("Variable vector lengths are different.");
+	if (x.size() != Y.size()) throw CChi2Exception("Variable vector lengths are different.");
 
 	std::map<int, std::map<int,int>> counts;
-	std::set<int> v2;
 
-	for (int i = 0; i < var1.size(); i++) {
-		counts[var1(i)][var2(i)] += 1;
-		v2.insert(var2(i));
-	}
+	for (int i = 0; i < x.size(); i++)
+		counts[Y(i)][x(i)] += 1;
 
-	MatrixXd table = MatrixXd::Zero(counts.size(), v2.size());
+	MatrixXd table = MatrixXd::Zero(2, 3);
 
 	int row = 0;
 	for (std::map<int, std::map<int,int>>::iterator it = counts.begin(); it!= counts.end(); ++it) {
 		int col = 0;
-		for (std::set<int>::iterator it2 = v2.begin(); it2!= v2.end(); ++it2) {
+		for (int i = 0; i <= 2; i++){
 
-			std::map<int,int>::iterator f = it->second.find(*it2);
+			std::map<int,int>::iterator f = it->second.find(i);
 			if (f != it->second.end())
-				table(row, col) = it->second[*it2];
+				table(row, col) = it->second[i];
 			col++;
 		}
 		row++;
