@@ -14,7 +14,7 @@ TEST(CChi2Test, ContingencyTable) {
     MatrixXd exp(2,3);
     exp << 1, 2, 1,
            4, 3, 3;
-    
+
     ASSERT_EQ(table, exp);
 
 }
