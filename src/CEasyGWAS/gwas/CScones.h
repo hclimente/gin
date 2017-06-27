@@ -86,8 +86,6 @@ class CScones {
 		CLinearRegression __linear_regression; //Regression model, either LinearRegression for continuous phenotypes or LogisticRegression for binary
 		CLogisticRegression __logistic_regression; //Regression model, either LinearRegression for continuous phenotypes or LogisticRegression for binary
 
-        void __removeZeroRows(MatrixXd&);
-
 		void __checkdata() throw (CSconesException);
 		void __autoParameters();
 		void __selectRegressionModel();
