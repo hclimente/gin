@@ -120,9 +120,8 @@ TEST_P(SearchMarkers, checkSelectedSNPS) {
     scones -> test_associations();
     int out = scones -> getIndicatorVector().sum();
     EXPECT_EQ(as.expected_causal_SNPs.size(), out);
-    for (unsigned int i = 0; i < as.expected_causal_SNPs.size(); i++){
+    for (unsigned int i = 0; i < as.expected_causal_SNPs.size(); i++)
         EXPECT_EQ(1, scones -> getIndicatorVector()(as.expected_causal_SNPs[i]));
-    }
 }
 
 TEST_P(SearchMarkers, checkSelectedSNPs_fixedParameters) {
@@ -224,7 +223,7 @@ CSconesInitialSettings chisq_grid5_information = CSconesInitialSettings {
         234048, // expected_sparsity
         "data/testing/scones/skat/", // path_prefix
         CONSISTENCY, // selection_criterion
-        {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
+        {676, 680, 682, 685, 686, 690, 696} // expected_causal_SNPs
 
 };
 
