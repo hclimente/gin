@@ -16,14 +16,22 @@ include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src/
 		${PROJECT_SOURCE_DIR}/External ${PROJECT_SOURCE_DIR}/External/eigen
 		${PROJECT_SOURCE_DIR}/External/maxflow ${PROJECT_SOURCE_DIR}/External/Cephes)
 
-add_library(CEasyGWAS STATIC ${SOURCES})
-target_link_libraries (CEasyGWAS cephes maxflow)
+if (UNIX)
+	if (APPLE)
+		SET( ginlib  "gin-macosx-x64" )
+	else (APPLE)
+		SET( ginlib  "gin-linux-x64" )
+	endif (APPLE)
+endif (UNIX)
+
+add_library(${ginlib} STATIC ${SOURCES})
+target_link_libraries (${ginlib} cephes maxflow)
 
 add_subdirectory (${PROJECT_SOURCE_DIR}/External/Cephes)
 add_subdirectory (${PROJECT_SOURCE_DIR}/External/maxflow)
 add_subdirectory (${PROJECT_SOURCE_DIR}/tests)
 add_subdirectory (${PROJECT_SOURCE_DIR}/src)
 
-install(TARGETS CEasyGWAS
+install(TARGETS ${ginlib}
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib)
