@@ -230,12 +230,16 @@ VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
 
 VectorXd CScones::__computeCochranArmitageT(MatrixXd const& X, VectorXd const& r, string const& geneticModel) {
     VectorXd T(X.cols());
-    VectorXd model;
+    VectorXd model(3);
 
     if(geneticModel == "dominance")
-        model = VectorXd::Ones(3); // change
-    else
-        model = VectorXd::Ones(3);
+		model << 1, 1, 0;
+	else if(geneticModel == "recessive")
+		model << 0, 1, 1;
+	else if(geneticModel == "codominance")
+		model << 0, 1, 2;
+	else
+        model << 1, 1, 1;
 
     for (int i = 0; i < X.cols(); i++) {
 		MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i));
