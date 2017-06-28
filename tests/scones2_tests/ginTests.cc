@@ -99,9 +99,8 @@ TEST_P(SearchMarkers, checkSelectedSNPS) {
     scones -> test_associations();
     int out = scones -> getIndicatorVector().sum();
     EXPECT_EQ(as.expected_causal_SNPs.size(), out);
-    for (unsigned int i = 0; i < as.expected_causal_SNPs.size(); i++){
+    for (unsigned int i = 0; i < as.expected_causal_SNPs.size(); i++)
         EXPECT_EQ(1, scones -> getIndicatorVector()(as.expected_causal_SNPs[i]));
-    }
 }
 
 TEST_P(SearchMarkers, checkSelectedSNPs_fixedParameters) {

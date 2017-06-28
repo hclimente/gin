@@ -197,25 +197,6 @@ VectorXd CScones::__computeSKATScore(MatrixXd const& X, VectorXd const& r) {
 	return __sW*nonweighted_skat;
 }
 
-void CScones::__removeZeroRows(Eigen::MatrixXd& mat)
-{
-	Eigen::Matrix<bool, Eigen::Dynamic, 1> empty = (mat.array() == 0).rowwise().all();
-
-	size_t last = mat.rows() - 1;
-	for (size_t i = 0; i < last + 1;)
-	{
-		if (empty(i))
-		{
-			mat.row(i).swap(mat.row(last));
-			empty.segment<1>(i).swap(empty.segment<1>(last));
-			--last;
-		}
-		else
-			++i;
-	}
-	mat.conservativeResize(last + 1, mat.cols());
-}
-
 VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
     VectorXd chisq(X.cols());
 
