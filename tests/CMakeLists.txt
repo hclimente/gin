@@ -1,4 +1,5 @@
 project(tests)
 
-add_subdirectory(lib/googletest)
-add_subdirectory(scones2_tests)
+add_subdirectory(googletest)
+add_subdirectory(unit_tests)
+add_subdirectory(function_tests)
