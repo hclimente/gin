@@ -1,1 +1,1 @@
-add_library(maxflow STATIC maxflow.cpp maxflow.h)
+add_library(maxflow OBJECT maxflow.cpp maxflow.h)

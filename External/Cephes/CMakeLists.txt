@@ -1,5 +1,5 @@
-file(GLOB_RECURSE CEPHES_SOURCES
-		${PROJECT_SOURCE_DIR}/External/Cephes/cephes.h ${PROJECT_SOURCE_DIR}/External/Cephes/double/*.c )
-list(REMOVE_ITEM CEPHES_SOURCES "${PROJECT_SOURCE_DIR}/External/Cephes/double/setpmsvc.c")
+file(GLOB_RECURSE CEPHES_SOURCES cephes.h double/*.c )
+list(REMOVE_ITEM CEPHES_SOURCES "${PROJECT_SOURCE_DIR}/External/Cephes/double/setpmsvc.c"
+		"${PROJECT_SOURCE_DIR}/External/Cephes/double/lmdif.c")
 
-add_library(cephes STATIC ${CEPHES_SOURCES})
+add_library(cephes OBJECT ${CEPHES_SOURCES})
