@@ -1,1 +1,1 @@
-%include "CEasyGWAS/meta/CEffectSize.h"
+%include "meta/CEffectSize.h"

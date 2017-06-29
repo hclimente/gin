@@ -1,1 +1,1 @@
-%include "CEasyGWAS/kernel/CKernels.h"
+%include "kernel/CKernels.h"

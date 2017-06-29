@@ -17,4 +17,4 @@ namespace CSingleTraitGWAS {
 }
 
 
-%include "CEasyGWAS/gwas/CSingleTraitGWAS.h"
+%include "gwas/CSingleTraitGWAS.h"

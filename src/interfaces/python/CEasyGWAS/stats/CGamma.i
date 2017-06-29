@@ -9,5 +9,5 @@
 %ignore CGamma::logpdf(float64 const&, float64 const&, float64 const&);
 */
 
-%include "CEasyGWAS/types.h"
-%include "CEasyGWAS/stats/CGamma.h"
+%include "types.h"
+%include "stats/CGamma.h"

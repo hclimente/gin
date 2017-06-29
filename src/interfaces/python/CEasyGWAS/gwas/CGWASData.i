@@ -10,4 +10,4 @@
 %ignore CGWASDataHelper::createSNPHash;
 %ignore CGWASDataHelper::removeSamples4MissingData;
 
-%include "CEasyGWAS/gwas/CGWASData.h"
+%include "gwas/CGWASData.h"

@@ -17,4 +17,4 @@
 %ignore CLinearMixedRegression::predict(VectorXd*, MatrixXd const&, MatrixXd const&);
 
 
-%include "CEasyGWAS/regression/CRegression.h"
+%include "regression/CRegression.h"

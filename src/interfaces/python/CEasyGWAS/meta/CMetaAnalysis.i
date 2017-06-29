@@ -1,1 +1,1 @@
-%include "CEasyGWAS/meta/CMetaAnalysis.h"
+%include "meta/CMetaAnalysis.h"

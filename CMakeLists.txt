@@ -8,9 +8,9 @@ if (CMAKE_BUILD_TYPE EQUAL "DEBUG")
 endif (CMAKE_BUILD_TYPE EQUAL "DEBUG")
 
 find_package(Boost)
-include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src/
-		${PROJECT_SOURCE_DIR}/External ${PROJECT_SOURCE_DIR}/External/eigen
-		${PROJECT_SOURCE_DIR}/External/maxflow ${PROJECT_SOURCE_DIR}/External/Cephes)
+include_directories(${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include/
+		${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/lib/eigen
+		${PROJECT_SOURCE_DIR}/lib/maxflow ${PROJECT_SOURCE_DIR}/lib/Cephes)
 
 # create gin library
 if (UNIX)
@@ -21,16 +21,18 @@ if (UNIX)
 	endif (APPLE)
 endif (UNIX)
 
-file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/CEasyGWAS/*.cc ${PROJECT_SOURCE_DIR}/src/*.h)
+file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.cc)
 add_library(${ginlib} STATIC ${SOURCES} $<TARGET_OBJECTS:maxflow> $<TARGET_OBJECTS:cephes>)
 
-add_subdirectory (${PROJECT_SOURCE_DIR}/External/Cephes)
-add_subdirectory (${PROJECT_SOURCE_DIR}/External/maxflow)
+add_subdirectory (${PROJECT_SOURCE_DIR}/lib/Cephes)
+add_subdirectory (${PROJECT_SOURCE_DIR}/lib/maxflow)
+add_subdirectory (${PROJECT_SOURCE_DIR}/lib/googletest)
+
 
 install(TARGETS ${ginlib}
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION lib)
 
 # get tools and tests
-add_subdirectory (${PROJECT_SOURCE_DIR}/tests)
+add_subdirectory (${PROJECT_SOURCE_DIR}/test)
 add_subdirectory (${PROJECT_SOURCE_DIR}/src/tools)

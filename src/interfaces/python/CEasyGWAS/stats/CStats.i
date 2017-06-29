@@ -1,2 +1,2 @@
-%include "CEasyGWAS/types.h"
-%include "CEasyGWAS/stats/CStats.h"
+%include "types.h"
+%include "stats/CStats.h"

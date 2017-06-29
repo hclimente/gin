@@ -6,22 +6,22 @@
 %{
 #define SWIG_FILE_WITH_INIT
 #define SWIG
-#include "CEasyGWAS/globals.h"
-#include "CEasyGWAS/types.h"
-#include "CEasyGWAS/regression/CRegression.h"
-#include "CEasyGWAS/gwas/CSingleTraitGWAS.h"
-#include "CEasyGWAS/gwas/CGWASData.h"
-#include "CEasyGWAS/gwas/CMetaGWAS.h"
-#include "CEasyGWAS/meta/CMetaAnalysis.h"
-#include "CEasyGWAS/meta/CEffectSize.h"
-#include "CEasyGWAS/kernel/CKernels.h"
-#include "CEasyGWAS/stats/CChi2.h"
-#include "CEasyGWAS/stats/CGaussian.h"
-#include "CEasyGWAS/stats/CBeta.h"
-#include "CEasyGWAS/stats/CFisherF.h"
-#include "CEasyGWAS/stats/CStudentT.h"
-#include "CEasyGWAS/stats/CGamma.h"
-#include "CEasyGWAS/stats/CHSIC.h"
+#include "globals.h"
+#include "types.h"
+#include "regression/CRegression.h"
+#include "gwas/CSingleTraitGWAS.h"
+#include "gwas/CGWASData.h"
+#include "gwas/CMetaGWAS.h"
+#include "meta/CMetaAnalysis.h"
+#include "meta/CEffectSize.h"
+#include "kernel/CKernels.h"
+#include "stats/CChi2.h"
+#include "stats/CGaussian.h"
+#include "stats/CBeta.h"
+#include "stats/CFisherF.h"
+#include "stats/CStudentT.h"
+#include "stats/CGamma.h"
+#include "stats/CHSIC.h"
 /*
 */
 %}

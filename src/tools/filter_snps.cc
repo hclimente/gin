@@ -2,10 +2,10 @@
 #include <string>
 #include <time.h>
 
-#include "CEasyGWAS/gwas/CSingleTraitGWAS.h"
-#include "CEasyGWAS/io/CPlinkParser.h"
-#include "CEasyGWAS/kernel/CKernels.h"
-#include "CEasyGWAS/io/CGWASDataIO.h"
+#include "gwas/CSingleTraitGWAS.h"
+#include "io/CPlinkParser.h"
+#include "kernel/CKernels.h"
+#include "io/CGWASDataIO.h"
 
 using namespace std;
 
