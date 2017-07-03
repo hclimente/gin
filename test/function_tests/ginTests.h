@@ -33,7 +33,7 @@ CSconesInitialSettings skat_grid_consistency = CSconesInitialSettings {
         724379, // expected_association
         44799.20, // expected_connectivity
         166810, // expected_sparsity
-        "data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
 };
@@ -48,7 +48,7 @@ CSconesInitialSettings skat_grid_information = CSconesInitialSettings {
         820863, // expected_association
         4308, // expected_connectivity
         433706, // expected_sparsity
-        "data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         AICc, // selection_criterion
         {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
 };
@@ -63,7 +63,7 @@ CSconesInitialSettings skat_fixed = CSconesInitialSettings {
         724379, // expected_association
         48300, // expected_connectivity
         170000, // expected_sparsity
-        "data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
 };
@@ -78,7 +78,7 @@ CSconesInitialSettings chisq_fixed = CSconesInitialSettings {
         517.83, // expected_association
         35.1, // expected_connectivity
         130.694, // expected_sparsity
-        "data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
 
@@ -94,7 +94,7 @@ CSconesInitialSettings chisq_grid5_information = CSconesInitialSettings {
         625692, // expected_association
         453.695, // expected_connectivity
         234048, // expected_sparsity
-        "data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 680, 682, 685, 686, 690, 696} // expected_causal_SNPs
 
@@ -114,7 +114,7 @@ CSconesInitialSettings skat_fixed = CSconesInitialSettings {
         693163, // expected_association
         46200, // expected_connectivity
         153000, // expected_sparsity
-        "test/data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 679, 680, 682, 685, 686, 690, 695, 696} // expected_causal_SNPs
 };
@@ -129,7 +129,7 @@ CSconesInitialSettings skat_grid_consistency = CSconesInitialSettings {
         724379, // expected_association
         44799, // expected_connectivity
         166810, // expected_sparsity
-        "test/data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
 };
@@ -144,7 +144,7 @@ CSconesInitialSettings skat_grid_information = CSconesInitialSettings {
         820863, // expected_association
         4308, // expected_connectivity
         433706, // expected_sparsity
-        "test/data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         AICc, // selection_criterion
         {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
 };
@@ -159,7 +159,7 @@ CSconesInitialSettings chisq_fixed = CSconesInitialSettings {
         517.83, // expected_association
         35.1, // expected_connectivity
         130.694, // expected_sparsity
-        "test/data/testing/scones/skat/", // path_prefix
+        "test/data/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 679, 680, 682, 684, 685, 686, 690, 695, 696} // expected_causal_SNPs
 
@@ -175,7 +175,7 @@ CSconesInitialSettings chisq_grid5_information = CSconesInitialSettings {
         625692, // expected_association
         453.695, // expected_connectivity
         234048, // expected_sparsity
-        "test/data/testing/scones/skat/", // path_prefix
+        "test/data/testing/scones/case1/", // path_prefix
         CONSISTENCY, // selection_criterion
         {676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 700, 701} // expected_causal_SNPs
 
