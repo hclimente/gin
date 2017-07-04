@@ -1,0 +1,9 @@
+OFFICIAL_SYMBOL_FOR_A	OFFICIAL_SYMBOL_FOR_B	INTERACTOR_A	INTERACTOR_B	ALIASES_FOR_A	ALIASES_FOR_B	EXPERIMENTAL_SYSTEM	SOURCE	PUBMED_ID	ORGANISM_A_ID	ORGANISM_B_ID
+g1	g2									
+g2	g1									
+g2	g5									
+g3	g4									
+g4	g3									
+g4	g5									
+g5	g4									
+g5	g2									
