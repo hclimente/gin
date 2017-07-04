@@ -1,10 +1,10 @@
 # gin
 
-gin (GWAS Incorporating Networks) is a software framework aimed at improving biomarker discovery on genotyping data using a priori information, namely networks. It is the successor of [SConES](http://bioinformatics.oxfordjournals.org/content/29/13/i171.short), the network guided multi-locus mapping method. It includes two executables (the original `scones` and `shake`, its extended version) as well as the `gin` library, ready to be used by third party software, like [`martini`](https://github.com/hclimente/martini/).
+gin (GWAS Incorporating Networks) is a software framework aimed at improving biomarker discovery on genotyping data using a priori information, namely networks. It is the successor of [SConES](http://bioinformatics.oxfordjournals.org/content/29/13/i171.short), the network guided multi-locus mapping method. It includes two executables (the original `scones` and `shake`, its extended version) as well as the `gin` library, ready to be used by other software, like [`martini`](https://github.com/hclimente/martini/).
 
 ## Installation
 
-The gin suite requires [CMake](https://cmake.org/download/) >= 3.6 to be compiled. After cloning the git repository, simply do 
+gin requires [CMake](https://cmake.org/download/) >= 3.6 to compile. After cloning the git repository, simply do 
 
 ```
 cmake --target all
@@ -46,4 +46,4 @@ The arguments are (in order):
 
 ## Credits
 
-gin is based on [easyGWAS](http://easygwas.ethz.ch), a C/C++ framework for computing genome-wide association studies and meta-analysis developed by [dominikgrimm](https://github.com/dominikgrimm).  easyGWAS includes several standard methods for performing GWAS, such as linear regression, logistic regression and popular linear mixed models ([EMMAX](http://www.nature.com/ng/journal/v42/n4/abs/ng.548.html), [FaSTLMM](http://www.nature.com/nmeth/journal/v8/n10/abs/nmeth.1681.html)) to also account for population stratification. Although these methods are out of the scope of gin, I have kept them for the sake of completeness.
+gin is based on [easyGWAS](http://easygwas.ethz.ch), a C/C++ framework for computing genome-wide association studies and meta-analysis developed by [dominikgrimm](https://github.com/dominikgrimm). easyGWAS includes several standard methods for performing GWAS, such as linear regression, logistic regression and popular linear mixed models ([EMMAX](http://www.nature.com/ng/journal/v42/n4/abs/ng.548.html), [FaSTLMM](http://www.nature.com/nmeth/journal/v8/n10/abs/nmeth.1681.html)) to also account for population stratification. Although these methods are out of the scope of gin, I have kept them for the sake of completeness.
