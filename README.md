@@ -1,5 +1,9 @@
 # gin
 
+
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.824641.svg)](https://doi.org/10.5281/zenodo.824641)
+
 gin (GWAS Incorporating Networks) is a software framework aimed at improving biomarker discovery on genotyping data using a priori information, namely networks. It is the successor of [SConES](http://bioinformatics.oxfordjournals.org/content/29/13/i171.short), the network guided multi-locus mapping method. It includes two executables (the original `scones` and `shake`, its extended version) as well as the `gin` library, ready to be used by other software, like [`martini`](https://github.com/hclimente/martini/).
 
 ## Installation
