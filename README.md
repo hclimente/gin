@@ -15,7 +15,7 @@ git clone --recursive git@github.com:hclimente/gin.git
 cd gin
 cmake .
 make
-make install
+sudo make install
 ```
 
 This will install `gin`, `scones` and `shake` in your system default directories.
@@ -40,7 +40,7 @@ shake --ped genotype --pheno phenotype.txt --net network.txt --depth 1
 This is an example of how to run SConES:
 
 ```
-scones genotype phenotype.txt network.txt 0.05 scones_out additive 0
+scones genotype phenotype.txt network.txt 0.05 . additive 0
 ```
 
 The arguments are (in order):
