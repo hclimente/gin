@@ -1,14 +1,21 @@
 # gin
 
+
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.824641.svg)](https://doi.org/10.5281/zenodo.824641)
+
 gin (GWAS Incorporating Networks) is a software framework aimed at improving biomarker discovery on genotyping data using a priori information, namely networks. It is the successor of [SConES](http://bioinformatics.oxfordjournals.org/content/29/13/i171.short), the network guided multi-locus mapping method. It includes two executables (the original `scones` and `shake`, its extended version) as well as the `gin` library, ready to be used by other software, like [`martini`](https://github.com/hclimente/martini/).
 
 ## Installation
 
-gin requires [CMake](https://cmake.org/download/) >= 3.6 to compile. After cloning the git repository, simply do 
+gin requires [CMake](https://cmake.org/download/) >= 3.6 to compile. To install, simply do
 
 ```
-cmake --target all
-make install
+git clone --recursive git@github.com:hclimente/gin.git
+cd gin
+cmake .
+make
+sudo make install
 ```
 
 This will install `gin`, `scones` and `shake` in your system default directories.
@@ -33,7 +40,7 @@ shake --ped genotype --pheno phenotype.txt --net network.txt --depth 1
 This is an example of how to run SConES:
 
 ```
-scones genotype phenotype.txt network.txt 0.05 scones_out additive 0
+scones genotype phenotype.txt network.txt 0.05 . additive 0
 ```
 
 The arguments are (in order):
