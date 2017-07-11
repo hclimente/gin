@@ -33,11 +33,11 @@ target_include_directories (${libgin} INTERFACE ${GIN_SOURCE_DIR}/include ${GIN_
 
 # installation configuration
 install (TARGETS ${libgin}
-		ARCHIVE DESTINATION lib INCLUDES DESTINATION include)
+		 ARCHIVE DESTINATION lib INCLUDES DESTINATION include)
 install (DIRECTORY ${GIN_SOURCE_DIR}/include/ DESTINATION include/gin
-		FILES_MATCHING PATTERN "*.h")
+		 FILES_MATCHING PATTERN "*.h")
 install (DIRECTORY ${GIN_SOURCE_DIR}/lib/Cephes DESTINATION include/gin
-		FILES_MATCHING PATTERN "*.h")
+		 FILES_MATCHING PATTERN "*.h")
 
 # define alias for linking purposes (in TESTS)
 add_library (gin ALIAS ${libgin})
