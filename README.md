@@ -15,7 +15,7 @@ git clone --recursive https://github.com/hclimente/gin.git
 gin/install_gin.sh
 ```
 
-This will install `gin`, `scones` and `shake` in your system default directories.
+This will install `gin`, `scones` and `shake` in gin/build.
  
 ## Usage
 
