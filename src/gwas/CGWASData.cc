@@ -1,5 +1,5 @@
-#include "gwas/CGWASData.h"
-#include "utils/CMatrixHelper.h"
+#include "gin/gwas/CGWASData.h"
+#include "gin/utils/CMatrixHelper.h"
 #include <locale>
 //#include <tr1/random>
 #include <ctype.h>

@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "stats/CFisherF.h"
+#include "gin/stats/CFisherF.h"
 #include "Cephes/cephes.h"
 
 void CFisherF::__checkParameters(float64 const& x,int const& d1, int const& d2) throw (CFisherFException) {

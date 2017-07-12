@@ -2,8 +2,8 @@
 #include "math.h"
 #include <iostream>
 
-#include "utils/CMathHelper.h"
-#include "stats/CGaussian.h"
+#include "gin/utils/CMathHelper.h"
+#include "gin/stats/CGaussian.h"
 #include "Cephes/cephes.h"
 
 void CGaussian::__checkParameters(float64 const& std) throw (CGaussianException) {

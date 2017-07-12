@@ -1,7 +1,6 @@
-#include "io/CSconesIO.h"
-
-#include "io/CIOProgress.h"
-#include "utils/StringHelper.h"
+#include "gin/io/CSconesIO.h"
+#include "gin/io/CIOProgress.h"
+#include "gin/utils/StringHelper.h"
 
 #include <sstream>
 #include <vector>

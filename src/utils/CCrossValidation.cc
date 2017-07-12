@@ -1,6 +1,6 @@
-#include "utils/CCrossValidation.h"
+#include "gin/utils/CCrossValidation.h"
 #include "math.h"
-#include "utils/StringHelper.h"
+#include "gin/utils/StringHelper.h"
 
 #include <iostream>
 

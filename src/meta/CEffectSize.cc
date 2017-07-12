@@ -1,6 +1,6 @@
-#include "meta/CEffectSize.h"
+#include "gin/meta/CEffectSize.h"
 
-#include "stats/CStats.h"
+#include "gin/stats/CStats.h"
 
 namespace CEffectSize {
 

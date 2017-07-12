@@ -1,4 +1,4 @@
-#include "stats/CChi2.h"
+#include "gin/stats/CChi2.h"
 //#include "CGamma.h"
 
 void CChi2::__checkParameters(float64 const& k) throw (CChi2Exception) {

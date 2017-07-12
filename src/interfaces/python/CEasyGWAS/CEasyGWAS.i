@@ -6,8 +6,8 @@
 %{
 #define SWIG_FILE_WITH_INIT
 #define SWIG
-#include "globals.h"
-#include "types.h"
+#include "gin/globals.h"
+#include "gin/types.h"
 #include "regression/CRegression.h"
 #include "gwas/CSingleTraitGWAS.h"
 #include "gwas/CGWASData.h"

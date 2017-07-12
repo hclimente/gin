@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "stats/CGamma.h"
+#include "gin/stats/CGamma.h"
 
 #include "Cephes/cephes.h"
 

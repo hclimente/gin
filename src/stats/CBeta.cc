@@ -1,8 +1,8 @@
 #include <cmath>
 
-#include "stats/CBeta.h"
+#include "gin/stats/CBeta.h"
 
-#include "utils/CMathHelper.h"
+#include "gin/utils/CMathHelper.h"
 
 #include "Cephes/cephes.h"
 

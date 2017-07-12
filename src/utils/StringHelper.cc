@@ -4,7 +4,7 @@
 *@author: Dominik Grimm
 *@year: 2010
 */
-#include "utils/StringHelper.h"
+#include "gin/utils/StringHelper.h"
 
 using namespace std;
 

@@ -1,9 +1,9 @@
-#include "gwas/CScones.h"
-#include "io/CSconesIO.h"
+#include "gin/gwas/CScones.h"
+#include "gin/io/CSconesIO.h"
 #include "math.h"
-#include "utils/CCrossValidation.h"
-#include "utils/CMatrixHelper.h"
-#include "utils/StringHelper.h"
+#include "gin/utils/CCrossValidation.h"
+#include "gin/utils/CMatrixHelper.h"
+#include "gin/utils/StringHelper.h"
 #include "maxflow/maxflow.h"
 /*
 *Initialize default scones settings

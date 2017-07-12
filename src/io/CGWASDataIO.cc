@@ -1,6 +1,5 @@
-#include "io/CGWASDataIO.h"
-
-#include "utils/StringHelper.h"
+#include "gin/io/CGWASDataIO.h"
+#include "gin/utils/StringHelper.h"
 
 #include <fstream>
 #include <iterator>

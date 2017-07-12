@@ -1,5 +1,5 @@
-#include "kernel/CKernels.h"
-#include "stats/CStats.h"
+#include "gin/kernel/CKernels.h"
+#include "gin/stats/CStats.h"
 
 /*
 *Compute realized Relationship Kernel

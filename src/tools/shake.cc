@@ -1,12 +1,12 @@
 #include <iostream>
 #include "boost/program_options.hpp"
 
-#include "gwas/CScones.h"
-#include "io/CPlinkParser.h"
-#include "kernel/CKernels.h"
-#include "io/CSconesIO.h"
-#include "stats/CStats.h"
-#include "utils/CMatrixHelper.h"
+#include "gin/gwas/CScones.h"
+#include "gin/io/CPlinkParser.h"
+#include "gin/kernel/CKernels.h"
+#include "gin/io/CSconesIO.h"
+#include "gin/stats/CStats.h"
+#include "gin/utils/CMatrixHelper.h"
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "stats/CStudentT.h"
+#include "gin/stats/CStudentT.h"
 #include "Cephes/cephes.h"
 
 void CStudentT::__checkParameters(int const& d1) throw (CStudentTException) {

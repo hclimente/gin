@@ -8,10 +8,10 @@
 */
 #include <cmath>
 
-#include "stats/CStudentT.h"
-#include "utils/CMisc.h"
-#include "utils/CMatrixHelper.h"
-#include "stats/CStats.h"
+#include "gin/stats/CStudentT.h"
+#include "gin/utils/CMisc.h"
+#include "gin/utils/CMatrixHelper.h"
+#include "gin/stats/CStats.h"
 
 extern VectorXd* vpointer;
 

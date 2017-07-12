@@ -1,8 +1,8 @@
-#include "regression/CRegression.h"
-#include "stats/CChi2.h"
-#include "stats/CFisherF.h"
-#include "utils/StringHelper.h"
-#include "utils/CMathHelper.h"
+#include "gin/regression/CRegression.h"
+#include "gin/stats/CChi2.h"
+#include "gin/stats/CFisherF.h"
+#include "gin/utils/StringHelper.h"
+#include "gin/utils/CMathHelper.h"
 #include <unsupported/Eigen/IterativeSolvers>
 #include <ctime>
 

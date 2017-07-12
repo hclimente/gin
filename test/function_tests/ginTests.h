@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
-#include "gwas/CScones.h"
-#include "io/CSconesIO.h"
-#include "io/CPlinkParser.h"
-#include "globals.h"
+#include "gin/gwas/CScones.h"
+#include "gin/io/CSconesIO.h"
+#include "gin/io/CPlinkParser.h"
+#include "gin/globals.h"
 
 struct CSconesInitialSettings{
 

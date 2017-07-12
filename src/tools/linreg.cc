@@ -2,11 +2,11 @@
 #include <string>
 #include <time.h>
 
-#include "io/CLogging.h"
-#include "gwas/CSingleTraitGWAS.h"
-#include "io/CPlinkParser.h"
-#include "kernel/CKernels.h"
-#include "io/CGWASDataIO.h"
+#include "gin/io/CLogging.h"
+#include "gin/gwas/CSingleTraitGWAS.h"
+#include "gin/io/CPlinkParser.h"
+#include "gin/kernel/CKernels.h"
+#include "gin/io/CGWASDataIO.h"
 
 int main(int argc, char* argv[]) {
 	//get command line arguments

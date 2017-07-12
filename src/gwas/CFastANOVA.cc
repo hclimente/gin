@@ -3,7 +3,7 @@ Reimplementation of FastANOVA
 Paper Link: http://www.ncbi.nlm.nih.gov/pubmed/20945829
 */
 
-#include "gwas/CFastANOVA.h"
+#include "gin/gwas/CFastANOVA.h"
 
 #include <list>
 #include <vector>
@@ -12,8 +12,8 @@ Paper Link: http://www.ncbi.nlm.nih.gov/pubmed/20945829
 
 #include <fstream>
 
-#include "utils/StringHelper.h"
-#include "stats/CFisherF.h"
+#include "gin/utils/StringHelper.h"
+#include "gin/stats/CFisherF.h"
 
 namespace CEpistasis {
 

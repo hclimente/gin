@@ -1,6 +1,6 @@
-#include "gwas/CMetaGWAS.h"
-#include "utils/StringHelper.h"
-#include "meta/CMetaAnalysis.h"
+#include "gin/gwas/CMetaGWAS.h"
+#include "gin/utils/StringHelper.h"
+#include "gin/meta/CMetaAnalysis.h"
 
 #include "math.h"
 

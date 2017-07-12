@@ -1,6 +1,5 @@
-#include "io/CPlinkParser.h"
-
-#include "io/CIOProgress.h"
+#include "gin/io/CPlinkParser.h"
+#include "gin/io/CIOProgress.h"
 
 #include <math.h>
 #include <algorithm>

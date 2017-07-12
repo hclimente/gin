@@ -1,4 +1,4 @@
-#include "io/CLogging.h"
+#include "gin/io/CLogging.h"
 
 CLogging::CLogging() {
 	file_logging = false;

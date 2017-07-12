@@ -1,9 +1,9 @@
-#include "gwas/CSingleTraitGWAS.h"
-#include "stats/CChi2.h"
-#include "stats/CFisherF.h"
-#include "utils/CMatrixHelper.h"
-#include "utils/CCrossValidation.h"
-#include "stats/CStats.h"
+#include "gin/gwas/CSingleTraitGWAS.h"
+#include "gin/stats/CChi2.h"
+#include "gin/stats/CFisherF.h"
+#include "gin/utils/CMatrixHelper.h"
+#include "gin/utils/CCrossValidation.h"
+#include "gin/stats/CStats.h"
 
 #include <stdlib.h>
 

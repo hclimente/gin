@@ -12,10 +12,7 @@ gin requires [CMake](https://cmake.org/download/) >= 3.6 to compile. To install,
 
 ```
 git clone --recursive https://github.com/hclimente/gin.git
-cd gin
-cmake .
-make
-sudo make install
+gin/install_gin.sh
 ```
 
 This will install `gin`, `scones` and `shake` in your system default directories.

@@ -1,8 +1,8 @@
 #include "math.h"
 
-#include "meta/CMetaAnalysis.h"
-#include "stats/CGaussian.h"
-#include "stats/CChi2.h"
+#include "gin/meta/CMetaAnalysis.h"
+#include "gin/stats/CGaussian.h"
+#include "gin/stats/CChi2.h"
 
 namespace CMetaAnalysis {
 

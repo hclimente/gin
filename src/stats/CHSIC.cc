@@ -1,7 +1,7 @@
 #include <cmath>
-#include "stats/CHSIC.h"
-#include "kernel/CKernels.h"
-#include "utils/CMatrixHelper.h"
+#include "gin/stats/CHSIC.h"
+#include "gin/kernel/CKernels.h"
+#include "gin/utils/CMatrixHelper.h"
 
 /*
 *CHSIC Constructors

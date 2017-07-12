@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "stats/CChi2.h"
-#include "globals.h"
+#include "gin/stats/CChi2.h"
+#include "gin/globals.h"
 
 TEST(CChi2Test, ContingencyTable) {
     VectorXd x(14);
