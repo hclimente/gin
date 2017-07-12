@@ -1,4 +1,4 @@
-#!env bash
+#!/bin/bash
 
 # crash in case of error
 set -e
