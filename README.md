@@ -15,7 +15,7 @@ git clone --recursive https://github.com/hclimente/gin.git
 gin/install_gin.sh
 ```
 
-This will install `gin`, `scones` and `shake` in gin/build.
+This will install `gin`, `scones` and `shake` in gin/build. If you prefer another installation path, add it is as first argument eg `gin/install_gin.sh /usr/local`.
  
 ## Usage
 

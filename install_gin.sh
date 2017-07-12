@@ -1,7 +1,17 @@
 #!env bash
 
+# crash in case of error
+set -e
+
+INSTALL_PATH=`pwd`/gin/build
+
+if [ ! -z "$1" ]
+  then
+    INSTALL_PATH=$1
+fi
+
 cd gin
-cmake -DCMAKE_INSTALL_PREFIX:PATH=build .
+cmake -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH .
 make all install
 
 echo    # move to a new line
@@ -13,9 +23,9 @@ then
 cat <<- EOF  >> ~/.bashrc
 
 # added by gin installer
-export CPLUS_INCLUDE_PATH=`pwd`/build/include:\${CPLUS_INCLUDE_PATH}
-export LIBRARY_PATH=`pwd`/build/lib:\${LIBRARY_PATH}
-export PATH=`pwd`/build/bin:\${PATH}
+export CPLUS_INCLUDE_PATH=$INSTALL_PATH/include:\${CPLUS_INCLUDE_PATH}
+export LIBRARY_PATH=$INSTALL_PATH/lib:\${LIBRARY_PATH}
+export PATH=$INSTALL_PATH/bin:\${PATH}
 EOF
 
 source ~/.bashrc
