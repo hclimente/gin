@@ -20,7 +20,10 @@ matrix:
         - brew install ccache
         - export PATH="/usr/local/opt/ccache/libexec:$PATH"
   
-script: cd .. && gin/install_gin.sh
+script:
+  - cd .. && gin/install_gin.sh
+  - tests/unit_tests
+  - tests/integration_tests
 
 after_success:
     # Creating report

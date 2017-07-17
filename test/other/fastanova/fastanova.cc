@@ -3,18 +3,18 @@
 #include <fstream>
 #include <Eigen/Dense>
 
-#include "stats/CStats.h"
-#include "stats/CGaussian.h"
-#include "stats/CGamma.h"
-#include "stats/CBeta.h"
-#include "stats/CChi2.h"
-#include "stats/CFisherF.h"
-#include "stats/CStudentT.h"
-#include "regression/CRegression.h"
-#include "utils/CMathHelper.h"
-#include "gwas/CSingleTraitGWAS.h"
-#include "gwas/CFastANOVA.h"
-#include "utils/StringHelper.h"
+#include "gin/stats/CStats.h"
+#include "gin/stats/CGaussian.h"
+#include "gin/stats/CGamma.h"
+#include "gin/stats/CBeta.h"
+#include "gin/stats/CChi2.h"
+#include "gin/stats/CFisherF.h"
+#include "gin/stats/CStudentT.h"
+#include "gin/regression/CRegression.h"
+#include "gin/utils/CMathHelper.h"
+#include "gin/gwas/CSingleTraitGWAS.h"
+#include "gin/gwas/CFastANOVA.h"
+#include "gin/utils/StringHelper.h"
 
 using namespace std;
 

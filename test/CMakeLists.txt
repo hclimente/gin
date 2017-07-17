@@ -1,4 +1,15 @@
 project(TESTS)
 
-add_subdirectory(unit_tests)
-add_subdirectory(function_tests)
+include_directories(${GIN_SOURCE_DIR}/lib/eigen)
+
+# unit tests
+file (GLOB_RECURSE UNIT_TEST_SOURCES unit_tests/*.cc)
+
+add_executable (unit_tests ${UNIT_TEST_SOURCES})
+target_link_libraries (unit_tests LINK_PUBLIC gtest gtest_main gin)
+
+# integration tests
+file (GLOB_RECURSE INTEGRATION_TEST_SOURCES integration_tests/*.cc)
+
+add_executable (integration_tests ${INTEGRATION_TEST_SOURCES})
+target_link_libraries (integration_tests LINK_PUBLIC gtest gtest_main gin)
