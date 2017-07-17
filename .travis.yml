@@ -5,7 +5,9 @@ matrix:
   include:
     - os: linux
       dist: trusty
+      sudo: false
     - os: osx
+      sudo: false
 
 cache:
   apt: true
