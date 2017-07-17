@@ -21,7 +21,8 @@ matrix:
         - export PATH="/usr/local/opt/ccache/libexec:$PATH"
   
 script:
-  - cd .. && gin/install_gin.sh
+  - cd .. && gin/install_gin.sh && cd gin
+  - pwd
   - test/unit_tests
   - test/integration_tests
 
