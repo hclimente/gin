@@ -1,25 +1,12 @@
-sudo: false
-
 language: cpp
+
+os:
+  - osx
 
 cache:
   apt: true
 
 compiler:
   - clang
-  - gcc
-
-addons:
-  apt:
-    sources:
-    - boost-latest
-    - ubuntu-toolchain-r-test
-    packages:
-    - gcc-4.9
-    - g++-4.9
-    - libboost1.55-all-dev
-
-install:
-  - curl https://cmake.org/files/v3.6/cmake-3.6.1-Linux-x86_64.tar.gz | sudo tar -x -z --strip-components 1 -C /usr
   
 script: cmake
