@@ -1,24 +1,24 @@
 language: cpp
-cache: ccache
 
 matrix:
   include:
     - os: linux
       dist: trusty
       sudo: false
+      addons:
+        apt:
+          packages:
+            - libboost-program-options1.55-dev
+      cache:
+        apt: true
+      compiler: gcc
     - os: osx
       sudo: false
-
-cache:
-  apt: true
-
-compiler:
-  - clang
-  - gcc
-
-install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ccache; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH="/usr/local/opt/ccache/libexec:$PATH"; fi
+      cache: ccache
+      compiler: clang
+      install:
+        - brew install ccache
+        - export PATH="/usr/local/opt/ccache/libexec:$PATH"
   
 script: cd .. && gin/install_gin.sh
 
