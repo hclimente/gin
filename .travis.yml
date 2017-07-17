@@ -9,4 +9,4 @@ cache:
 compiler:
   - clang
   
-script: hclimente/gin/install_gin.sh
+script: ./install_gin.sh
