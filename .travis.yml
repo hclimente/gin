@@ -9,4 +9,4 @@ cache:
 compiler:
   - clang
   
-script: ./install_gin.sh
+script: cd .. && gin/install_gin.sh
