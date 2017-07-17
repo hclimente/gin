@@ -22,8 +22,8 @@ matrix:
   
 script:
   - cd .. && gin/install_gin.sh
-  - tests/unit_tests
-  - tests/integration_tests
+  - test/unit_tests
+  - test/integration_tests
 
 after_success:
     # Creating report
