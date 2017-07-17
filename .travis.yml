@@ -22,7 +22,6 @@ matrix:
   
 script:
   - cd .. && gin/install_gin.sh && cd gin
-  - pwd
   - test/unit_tests
   - test/integration_tests
 
