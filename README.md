@@ -9,7 +9,7 @@ gin (GWAS Incorporating Networks) is a software framework aimed at improving bio
 
 ## Installation
 
-gin requires [CMake](https://cmake.org/download/) >= 3.6 to compile. To install, simply do
+gin requires [CMake](https://cmake.org/download/) >= 3.2 to compile. To install, simply do
 
 ```
 git clone --recursive https://github.com/hclimente/gin.git

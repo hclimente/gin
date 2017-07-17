@@ -25,7 +25,14 @@ include_directories (${GIN_SOURCE_DIR}/include ${GIN_SOURCE_DIR}/lib/eigen ${GIN
 
 # *.cc files for gin, removing the CLI tools
 file (GLOB_RECURSE SOURCES "${GIN_SOURCE_DIR}/src/*.cc")
-list (FILTER SOURCES EXCLUDE REGEX "${GIN_SOURCE_DIR}/src/tools/")
+list (REMOVE_ITEM SOURCES
+		${GIN_SOURCE_DIR}/src/tools/emmax.cc
+		${GIN_SOURCE_DIR}/src/tools/filter_snps.cc
+		${GIN_SOURCE_DIR}/src/tools/random_effect_meta_analysis.cc
+		${GIN_SOURCE_DIR}/src/tools/shake.cc
+		${GIN_SOURCE_DIR}/src/tools/fastlmm.cc
+		${GIN_SOURCE_DIR}/src/tools/linreg.cc
+		${GIN_SOURCE_DIR}/src/tools/scones.cc )
 
 # create library
 add_library (${libgin} STATIC ${SOURCES} $<TARGET_OBJECTS:maxflow> $<TARGET_OBJECTS:cephes>)

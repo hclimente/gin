@@ -2,6 +2,7 @@ language: cpp
 cache: ccache
 
 os:
+  - linux
   - osx
 
 cache:
@@ -9,10 +10,11 @@ cache:
 
 compiler:
   - clang
+  - gcc
 
 install:
-  - brew install ccache
-  - export PATH="/usr/local/opt/ccache/libexec:$PATH"
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ccache; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH="/usr/local/opt/ccache/libexec:$PATH"; fi
   
 script: cd .. && gin/install_gin.sh
 
