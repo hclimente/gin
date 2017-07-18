@@ -9,6 +9,7 @@ matrix:
         apt:
           packages:
             - libboost-program-options1.55-dev
+            - lcov
       cache:
         apt: true
       compiler: gcc
@@ -18,6 +19,7 @@ matrix:
       compiler: clang
       install:
         - brew install ccache
+        - brew install lcov
         - export PATH="/usr/local/opt/ccache/libexec:$PATH"
   
 script:
