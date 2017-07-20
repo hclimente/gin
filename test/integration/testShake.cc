@@ -1,4 +1,4 @@
-#include "ginTests.h"
+#include "testShake.h"
 
 struct SearchMarkers : public ::testing::Test, testing::WithParamInterface<CSconesInitialSettings> {
 
