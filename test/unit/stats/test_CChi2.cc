@@ -2,7 +2,7 @@
 #include "gin/stats/CChi2.h"
 #include "gin/globals.h"
 
-TEST(testCChi2, ContingencyTable) {
+TEST(Chi2, ContingencyTable) {
     VectorXd x(14);
     VectorXd y(14);
 
@@ -19,7 +19,7 @@ TEST(testCChi2, ContingencyTable) {
 
 }
 
-TEST(testCChi2, Chi2Calculation) {
+TEST(Chi2, Chi2Calculation) {
 
     MatrixXd table(2,3);
     table << 9000, 3000, 1000,
@@ -32,7 +32,7 @@ TEST(testCChi2, Chi2Calculation) {
 
 }
 
-TEST(testCChi2, Chi2TrendCalculation) {
+TEST(Chi2, Chi2TrendCalculation) {
 
     MatrixXd table(2,3);
     table << 9000, 3000, 1000,

@@ -6,7 +6,7 @@
 #include "gin/feature_selection/scones.h"
 #include "gin/globals.h"
 
-TEST(testScones, testHyperparams) {
+TEST(Scones, testHyperparams) {
 
 	VectorXd c(10);
 	MatrixXd dW(10, 10);
@@ -41,7 +41,7 @@ TEST(testScones, testHyperparams) {
 
 }
 
-TEST(testScones, testHyperparamsTestedInGrids) {
+TEST(Scones, testHyperparamsTestedInGrids) {
 
 	VectorXd c(10);
 	MatrixXd dW(10, 10);
@@ -76,7 +76,7 @@ TEST(testScones, testHyperparamsTestedInGrids) {
 
 }
 
-TEST(testScones, testMaxflow) {
+TEST(Scones, testMaxflow) {
 
 	MatrixXd dW(10, 10);
 	dW <<   0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
@@ -130,7 +130,7 @@ TEST(testScones, testMaxflow) {
 
 }
 
-TEST(testScones, testSettersGetters) {
+TEST(Scones, testSettersGetters) {
 
 	VectorXd all(3);
 	all << 1, 1, 1;

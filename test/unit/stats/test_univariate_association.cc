@@ -6,7 +6,7 @@
 #include "gin/stats/univariate_association.h"
 #include "gin/globals.h"
 
-TEST(testUnivariate, testRightScores2COMPLETE2) {
+TEST(UnivariateAssociation, testRightScores2COMPLETE2) {
 
 	MatrixXd tX(2, 60);
 	tX <<   0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,
@@ -22,7 +22,7 @@ TEST(testUnivariate, testRightScores2COMPLETE2) {
 	EXPECT_NEAR(c[1], 0.4, 0.01);
 }
 
-TEST(testUnivariate, testRightScores2COMPLETE) {
+TEST(UnivariateAssociation, testRightScores2COMPLETE) {
 
 	MatrixXd X(10, 5);
 	X <<    0, 0, 0, 0, 0,

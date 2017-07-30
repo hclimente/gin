@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 #include "gin/globals.h"
 
-TEST(testGrid, HasExpectedDimensions) {
+TEST(Grid, HasExpectedDimensions) {
 
 	MatrixXd X(3, 3);
 	X <<    0, 1, 2,
@@ -47,7 +47,7 @@ TEST(testGrid, HasExpectedDimensions) {
 
 }
 
-TEST(testGrid, RunsScones) {
+TEST(Grid, RunsScones) {
 
 	// transposed matrix
 	// chi2 equals to 10 on associated snps and to 0.4 on unassociated snps
@@ -99,12 +99,5 @@ TEST(testGrid, RunsScones) {
 	EXPECT_EQ(g.selected(1,0.3), solution);
 	EXPECT_EQ(g.selected(11,0), none);
 	EXPECT_EQ(g.selected(0,0), all);
-
-}
-
-
-TEST(testGrid, FindsRightValue) {
-
-	// create dummy scones with preset scores
 
 }
