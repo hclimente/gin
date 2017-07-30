@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "gin/optimizer/CRootFinding.h"
+#include "gin/utils/CRootFinding.h"
 
 /*
  *Brent's root finding method from http://en.wikipedia.org/wiki/Brent's_method

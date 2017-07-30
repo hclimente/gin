@@ -3,7 +3,7 @@
 
 #include "gin/gwas/CScones.h"
 #include "gin/io/CPlinkParser.h"
-#include "gin/kernel/CKernels.h"
+#include "gin/utils/CKernels.h"
 #include "gin/io/CSconesIO.h"
 #include "gin/stats/CStats.h"
 #include "gin/utils/CMatrixHelper.h"

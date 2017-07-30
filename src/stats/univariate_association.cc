@@ -2,7 +2,7 @@
 // Created by hclimente on 21/07/2017.
 //
 
-#include "gin/association/univariate_association.h"
+#include "gin/stats/univariate_association.h"
 #include "gin/regression/CRegression.h"
 
 UnivariateAssociation::UnivariateAssociation(MatrixXd X, VectorXd y) {

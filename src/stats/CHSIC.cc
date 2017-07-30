@@ -1,6 +1,6 @@
 #include <cmath>
 #include "gin/stats/CHSIC.h"
-#include "gin/kernel/CKernels.h"
+#include "gin/utils/CKernels.h"
 #include "gin/utils/CMatrixHelper.h"
 
 /*

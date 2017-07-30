@@ -3,7 +3,7 @@
 //
 
 #include "gtest/gtest.h"
-#include "gin/association/univariate_association.h"
+#include "gin/stats/univariate_association.h"
 #include "gin/globals.h"
 
 TEST(testUnivariate, testRightScores2COMPLETE) {

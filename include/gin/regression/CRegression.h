@@ -5,7 +5,7 @@
 #include <Eigen/Dense>
 
 #include "gin/globals.h"
-#include "gin/optimizer/CRootFinding.h"
+#include "gin/utils/CRootFinding.h"
 
 /*
 *CRegression Exception Class

@@ -10,7 +10,7 @@
 #define TREND 2
 
 #include "gin/feature_selection/scones.h"
-#include "gin/association/univariate_association.h"
+#include "gin/stats/univariate_association.h"
 #include "gin/globals.h"
 
 class Grid {

@@ -7,7 +7,7 @@
 
 #include "gin/model_selection/grid_cv.h"
 #include "gin/feature_selection/scones.h"
-#include "gin/association/univariate_association.h"
+#include "gin/stats/univariate_association.h"
 
 #include "gin/gwas/CGWASData.h"
 #include "gin/io/CPlinkParser.h"
