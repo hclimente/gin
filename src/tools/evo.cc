@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 			("maf,m", po::value<double>()->default_value(0.05), "Float minor allele frequency filter.")
 			("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
 			("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
-			("outdir,o", po::value<string>()->default_value("."), "Output directory.")
+			("ofile,o", po::value<string>()->default_value("results.txt"), "Output directory.")
 			("encoding,s", po::value<string>()->default_value("additive"), "snp_encoding.")
 			("pc,c", po::value<int>()->default_value(0), "PC.")
 			("seed,z", po::value<int>()->default_value(0), "Random state seed.")
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 	string phenotype_str = vm["pheno"].as<string>();
 	string network_str = vm["net"].as<string>();
 	double maf = vm["maf"].as<double>();
-	string outfolder_str = vm["outdir"].as<string>();
+	string ofile = vm["ofile"].as<string>();
 	string snp_encoding = vm["encoding"].as<string>();
 	int pcs = vm["pc"].as<int>();
 	int seed = vm["seed"].as<int>();
@@ -92,6 +92,6 @@ int main(int argc, char* argv[]) {
 	shake.searchHyperparameters(10, model_selection, association_score);
 	shake.selectSnps();
 
-	shake.writeResults("results.txt");
+	shake.writeResults(ofile);
 
 }
