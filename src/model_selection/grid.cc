@@ -47,7 +47,7 @@ void Grid::__initGrid() {
 
 void Grid::__computeUnivariate(uint const& association) {
 
-	UnivariateAssociation snpAssociation(__X, __y);
+	UnivariateAssociation snpAssociation(&__X, &__y);
 
 	if(association == SKAT) {
 		__c = snpAssociation.computeSKAT();

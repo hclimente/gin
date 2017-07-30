@@ -11,11 +11,12 @@ TEST(UnivariateAssociation, testRightScores2COMPLETE2) {
 	MatrixXd tX(2, 60);
 	tX <<   0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,
 			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2;
+	MatrixXd X = Eigen::Transpose< MatrixXd >(tX);
 
 	VectorXd y(60);
 	y <<    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
 
-	UnivariateAssociation u(Eigen::Transpose< MatrixXd >(tX), y);
+	UnivariateAssociation u(&X, &y);
 	VectorXd c = u.computeChi2();
 
 	EXPECT_NEAR(c[0], 10, 0.1);
@@ -38,7 +39,7 @@ TEST(UnivariateAssociation, testRightScores2COMPLETE) {
 	VectorXd y(10);
 	y << 0, 0, 0, 0, 0, 1, 1, 1, 1, 1;
 
-	UnivariateAssociation u(X, y);
+	UnivariateAssociation u( &X, &y);
 
 	// chi2
 	VectorXd chi2(5);

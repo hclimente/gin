@@ -11,8 +11,7 @@
 class UnivariateAssociation {
 public:
 
-	// TODO convert to pointers
-	UnivariateAssociation(MatrixXd, VectorXd);
+	UnivariateAssociation(MatrixXd*, VectorXd*);
 
 	// association scores
 	VectorXd computeSKAT();
@@ -20,8 +19,8 @@ public:
 	VectorXd computeTrendTest(std::string const&);
 
 private:
-	MatrixXd __X;
-	VectorXd __y;
+	MatrixXd* __X;
+	VectorXd* __y;
 	uint __n_features;
 	bool __binary_y;
 };

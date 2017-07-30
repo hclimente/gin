@@ -109,8 +109,6 @@ void GridCV::exploreGrids(uint scoring_function) {
 			}
 
 			__gridAggregation[eta][lambda] /= __folds;
-
-			// TODO implement the other scoring functions
 			__gridSummary(e, l) = scoreModels(__gridAggregation[eta][lambda], scoring_function);
 
 			if(max < __gridSummary(e, l)) {

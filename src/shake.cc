@@ -34,7 +34,7 @@ void Shake::searchHyperparameters(uint folds, uint const& scoring_function, uint
 	VectorXd y = __gwas -> Y.col(0);
 	SparseMatrixXd W = __gwas -> network;
 
-	UnivariateAssociation univar(__gwas -> X, __gwas -> Y.col(0));
+	UnivariateAssociation univar( &X, &y );
 
 	if (association_score == CHI2) {
 		__c = univar.computeChi2();
