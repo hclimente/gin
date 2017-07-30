@@ -10,7 +10,6 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	__W = W;
 
 	// TODO extend range
-	// autoparams
 	__etas = VectorXd::LinSpaced(10, log10(c.maxCoeff()), log10(c.minCoeff()));
 	for(int i = 0; i < __etas.rows(); i++)
 		__etas(i) = pow(10, __etas(i));
@@ -72,7 +71,7 @@ void GridCV::__initGrids(uint association) {
 	}
 }
 
-void GridCV::exploreGrids(std::string const& scoring_function) {
+void GridCV::exploreGrids(uint scoring_function) {
 
 	for (int i = 0; i < __folds; i++) {
 		__grids[i] -> search();
@@ -103,12 +102,12 @@ void GridCV::exploreGrids(std::string const& scoring_function) {
 	}
 }
 
-double GridCV::scoreModels(VectorXd const& folds, std::string const& scoringFunction) {
+double GridCV::scoreModels(VectorXd const& folds, uint const& scoringFunction) {
 
 	double score;
 
 	// TODO implementation is not the same as in original SConES
-	if (scoringFunction == "CONSISTENCY") {
+	if (scoringFunction == CONSISTENCY) {
 		float totalSelected = (folds.array() > 0).count();
 
 		if (totalSelected == 0 ) {

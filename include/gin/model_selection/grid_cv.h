@@ -18,8 +18,8 @@ public:
 	~GridCV();
 
 	// grid exploration functions
-	void exploreGrids(std::string const&);
-	double scoreModels(VectorXd const&, std::string const&);
+	void exploreGrids(uint);
+	double scoreModels(VectorXd const&, uint const&);
 
 	// setters & getters
 	std::pair<double, double> bestParameters() { return __bestParameters; }

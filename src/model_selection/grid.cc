@@ -11,9 +11,13 @@ Grid::Grid(MatrixXd const& X, VectorXd const& y, SparseMatrixXd* const& W, uint 
 
 	__computeUnivariate(association);
 
-	// TODO autoparams based on c
-	__etas = VectorXd(10);
-	__lambdas = VectorXd(10);
+	__etas = VectorXd::LinSpaced(10, log10(__c.maxCoeff()), log10(__c.minCoeff()));
+	for(int i = 0; i < __etas.rows(); i++)
+		__etas(i) = pow(10, __etas(i));
+
+	__lambdas = VectorXd::LinSpaced(10, log10(__c.maxCoeff()), log10(__c.minCoeff()));
+	for(int i = 0; i < __lambdas.rows(); i++)
+		__lambdas(i) = pow(10, __lambdas(i));
 
 	__initGrid();
 

@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
 	if (model_selection == "cons") settings.selection_criterion = CONSISTENCY;
 	else if (model_selection == "aicc") settings.selection_criterion = AICc;
 	else if (model_selection == "bic") settings.selection_criterion = BIC;
-	else if (model_selection == "aiccn") settings.selection_criterion = AICcn;
+	else if (model_selection == "mbic") settings.selection_criterion = mBIC;
 
 	GWASData data;
 

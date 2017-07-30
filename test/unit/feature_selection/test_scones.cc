@@ -41,6 +41,41 @@ TEST(testScones, testHyperparams) {
 
 }
 
+TEST(testScones, testHyperparamsTestedInGrids) {
+
+	VectorXd c(10);
+	MatrixXd dW(10, 10);
+	dW <<   0, 1, 0, 0, 1, 1, 0, 0, 0, 0,
+			1, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+			0, 1, 0, 1, 0, 0, 0, 0, 0, 0,
+			0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
+			1, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+			1, 0, 0, 0, 1, 0, 1, 0, 0, 0,
+			0, 0, 0, 0, 0, 1, 0, 1, 0, 0,
+			0, 0, 0, 0, 0, 0, 1, 0, 1, 0,
+			0, 0, 0, 0, 0, 0, 0, 1, 0, 1,
+			0, 0, 0, 0, 0, 0, 0, 0, 1, 0;
+	SparseMatrixXd W = dW.sparseView();
+
+	VectorXd solution(10);
+	solution << 1, 0, 0, 0, 1, 1, 0, 0, 0, 0;
+
+	c << 10, 0, 0, 0, 10, 10, 0, 0, 0, 0;
+	Scones etaTest = Scones(c, 1, 0, W);
+	etaTest.selectSnps();
+
+	EXPECT_EQ(etaTest.selected(), solution);
+	EXPECT_EQ(etaTest.computeScore(), 27);
+
+	c << 10, 0.4, 0.4, 0.4, 10, 10, 0.4, 0.4, 0.4, 0.4;
+	Scones lambdaTest = Scones(c, 1, 0.3, W);
+	lambdaTest.selectSnps();
+
+	EXPECT_EQ(lambdaTest.selected(), solution);
+	EXPECT_NEAR(lambdaTest.computeScore(), 26.1, 0.01);
+
+}
+
 TEST(testScones, testMaxflow) {
 
 	MatrixXd dW(10, 10);

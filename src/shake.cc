@@ -28,7 +28,7 @@ void Shake::readNetwork(string const& networkFileame) {
 
 }
 
-void Shake::searchHyperparameters(uint folds, std::string const& scoring_function, uint const& association_score) {
+void Shake::searchHyperparameters(uint folds, uint const& scoring_function, uint const& association_score) {
 
 	MatrixXd X = __gwas -> X;
 	VectorXd y = __gwas -> Y.col(0);
@@ -36,9 +36,13 @@ void Shake::searchHyperparameters(uint folds, std::string const& scoring_functio
 
 	UnivariateAssociation univar(__gwas -> X, __gwas -> Y.col(0));
 
-	// TODO implement different association score
 	if (association_score == CHI2) {
 		__c = univar.computeChi2();
+	} else if (association_score == TREND) {
+		// TODO implement different trend scores
+		__c = univar.computeTrendTest("additive");
+	} else if (association_score == SKAT) {
+		__c = univar.computeSKAT();
 	}
 
 	__cvgrid = new GridCV(&X, &y, &W, __c, folds, association_score);

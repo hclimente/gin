@@ -5,11 +5,11 @@
 #include "gin/regression/CRegression.h"
 #include "gin/stats/CChi2.h"
 
-#define ROBUSTNESS 0
-#define CONSISTENCY 1
-#define AICc 2
-#define BIC 3
-#define AICcn 4
+#define CONSISTENCY 0
+#define BIC 1
+#define AIC 2
+#define AICc 3
+#define mBIC 4
 
 #define SKAT 0
 #define CHISQ 1

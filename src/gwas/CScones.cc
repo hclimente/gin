@@ -428,7 +428,7 @@ void CScones::test_associations() throw (CSconesException) {
             __cMat = __evaluateConsistency();
             __best_c = __cMat.maxCoeff(&best_eta_index,&best_lambda_index);
         }
-        else if(__settings.selection_criterion == AICc | __settings.selection_criterion == BIC | __settings.selection_criterion == AICcn)
+        else if(__settings.selection_criterion == AICc | __settings.selection_criterion == BIC | __settings.selection_criterion == mBIC)
         {
             __cMat = __evaluateInformation();
             __best_c = __cMat.minCoeff(&best_eta_index,&best_lambda_index);
@@ -552,7 +552,7 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
 						informationMetric = __logistic_regression.getAICc();
 					else if(__settings.selection_criterion == BIC)
 						informationMetric = __logistic_regression.getBIC();
-					else if(__settings.selection_criterion == AICcn)
+					else if(__settings.selection_criterion == mBIC)
 						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * __L * indicator_vector;
                 } else {
                     __linear_regression.fit(__y, x_tr);
@@ -560,7 +560,7 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
 						informationMetric = __linear_regression.getAICc();
 					else if(__settings.selection_criterion == BIC)
 						informationMetric = __linear_regression.getBIC();
-					else if(__settings.selection_criterion == AICcn)
+					else if(__settings.selection_criterion == mBIC)
 						informationMetric = __logistic_regression.getAICc() - indicator_vector.transpose() * __L * indicator_vector;
                 }
             }

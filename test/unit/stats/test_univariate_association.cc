@@ -6,6 +6,22 @@
 #include "gin/stats/univariate_association.h"
 #include "gin/globals.h"
 
+TEST(testUnivariate, testRightScores2COMPLETE2) {
+
+	MatrixXd tX(2, 60);
+	tX <<   0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,
+			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2;
+
+	VectorXd y(60);
+	y <<    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
+
+	UnivariateAssociation u(Eigen::Transpose< MatrixXd >(tX), y);
+	VectorXd c = u.computeChi2();
+
+	EXPECT_NEAR(c[0], 10, 0.1);
+	EXPECT_NEAR(c[1], 0.4, 0.01);
+}
+
 TEST(testUnivariate, testRightScores2COMPLETE) {
 
 	MatrixXd X(10, 5);
@@ -51,3 +67,4 @@ TEST(testUnivariate, testRightScores2COMPLETE) {
 	std::cout << "SKAT\n";
 
 }
+

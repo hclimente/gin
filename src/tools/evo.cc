@@ -53,7 +53,8 @@ int main(int argc, char* argv[]) {
 	double lambda = vm["lambda"].as<double>();
 	double eta = vm["eta"].as<double>();
 	bool debug = vm["debug"].as<bool>();
-	string model_selection = vm["model_selection"].as<string>();
+	string model_selection_str = vm["model_selection"].as<string>();
+	uint model_selection = CONSISTENCY;
 	int depth = vm["depth"].as<int>();
 
 	uint encoding = 0;
@@ -68,6 +69,9 @@ int main(int argc, char* argv[]) {
 
 	if (association_score_str == "chi2")
 		association_score = CHI2;
+
+	if (model_selection_str == "bic")
+		model_selection = BIC;
 
 	Shake shake = Shake();
 

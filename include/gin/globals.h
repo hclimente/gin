@@ -9,6 +9,12 @@
 #define CHI2 1
 #define TREND 2
 
+#define CONSISTENCY 0
+#define BIC 1
+#define AIC 2
+#define AICc 3
+#define mBIC 4
+
 #define RED	"\e[0;31m"
 #define BLACK	"\e[0m"
 #define GREEN	"\e[0;32m"

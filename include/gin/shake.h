@@ -21,7 +21,7 @@ public:
 	// GWAS operations
 	void readGWAS(string const&, uint);
 	void readNetwork(string const&);
-	void searchHyperparameters(uint, string const&, uint const&);
+	void searchHyperparameters(uint, uint const&, uint const&);
 	void selectSnps();
 	void writeResults(string const&);
 

@@ -15,7 +15,7 @@ project (LIBGIN)
 
 # Different names for release and debug
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-	set ( libgin  "gin-db" )
+	set ( libgin  "gin-devel" )
 else (CMAKE_BUILD_TYPE MATCHES Debug)
 	set ( libgin  "gin" )
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
