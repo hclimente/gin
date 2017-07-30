@@ -5,10 +5,6 @@
 #ifndef GIN_GRID_H
 #define GIN_GRID_H
 
-#define SKAT 0
-#define CHI2 1
-#define TREND 2
-
 #include "gin/feature_selection/scones.h"
 #include "gin/stats/univariate_association.h"
 #include "gin/globals.h"
@@ -17,8 +13,8 @@ class Grid {
 
 public:
 
-	Grid(MatrixXd const&, VectorXd const&, SparseMatrixXd* const& );
-	Grid(MatrixXd const&, VectorXd const&, VectorXd const&, VectorXd const&, SparseMatrixXd* const&);
+	Grid(MatrixXd const&, VectorXd const&, SparseMatrixXd* const&, uint const&);
+	Grid(MatrixXd const&, VectorXd const&, SparseMatrixXd* const&, uint const&, VectorXd const&, VectorXd const&);
 
 	void search();
 

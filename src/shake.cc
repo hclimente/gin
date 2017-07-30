@@ -28,7 +28,7 @@ void Shake::readNetwork(string const& networkFileame) {
 
 }
 
-void Shake::searchHyperparameters(uint folds, std::string const& scoring_function, string const& association_score) {
+void Shake::searchHyperparameters(uint folds, std::string const& scoring_function, uint const& association_score) {
 
 	MatrixXd X = __gwas -> X;
 	VectorXd y = __gwas -> Y.col(0);
@@ -37,11 +37,11 @@ void Shake::searchHyperparameters(uint folds, std::string const& scoring_functio
 	UnivariateAssociation univar(__gwas -> X, __gwas -> Y.col(0));
 
 	// TODO implement different association score
-	if (association_score == "chi2") {
+	if (association_score == CHI2) {
 		__c = univar.computeChi2();
 	}
 
-	__cvgrid = new GridCV(&X, &y, &W, __c, folds);
+	__cvgrid = new GridCV(&X, &y, &W, __c, folds, association_score);
 	__cvgrid -> exploreGrids(scoring_function);
 
 	__bestEta = __cvgrid -> bestParameters().first;

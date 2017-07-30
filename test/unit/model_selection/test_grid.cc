@@ -28,7 +28,7 @@ TEST(testGrid, HasExpectedDimensions) {
 	VectorXd lambdas(5);
 	lambdas << 0, 1, 2, 3, 4;
 
-	Grid g = Grid(X, y, etas, lambdas, &W);
+	Grid g = Grid(X, y, &W, CHI2, etas, lambdas);
 	g.search();
 
 	// check dimensions

@@ -13,8 +13,8 @@ class GridCV {
 
 public:
 
-	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, uint);
-	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, VectorXd, uint);
+	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, uint, uint);
+	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, VectorXd, uint, uint);
 	~GridCV();
 
 	// grid exploration functions
@@ -43,7 +43,7 @@ private:
 	SparseMatrixXd* __W = NULL;
 
 	// methods
-	void __initGrids();
+	void __initGrids(uint);
 
 };
 

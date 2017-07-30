@@ -48,7 +48,8 @@ int main(int argc, char* argv[]) {
 	string snp_encoding = vm["encoding"].as<string>();
 	int pcs = vm["pc"].as<int>();
 	int seed = vm["seed"].as<int>();
-	string association_score = vm["association_score"].as<string>();
+	string association_score_str = vm["association_score"].as<string>();
+	uint association_score = SKAT;
 	double lambda = vm["lambda"].as<double>();
 	double eta = vm["eta"].as<double>();
 	bool debug = vm["debug"].as<bool>();
@@ -64,6 +65,9 @@ int main(int argc, char* argv[]) {
 		logging(ERROR,"Encoding does not exist!");
 		exit(-1);
 	}
+
+	if (association_score_str == "chi2")
+		association_score = CHI2;
 
 	Shake shake = Shake();
 

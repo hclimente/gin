@@ -4,7 +4,7 @@
 
 #include "gin/model_selection/grid_cv.h"
 
-GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd c, uint folds) {
+GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd c, uint folds, uint association) {
 	__X = X;
 	__y = y;
 	__W = W;
@@ -21,10 +21,10 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 
 	__folds = folds;
 	__gridSummary = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
-	__initGrids();
+	__initGrids(association);
 }
 
-GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd etas, VectorXd lambdas, uint folds) {
+GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd etas, VectorXd lambdas, uint folds, uint association) {
 	__X = X;
 	__y = y;
 	__W = W;
@@ -32,7 +32,7 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	__lambdas = lambdas;
 	__folds = folds;
 	__gridSummary = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
-	__initGrids();
+	__initGrids(association);
 }
 
 GridCV::~GridCV() {
@@ -43,9 +43,9 @@ GridCV::~GridCV() {
 
 }
 
-void GridCV::__initGrids() {
+void GridCV::__initGrids(uint association) {
 
-	// TODO get seed
+	// TODO get seed from user settings
 	CCrossValidation cv(0);
 	cv.kFold(__folds, __y -> rows());
 
@@ -60,7 +60,7 @@ void GridCV::__initGrids() {
 		}
 		 */
 
-		Grid* g = new Grid(x_train, y_train, __etas, __lambdas, __W);
+		Grid* g = new Grid(x_train, y_train, __W, association, __etas, __lambdas);
 		__grids.push_back(g);
 	}
 

@@ -5,6 +5,10 @@
 
 #include "types.h"
 
+#define SKAT 0
+#define CHI2 1
+#define TREND 2
+
 #define RED	"\e[0;31m"
 #define BLACK	"\e[0m"
 #define GREEN	"\e[0;32m"
