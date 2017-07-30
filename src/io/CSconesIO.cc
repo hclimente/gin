@@ -90,7 +90,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
 	ofs.close();
 }
 
-void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, VectorXd const& indicator, float64 const& best_lambda, float64 const& best_eta, VectorXd const& terms, VectorXd const& skat) {
+void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, VectorXd const& indicator, float64 const& best_lambda, float64 const& best_eta, VectorXd const& terms, VectorXd const& c) {
     std::ofstream ofs;
     ofs.open(outfile.c_str());
     if(!ofs.is_open()) {
@@ -108,9 +108,29 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
             << data.chromosomes[i] << "\t"
             << data.positions[i] << "\t"
             << indicator(i) << "\t"
-            << skat(i) << "\n";
+            << c(i) << "\n";
     }
     ofs.close();
+}
+
+void CSconesIO::writeOutput(std::string const& outfile, GWASData* const& data, VectorXd const& indicator, float64 const& best_lambda, float64 const& best_eta, VectorXd const& c) {
+	std::ofstream ofs;
+	ofs.open(outfile.c_str());
+	if(!ofs.is_open()) {
+		logging(ERROR,"Writing output failed!");
+		exit(-1);
+	}
+	ofs << "#Best Lambda:\t" << best_lambda << "\n";
+	ofs << "#Best Eta:\t" << best_eta << "\n";
+	ofs << "#SNP ID\tCHR\tPositions\tSelected\tScore" << "\n";
+	for(uint i=0; i<indicator.rows();i++) {
+		ofs << data->snp_identifiers[i] << "\t"
+		    << data->chromosomes[i] << "\t"
+		    << data->positions[i] << "\t"
+		    << indicator(i) << "\t"
+		    << c(i) << "\n";
+	}
+	ofs.close();
 }
 
 void CSconesIO::writeCMatrix(std::string const& outfile, MatrixXd const& cmat, CSconesSettings const& settings) {

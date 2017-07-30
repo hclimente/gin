@@ -2,7 +2,7 @@
 #include "gin/stats/CChi2.h"
 #include "gin/stats/CFisherF.h"
 #include "gin/utils/CMatrixHelper.h"
-#include "gin/utils/CCrossValidation.h"
+#include "gin/model_selection/CCrossValidation.h"
 #include "gin/stats/CStats.h"
 
 #include <stdlib.h>

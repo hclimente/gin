@@ -1,7 +1,7 @@
 #include "gin/gwas/CScones.h"
 #include "gin/io/CSconesIO.h"
 #include "math.h"
-#include "gin/utils/CCrossValidation.h"
+#include "gin/model_selection/CCrossValidation.h"
 #include "gin/utils/CMatrixHelper.h"
 #include "gin/utils/StringHelper.h"
 #include "maxflow/maxflow.h"

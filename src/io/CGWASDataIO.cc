@@ -110,21 +110,3 @@ GWASResults CGWASDataIO::readGWASResults(std::string const& filename) {
 	ifs.close();
 	return results;
 }
-
-void CGWASDataIO::writeMetaResultsFile(std::string const& outfile, CMetaResults const& results) {
-	std::ofstream ofs;
-	ofs.open(outfile.c_str());
-	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
-		exit(-1);
-	}
-	ofs << "SNP ID\tCHR\tPositions\tPValue" << endl;
-	for(uint i=0; i<results.p_values.rows();i++) {
-		ofs << results.chromosomes[i] + "_" + StringHelper::to_string<uint64>(results.positions[i]) << "\t"
-		    << results.chromosomes[i] << "\t"
-	    	    << results.positions[i] << "\t"
-		    << results.p_values(i)	    
-		    << endl;
-	}
-	ofs.close();
-}

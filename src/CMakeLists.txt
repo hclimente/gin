@@ -58,26 +58,14 @@ find_package (Boost)
 include_directories (${Boost_INCLUDE_DIRS})
 
 # compile tools
+add_executable (evo tools/evo.cc)
+target_link_libraries (evo LINK_PUBLIC boost_program_options gin)
+
 add_executable (shake tools/shake.cc)
 target_link_libraries (shake LINK_PUBLIC boost_program_options gin)
 
 add_executable (scones tools/scones.cc)
 target_link_libraries (scones LINK_PUBLIC gin)
-
-add_executable (emmax tools/emmax.cc)
-target_link_libraries (emmax LINK_PUBLIC gin)
-
-add_executable (fastlmm tools/fastlmm.cc)
-target_link_libraries (fastlmm LINK_PUBLIC gin)
-
-add_executable (filter_snps tools/filter_snps.cc)
-target_link_libraries (filter_snps LINK_PUBLIC gin)
-
-add_executable (linreg tools/linreg.cc)
-target_link_libraries (linreg LINK_PUBLIC gin)
-
-add_executable (random_effect_meta_analysis tools/random_effect_meta_analysis.cc)
-target_link_libraries (random_effect_meta_analysis LINK_PUBLIC gin)
 
 # installation configuration
 install (TARGETS shake scones

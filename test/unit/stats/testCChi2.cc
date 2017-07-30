@@ -2,7 +2,7 @@
 #include "gin/stats/CChi2.h"
 #include "gin/globals.h"
 
-TEST(CChi2Test, ContingencyTable) {
+TEST(testCChi2, ContingencyTable) {
     VectorXd x(14);
     VectorXd y(14);
 
@@ -19,7 +19,7 @@ TEST(CChi2Test, ContingencyTable) {
 
 }
 
-TEST(CChi2Test, Chi2Calculation) {
+TEST(testCChi2, Chi2Calculation) {
 
     MatrixXd table(2,3);
     table << 9000, 3000, 1000,
@@ -32,7 +32,7 @@ TEST(CChi2Test, Chi2Calculation) {
 
 }
 
-TEST(CChi2Test, Chi2TrendCalculation) {
+TEST(testCChi2, Chi2TrendCalculation) {
 
     MatrixXd table(2,3);
     table << 9000, 3000, 1000,
@@ -45,10 +45,4 @@ TEST(CChi2Test, Chi2TrendCalculation) {
 
     ASSERT_NEAR(T, exp, 0.2);
 
-}
-
-int main(int argc, char* argv[])
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }

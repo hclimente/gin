@@ -70,8 +70,9 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y) thro
 		for (int i = 0; i <= 2; i++){
 
 			std::map<int,int>::iterator f = it->second.find(i);
-			if (f != it->second.end())
+			if (f != it->second.end()) {
 				table(row, col) = it->second[i];
+			}
 			col++;
 		}
 		row++;
@@ -80,7 +81,7 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y) thro
 	return table;
 }
 
-float64 CChi2::calculateChi2(MatrixXd const& table) throw (CChi2Exception) {
+double CChi2::calculateChi2(MatrixXd const& table) throw (CChi2Exception) {
 	double N = table.sum();
 
 	MatrixXd p_phenotype = table.rowwise().sum() / N;

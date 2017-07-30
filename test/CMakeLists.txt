@@ -3,7 +3,7 @@ project(TESTS)
 include_directories(${GIN_SOURCE_DIR}/lib/eigen)
 
 # unit tests
-file (GLOB_RECURSE UNIT_TEST_SOURCES unit/*.cc)
+file (GLOB_RECURSE UNIT_TEST_SOURCES unit/*/*.cc)
 
 add_executable (unit_tests ${UNIT_TEST_SOURCES})
 target_link_libraries (unit_tests LINK_PUBLIC gtest gtest_main gin)
