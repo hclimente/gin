@@ -26,14 +26,14 @@ TEST(Scones, testHyperparams) {
 	solution << 1, 0, 0, 0, 1, 1, 0, 0, 0, 0;
 
 	c << 100, 0, 0, 0, 100, 100, 0, 0, 0, 0;
-	Scones etaTest = Scones(c, 1, 0, W);
+	Scones etaTest = Scones(c, 1, 0, &W);
 	etaTest.selectSnps();
 
 	EXPECT_EQ(etaTest.selected(), solution);
 	EXPECT_EQ(etaTest.computeScore(), 297);
 
 	c << 100, 5, 5, 5, 100, 100, 5, 5, 5, 5;
-	Scones lambdaTest = Scones(c, 10, 3, W);
+	Scones lambdaTest = Scones(c, 10, 3, &W);
 	lambdaTest.selectSnps();
 
 	EXPECT_EQ(lambdaTest.selected(), solution);
@@ -61,14 +61,14 @@ TEST(Scones, testHyperparamsTestedInGrids) {
 	solution << 1, 0, 0, 0, 1, 1, 0, 0, 0, 0;
 
 	c << 10, 0, 0, 0, 10, 10, 0, 0, 0, 0;
-	Scones etaTest = Scones(c, 1, 0, W);
+	Scones etaTest = Scones(c, 1, 0, &W);
 	etaTest.selectSnps();
 
 	EXPECT_EQ(etaTest.selected(), solution);
 	EXPECT_EQ(etaTest.computeScore(), 27);
 
 	c << 10, 0.4, 0.4, 0.4, 10, 10, 0.4, 0.4, 0.4, 0.4;
-	Scones lambdaTest = Scones(c, 1, 0.3, W);
+	Scones lambdaTest = Scones(c, 1, 0.3, &W);
 	lambdaTest.selectSnps();
 
 	EXPECT_EQ(lambdaTest.selected(), solution);
@@ -102,7 +102,7 @@ TEST(Scones, testMaxflow) {
 	VectorXd c(10);
 	c << 100, 0, 0, 0, 100, 100, 0, 0, 0, 0;
 
-	Scones noTerms1 = Scones(c, 0, 0, W);
+	Scones noTerms1 = Scones(c, 0, 0, &W);
 	noTerms1.selectSnps();
 
 	EXPECT_EQ(noTerms1.selected(), solution);
@@ -110,7 +110,7 @@ TEST(Scones, testMaxflow) {
 
 	c << 100, 1, 0, 0, 100, 100, 0, 0, 0, 0;
 
-	Scones noTerms2 = Scones(c, 0, 0, W);
+	Scones noTerms2 = Scones(c, 0, 0, &W);
 	noTerms2.selectSnps();
 
 	EXPECT_NE(noTerms2.selected(), solution);
@@ -118,12 +118,12 @@ TEST(Scones, testMaxflow) {
 
 	// disconnected from source/sink
 	c << 100, 5, 5, 5, 100, 100, 5, 5, 5, 5;
-	Scones etaTooLarge = Scones(c, 101, 0, W);
+	Scones etaTooLarge = Scones(c, 101, 0, &W);
 	etaTooLarge.selectSnps();
 
 	EXPECT_EQ(etaTooLarge.selected(), none);
 
-	Scones etaTooSmall = Scones(c, 3, 0, W);
+	Scones etaTooSmall = Scones(c, 3, 0, &W);
 	etaTooSmall.selectSnps();
 
 	EXPECT_EQ(etaTooSmall.selected(), all);
@@ -138,13 +138,13 @@ TEST(Scones, testSettersGetters) {
 	VectorXd c(3);
 	SparseMatrixXd W;
 
-	Scones empty = Scones(c, 0, 0, W);
+	Scones empty = Scones(c, 0, 0, &W);
 	empty.setSelected(all);
 
 	EXPECT_EQ(empty.selected(), all);
 
 	c << 2, 4, 8;
-	Scones empty2 = Scones(c, 0, 0, W);
+	Scones empty2 = Scones(c, 0, 0, &W);
 	empty2.setSelected(all);
 
 	EXPECT_EQ(empty2.computeScore(), 14);

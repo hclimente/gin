@@ -10,16 +10,8 @@
 
 class Scones: public FeatureSelector {
 public:
-	Scones(VectorXd const& c, double const& eta, double const& lambda, SparseMatrixXd const& W)
-			: FeatureSelector::FeatureSelector(c.rows())
-	{
 
-		// TODO throw exception in f and nrow do not match
-		__c = c;
-		__eta = eta;
-		__lambda = lambda;
-		__lW = __lambda * W;
-	};
+	Scones(VectorXd const&, double const&, double const&, SparseMatrixXd* const&);
 	void selectSnps();
 	double computeScore();
 

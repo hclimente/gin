@@ -67,7 +67,7 @@ void Grid::search() {
 			double eta = __etas[e];
 			double lambda = __lambdas[l];
 
-			Scones s(__c, eta, lambda, *__W);
+			Scones s(__c, eta, lambda, __W);
 			s.selectSnps();
 
 			__grid[eta][lambda] = s.selected();

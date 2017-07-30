@@ -55,7 +55,9 @@ void Shake::searchHyperparameters(uint folds, uint const& scoring_function, uint
 
 void Shake::selectSnps() {
 
-	Scones s = Scones(__c, __bestEta, __bestLambda, __gwas -> network);
+	SparseMatrixXd W = __gwas -> network;
+
+	Scones s = Scones(__c, __bestEta, __bestLambda, &W);
 	__selectedSnps = s.selected();
 
 }

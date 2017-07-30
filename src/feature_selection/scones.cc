@@ -5,6 +5,21 @@
 #include "gin/feature_selection/scones.h"
 #include "maxflow/maxflow.h"
 
+Scones::Scones(VectorXd const& c, double const& eta, double const& lambda, SparseMatrixXd* const& W)
+: FeatureSelector::FeatureSelector(c.rows())
+{
+
+	if (c.rows() != W -> rows()){
+		// TODO throw exception in f and nrow do not match
+	}
+
+	__c = c;
+	__eta = eta;
+	__lambda = lambda;
+	__lW = __lambda * (*W);
+
+}
+
 void Scones::selectSnps() {
 
 	VectorXd c_t = __c.array() - __eta;
