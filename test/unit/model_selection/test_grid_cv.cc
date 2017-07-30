@@ -10,6 +10,10 @@ TEST(GridCV, CreatesFolds) {
 	// TODO Number of folds, appropriately split folds, runs them, etc.
 }
 
+TEST(GridCV, CheckConstructor) {
+	// TODO All values are initialized, Y is detected as binary, etc.
+}
+
 TEST(GridCV, GridEvaluation) {
 	// TODO Check BIC, AIC, CONSISTENCY, etc.
 }

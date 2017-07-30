@@ -51,7 +51,7 @@ class CRegression {
 		
 		virtual void fit() throw (CRegressionException) {};
 		virtual void fit(bool const&) throw (CRegressionException) {};
-		//virtual void fit(VectorXd const&, MatrixXd const&) throw (CRegressionException) {};
+		virtual void fit(VectorXd const&, MatrixXd const&) throw (CRegressionException) {};
 		//virtual void fit(VectorXd const&, MatrixXd const&, bool const&) throw (CRegressionException) {};
 
 		//Several Getter Methods

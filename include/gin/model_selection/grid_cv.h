@@ -7,6 +7,7 @@
 
 #include "gin/model_selection/grid.h"
 #include "gin/model_selection/CCrossValidation.h"
+#include "gin/regression/CRegression.h"
 #include "gin/utils/CMatrixHelper.h"
 
 class GridCV {
@@ -41,9 +42,12 @@ private:
 	MatrixXd* __X = NULL;
 	VectorXd* __y = NULL;
 	SparseMatrixXd* __W = NULL;
+	bool __binary_y;
 
 	// methods
 	void __initGrids(uint);
+	double __computeConsistency(VectorXd const&);
+	double __computeInformation(VectorXd, uint);
 
 };
 
