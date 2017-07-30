@@ -52,7 +52,7 @@ void Shake::searchHyperparameters(uint folds, std::string const& scoring_functio
 void Shake::selectSnps() {
 
 	Scones s = Scones(__c, __bestEta, __bestLambda, __gwas -> network);
-	__selectedSnps = s.getSelected();
+	__selectedSnps = s.selected();
 
 }
 

@@ -11,7 +11,7 @@ class FeatureSelector {
 public:
 	FeatureSelector(long);
 
-	VectorXd getSelected();
+	VectorXd selected();
 
 	void setSelected(VectorXd);
 

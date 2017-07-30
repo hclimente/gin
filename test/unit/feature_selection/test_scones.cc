@@ -29,14 +29,14 @@ TEST(testScones, testHyperparams) {
 	Scones etaTest = Scones(c, 1, 0, W);
 	etaTest.selectSnps();
 
-	EXPECT_EQ(etaTest.getSelected(), solution);
+	EXPECT_EQ(etaTest.selected(), solution);
 	EXPECT_EQ(etaTest.computeScore(), 297);
 
 	c << 100, 5, 5, 5, 100, 100, 5, 5, 5, 5;
 	Scones lambdaTest = Scones(c, 10, 3, W);
 	lambdaTest.selectSnps();
 
-	EXPECT_EQ(lambdaTest.getSelected(), solution);
+	EXPECT_EQ(lambdaTest.selected(), solution);
 	EXPECT_EQ(lambdaTest.computeScore(), 261);
 
 }
@@ -70,7 +70,7 @@ TEST(testScones, testMaxflow) {
 	Scones noTerms1 = Scones(c, 0, 0, W);
 	noTerms1.selectSnps();
 
-	EXPECT_EQ(noTerms1.getSelected(), solution);
+	EXPECT_EQ(noTerms1.selected(), solution);
 	EXPECT_EQ(noTerms1.computeScore(), 300);
 
 	c << 100, 1, 0, 0, 100, 100, 0, 0, 0, 0;
@@ -78,7 +78,7 @@ TEST(testScones, testMaxflow) {
 	Scones noTerms2 = Scones(c, 0, 0, W);
 	noTerms2.selectSnps();
 
-	EXPECT_NE(noTerms2.getSelected(), solution);
+	EXPECT_NE(noTerms2.selected(), solution);
 	EXPECT_EQ(noTerms2.computeScore(), 301);
 
 	// disconnected from source/sink
@@ -86,12 +86,12 @@ TEST(testScones, testMaxflow) {
 	Scones etaTooLarge = Scones(c, 101, 0, W);
 	etaTooLarge.selectSnps();
 
-	EXPECT_EQ(etaTooLarge.getSelected(), none);
+	EXPECT_EQ(etaTooLarge.selected(), none);
 
 	Scones etaTooSmall = Scones(c, 3, 0, W);
 	etaTooSmall.selectSnps();
 
-	EXPECT_EQ(etaTooSmall.getSelected(), all);
+	EXPECT_EQ(etaTooSmall.selected(), all);
 
 }
 
@@ -106,7 +106,7 @@ TEST(testScones, testSettersGetters) {
 	Scones empty = Scones(c, 0, 0, W);
 	empty.setSelected(all);
 
-	EXPECT_EQ(empty.getSelected(), all);
+	EXPECT_EQ(empty.selected(), all);
 
 	c << 2, 4, 8;
 	Scones empty2 = Scones(c, 0, 0, W);

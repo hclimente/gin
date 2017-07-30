@@ -67,17 +67,17 @@ void Grid::search() {
 			Scones s(__c, eta, lambda, *__W);
 			s.selectSnps();
 
-			__grid[eta][lambda] = s.getSelected();
+			__grid[eta][lambda] = s.selected();
 
 		}
 	}
 }
 
-VectorXd Grid::getSelected(double const& eta, double const& lambda) {
+VectorXd Grid::selected(double const& eta, double const& lambda) {
 	return __grid[eta][lambda];
 }
 
-std::vector<VectorXd> Grid::getSelected(VectorXd const& etas, VectorXd const& lambdas) {
+std::vector<VectorXd> Grid::selected(VectorXd const &etas, VectorXd const &lambdas) {
 	std::vector<VectorXd> selected;
 
 	for (int e = 0; e < etas.rows(); e++) {

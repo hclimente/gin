@@ -88,7 +88,7 @@ void GridCV::exploreGrids(std::string const& scoring_function) {
 			__gridAggregation[eta][lambda] = VectorXd::Zero(__X -> cols());
 
 			for (int i = 0; i < __folds; i++) {
-				VectorXd u = __grids[i] -> getSelected(eta, lambda);
+				VectorXd u = __grids[i]->selected(eta, lambda);
 				__gridAggregation[eta][lambda] += u;
 			}
 

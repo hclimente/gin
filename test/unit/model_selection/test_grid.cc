@@ -32,14 +32,14 @@ TEST(testGrid, HasExpectedDimensions) {
 	g.search();
 
 	// check dimensions
-	EXPECT_EQ(g.getSelected(etas, lambdas).size(), 20);
+	EXPECT_EQ(g.selected(etas, lambdas).size(), 20);
 	VectorXd oneDimension(1);
 	oneDimension << 0;
-	EXPECT_EQ(g.getSelected(etas, oneDimension).size(), 4);
-	EXPECT_EQ(g.getSelected(oneDimension, lambdas).size(), 5);
+	EXPECT_EQ(g.selected(etas, oneDimension).size(), 4);
+	EXPECT_EQ(g.selected(oneDimension, lambdas).size(), 5);
 
 	// check all models are run
-	std::vector<VectorXd> allModels = g.getSelected(etas, lambdas);
+	std::vector<VectorXd> allModels = g.selected(etas, lambdas);
 
 	double max = -1;
 	for (VectorXd m : allModels) {

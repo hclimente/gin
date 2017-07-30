@@ -22,8 +22,8 @@ public:
 
 	void search();
 
-	VectorXd getSelected(double const&, double const&);
-	std::vector<VectorXd> getSelected(VectorXd const& etas, VectorXd const& lambdas);
+	VectorXd selected(double const&, double const&);
+	std::vector<VectorXd> selected(VectorXd const &etas, VectorXd const &lambdas);
 
 private:
 

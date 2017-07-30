@@ -14,7 +14,7 @@ FeatureSelector::FeatureSelector(long n_features) {
 	__selected = VectorXd::Ones(__n_features);
 }
 
-VectorXd FeatureSelector::getSelected() {
+VectorXd FeatureSelector::selected() {
 	return __selected;
 }
 
