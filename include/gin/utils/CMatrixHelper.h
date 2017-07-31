@@ -27,7 +27,9 @@ inline MatrixXd sliceColsMatrix(MatrixXd const& m, VectorXd const& indices) {
 	return out;
 }
 
-inline MatrixXd sliceColsMatrixByBinaryVector(MatrixXd const &m, VectorXd const &binaryVec) {
+inline MatrixXd sliceColsMatrixByBinaryVector(MatrixXd const &m, VectorXd binaryVec) {
+
+	binaryVec = binaryVec.array().round();
 
 	int ncols = binaryVec.sum();
 	MatrixXd out(m.rows(), ncols);
