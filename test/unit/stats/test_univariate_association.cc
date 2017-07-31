@@ -65,7 +65,6 @@ TEST(UnivariateAssociation, testRightScores2COMPLETE) {
 	*/
 
 	// TODO find right scores
-	std::cout << "SKAT\n";
 
 }
 

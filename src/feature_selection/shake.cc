@@ -2,7 +2,7 @@
 // Created by hclimente on 21/07/2017.
 //
 
-#include "gin/shake.h"
+#include "gin/feature_selection/shake.h"
 
 Shake::Shake() {
 	__gwas = new GWASData();
@@ -45,8 +45,9 @@ void Shake::searchHyperparameters(uint folds, uint const& scoring_function, uint
 		__c = univar.computeSKAT();
 	}
 
-	__cvgrid = new GridCV(&X, &y, &W, __c, folds, association_score);
-	__cvgrid -> exploreGrids(scoring_function);
+	__cvgrid = new GridCV(&X, &y, &W, __c, folds);
+	__cvgrid->runFolds(association_score);
+	__cvgrid->scoreModels(scoring_function);
 
 	__bestEta = __cvgrid -> bestParameters().first;
 	__bestLambda = __cvgrid -> bestParameters().second;

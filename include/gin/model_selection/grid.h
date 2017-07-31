@@ -18,8 +18,16 @@ public:
 
 	void search();
 
+	// getters
+	std::map<double, std::map<double, VectorXd>> grid() { return __grid; }
 	VectorXd selected(double const&, double const&);
 	std::vector<VectorXd> selected(VectorXd const &etas, VectorXd const &lambdas);
+
+	MatrixXd X() { return __X; }
+	VectorXd y() { return __y; }
+	VectorXd c() { return __c; }
+	VectorXd etas() { return __etas; }
+	VectorXd lambdas() { return __lambdas; }
 
 private:
 
@@ -31,8 +39,6 @@ private:
 	VectorXd __lambdas;
 
 	std::map<double, std::map<double, VectorXd>> __grid;
-	double __bestEta;
-	double __bestLambda;
 
 	void __initGrid();
 	void __computeUnivariate(uint const&);

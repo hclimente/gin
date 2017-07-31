@@ -21,6 +21,8 @@ UnivariateAssociation::UnivariateAssociation(MatrixXd* X, VectorXd* y) {
 
 VectorXd UnivariateAssociation::computeSKAT() {
 
+	// TODO check SKAT implementation
+
 	MatrixXd sW;
 	sW = DiagXd(__n_features);
 	sW.diagonal() = VectorXd::Ones(__n_features);

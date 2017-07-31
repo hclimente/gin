@@ -6,6 +6,8 @@
 #include "gtest/gtest.h"
 #include "gin/globals.h"
 
+// TODO set more setters and getters
+
 TEST(Grid, HasExpectedDimensions) {
 
 	MatrixXd X(3, 3);

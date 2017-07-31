@@ -2,7 +2,7 @@
 // Created by hclimente on 25/07/2017.
 //
 
-#include "gin/shake.h"
+#include "gin/feature_selection/shake.h"
 #include "boost/program_options.hpp"
 
 int main(int argc, char* argv[]) {

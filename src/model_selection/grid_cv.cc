@@ -4,7 +4,7 @@
 
 #include "gin/model_selection/grid_cv.h"
 
-GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd c, uint folds, uint association) {
+GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd c, uint folds) {
 	__X = X;
 	__y = y;
 	__W = W;
@@ -27,11 +27,11 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	}
 
 	__folds = folds;
-	__gridSummary = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
-	__initGrids(association);
+	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
+
 }
 
-GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd etas, VectorXd lambdas, uint folds, uint association) {
+GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd etas, VectorXd lambdas, uint folds) {
 	__X = X;
 	__y = y;
 	__W = W;
@@ -47,19 +47,24 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	__etas = etas;
 	__lambdas = lambdas;
 	__folds = folds;
-	__gridSummary = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
-	__initGrids(association);
+	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
+
 }
 
 GridCV::~GridCV() {
 
-	for (int i = 0; i < __folds; i++) {
+	for (int i = 0; i < __grids.size(); i++) {
 		delete __grids[i];
 	}
 
 }
 
-void GridCV::__initGrids(uint association) {
+void GridCV::runFolds(uint association) {
+
+	// delete previous iteration, if any
+	for (int i = 0; i < __grids.size(); i++) {
+		delete __grids[i];
+	}
 
 	// TODO get seed from user settings
 	CCrossValidation cv(0);
@@ -82,55 +87,41 @@ void GridCV::__initGrids(uint association) {
 
 	for (int e = 0; e < __etas.rows(); e++ ) {
 		for (int l = 0; l < __lambdas.rows(); l++ ) {
-			__gridAggregation[e][l] = VectorXd();
-			__gridSummary(e, l) = -1;
+			__setAggregatedFolds(e, l, VectorXd());
+			__scoredFolds(e,l) = -1;
 		}
 	}
-}
-
-void GridCV::exploreGrids(uint scoring_function) {
 
 	for (int i = 0; i < __folds; i++) {
 		__grids[i] -> search();
 	}
+}
 
-	double max = -1;
+void GridCV::scoreModels(uint scoring_function) {
 
-	for (int e = 0; e < __etas.rows(); e++ ) {
-		for (int l = 0; l < __lambdas.rows(); l++ ) {
+	for (uint e = 0; e < __etas.rows(); e++ ) {
+		for (uint l = 0; l < __lambdas.rows(); l++ ) {
 
-			double eta = __etas[e];
-			double lambda = __lambdas[e];
-			__gridAggregation[eta][lambda] = VectorXd::Zero(__X -> cols());
+			__setAggregatedFolds(e, l, VectorXd::Zero(__X->cols()));
 
 			for (int i = 0; i < __folds; i++) {
-				VectorXd u = __grids[i]->selected(eta, lambda);
-				__gridAggregation[eta][lambda] += u;
+				VectorXd u = __grids[i] -> selected(__etas[e], __lambdas[l]);
+				__setAggregatedFolds(e, l, aggregatedFolds(e, l) + u);
 			}
+			__setAggregatedFolds(e, l, aggregatedFolds(e, l) / __folds);
 
-			__gridAggregation[eta][lambda] /= __folds;
-			__gridSummary(e, l) = scoreModels(__gridAggregation[eta][lambda], scoring_function);
-
-			if(max < __gridSummary(e, l)) {
-				max = __gridSummary(e, l);
-				__bestParameters = std::pair<double, double>(eta, lambda);
+			// TODO consider cases where a number > that a threshold are picked
+			if (scoring_function == CONSISTENCY) {
+				__scoredFolds(e, l) = __computeConsistency(aggregatedFolds(e,l));
+			} else if(scoring_function == AICc | scoring_function == AIC | scoring_function == BIC | scoring_function == mBIC) {
+				__scoredFolds(e, l) = - __computeInformation(aggregatedFolds(e,l), scoring_function);
 			}
 		}
 	}
-}
 
-double GridCV::scoreModels(VectorXd const& folds, uint const& scoringFunction) {
-
-	double score;
-
-	// TODO consider cases where a number > that a threshold are picked
-	if (scoringFunction == CONSISTENCY) {
-		score = __computeConsistency(folds);
-	} else if(scoringFunction == AICc | scoringFunction == AIC | scoringFunction == BIC | scoringFunction == mBIC) {
-		score = __computeInformation(folds, scoringFunction);
-	}
-
-	return score;
+	MatrixXd::Index best_eta_index, best_lambda_index;
+	__scoredFolds.maxCoeff(&best_eta_index, &best_lambda_index);
+	__bestParameters = std::pair<double, double> (__etas[best_eta_index], __lambdas[best_lambda_index]);
 
 }
 
@@ -138,12 +129,12 @@ double GridCV::__computeConsistency(VectorXd const& folds) {
 
 	// TODO implementation is not the same as in original SConES
 	double score;
-	float totalSelected = (folds.array() > 0).count();
+	float totalSelected = (folds.array() > 0).count() * __folds;
 
 	if (totalSelected == 0 ) {
 		score = 0;
 	} else {
-		float consistentlySelected = (folds.array() == 1).count();
+		float consistentlySelected = (folds.array() * __folds).sum();
 		score = consistentlySelected / totalSelected;
 	}
 
@@ -156,7 +147,7 @@ double GridCV::__computeInformation(VectorXd folds, uint scoringFunction) {
 	double score;
 
 	for(uint64 i = 0; i < folds.rows(); i++) {
-		if(folds(i) != 1) {
+		if(folds(i) < 1) {
 			folds(i) = 0;
 		}
 	}
@@ -166,26 +157,27 @@ double GridCV::__computeInformation(VectorXd folds, uint scoringFunction) {
 		score = 1e31;
 	else {
 		MatrixXd x_tr = sliceColsMatrixByBinaryVector(*__X, folds);
-		CRegression regression;
+		CRegression* regression;
 
 		if(__binary_y) {
-			regression = CLogisticRegression();
+			regression = new CLogisticRegression();
+			regression -> fit(*__y, x_tr);
 		} else {
-			regression = CLinearRegression();
+			regression = new CLinearRegression();
+			regression -> fit(*__y, x_tr);
 		}
-
-		regression.fit(*__y, x_tr);
 
 		if (scoringFunction == BIC) {
-			score = regression.getBIC();
+			score = regression -> getBIC();
 		} else if(scoringFunction == AIC) {
-			score = regression.getAIC();
+			score = regression -> getAIC();
 		}  else if(scoringFunction == AICc) {
-			score = regression.getAICc();
+			score = regression -> getAICc();
 		}  else if(scoringFunction == mBIC) {
 			// TODO implement network information
-			score = regression.getBIC();
+			score = regression -> getBIC();
 		}
+		delete regression;
 	}
 
 	return score;
