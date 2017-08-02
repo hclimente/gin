@@ -18,6 +18,15 @@ public:
 		__parseOptions(argc, argv);
 	}
 
+	Settings(string pedBasename, string networkFilename, uint encoding, uint modelScore, uint associationScore, string output) {
+		__pedBasename = pedBasename;
+		__networkFilename = networkFilename;
+		__encoding = encoding;
+		__modelScore = modelScore;
+		__associationScore = associationScore;
+		__output = output;
+	}
+
 	void printHelp() {
 		std::cout << __options() << "\n";
 	}
