@@ -22,13 +22,13 @@ void Shake::readGWAS(string const& pedBasename, uint encoding) {
 	CGWASDataHelper::encodeHeterozygousData(__gwas, encoding);
 }
 
-void Shake::readNetwork(string const& networkFileame) {
+void Shake::readNetwork(string const& networkFilename) {
 
-	CSconesIO::readSparseNetworkFile(networkFileame, __gwas);
+	CSconesIO::readSparseNetworkFile(networkFilename, __gwas);
 
 }
 
-void Shake::searchHyperparameters(uint folds, uint const& scoring_function, uint const& association_score) {
+void Shake::searchHyperparameters(uint folds, uint const& modelScore, uint const& associationScore) {
 
 	MatrixXd X = __gwas -> X;
 	VectorXd y = __gwas -> Y.col(0);
@@ -36,18 +36,18 @@ void Shake::searchHyperparameters(uint folds, uint const& scoring_function, uint
 
 	UnivariateAssociation univar( &X, &y );
 
-	if (association_score == CHI2) {
+	if (associationScore == CHI2) {
 		__c = univar.computeChi2();
-	} else if (association_score == TREND) {
+	} else if (associationScore == TREND) {
 		// TODO implement different trend scores
 		__c = univar.computeTrendTest("additive");
-	} else if (association_score == SKAT) {
+	} else if (associationScore == SKAT) {
 		__c = univar.computeSKAT();
 	}
 
 	__cvgrid = new GridCV(&X, &y, &W, __c, folds);
-	__cvgrid->runFolds(association_score);
-	__cvgrid->scoreModels(scoring_function);
+	__cvgrid->runFolds(associationScore);
+	__cvgrid->scoreModels(modelScore);
 
 	__bestEta = __cvgrid -> bestParameters().first;
 	__bestLambda = __cvgrid -> bestParameters().second;

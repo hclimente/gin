@@ -64,6 +64,7 @@ void GridCV::runFolds(uint association) {
 	// delete previous iteration, if any
 	for (int i = 0; i < __grids.size(); i++) {
 		delete __grids[i];
+		__grids[i] = NULL;
 	}
 
 	// TODO get seed from user settings

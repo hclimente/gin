@@ -31,10 +31,11 @@ void CPlinkParser::readPEDFile(std::string const& file,
 	logging(INFO,"File Size: " + StringHelper::to_string<float64>(((float64)fsize)/1024/1024) + " MB");
 
 	std::string line;
-	uint64 i=0;
-	uint64 size=0;
-	uint64 lcounter=0;
+	uint64 i = 0;
+	uint64 size = 0;
+	uint64 lcounter = 0;
 	std::vector<std::string> sv;
+
 	while(ifs.good()) {
 		getline(ifs,line);
 		line = StringHelper::trim(line);
@@ -42,42 +43,49 @@ void CPlinkParser::readPEDFile(std::string const& file,
 		sv.clear();
 		std::copy(std::istream_iterator<std::string>(iss),
 		       	  std::istream_iterator<std::string>(),
-			  std::back_inserter<std::vector<std::string> >(sv));
+		          std::back_inserter<std::vector<std::string> >(sv));
+
 		if(sv.size() < 8) continue;
+
 		data->family_ids.push_back(sv[0]);
 		data->sample_ids.push_back(sv[1]);
 		data->paternal_ids.push_back(sv[2]);
 		data->maternal_ids.push_back(sv[3]);
 		data->sex.push_back(StringHelper::string_to<int>(sv[4]));
 		Y.push_back(StringHelper::string_to<double>(sv[5]));
-		if((sv.size()-6)%2!=0) 
+
+		if((sv.size() - 6) % 2 != 0)
 			throw CPlinkParserException("ERROR: PED file has wrong file format.");
+
 		std::vector<char> snps;
-		size = (sv.size()-6.0)/2.0;
+		size = (sv.size() - 6.0)/2.0;
 		snps.resize(size);
-		lcounter=0;
-		for(i=6; i<sv.size(); i++) {
+		lcounter = 0;
+
+		for(i = 6; i < sv.size(); i++) {
 			std::string iupac = sv[i] + sv[i+1];
 			iupac_iterator = __iupac_map.find(iupac);
-			if(iupac_iterator!=__iupac_map.end()) {
-			       	snps.at(lcounter) = (char)(iupac_iterator->second);
+			if(iupac_iterator != __iupac_map.end()) {
+				snps.at(lcounter) = (char)(iupac_iterator->second);
 			} else {
 				throw CPlinkParserException("ERROR in PED Parser: Wrong Nucleotide encoding");
 			}
 			lcounter++;
 			i++;
 		}
+
 		data->raw_snps.push_back(snps);
 		progress.printProgress(ifs);
 	}
+
 	progress.printProgress(ifs);
-	logging(LOG,"");
+	logging(LOG,"\n");
 	data->n_snps = size;
 	data->n_samples = data->raw_snps.size();
 	ifs.close();
 
 	data->Y = VectorXd::Zero(data->n_samples);
-	for (uint i; i < data->n_samples; i++) {
+	for (uint i = 0; i < data->n_samples; i++) {
 		data->Y(i) = Y[i];
 	}
 

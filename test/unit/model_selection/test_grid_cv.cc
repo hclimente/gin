@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 #include "gin/globals.h"
 
-TEST(GridCV, Constructor) {
+TEST(GridCV, GridCV) {
 
 	MatrixXd X(3,4);
 	X <<    0,0,0,1,
@@ -51,7 +51,7 @@ TEST(GridCV, Constructor) {
 
 }
 
-TEST(GridCV, RunsKFold) {
+TEST(GridCV, runFolds) {
 
 	MatrixXd X(10, 3);
 	X <<    2,0,0,
@@ -112,7 +112,7 @@ TEST(GridCV, RunsKFold) {
 
 }
 
-TEST(GridCV, ExploresKFold) {
+TEST(GridCV, scoreModels) {
 
 	// only 2 first SNPs are causal
 	MatrixXd X(12, 4);
@@ -163,7 +163,6 @@ TEST(GridCV, ExploresKFold) {
 	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 0.85, 0.01);
 
 	// TODO check BIC, AIC, CONSISTENCY for continuous when SKAT is implemented
-
 	// y <<    0.97,0.98,0.94,0.75,0.8,0.77,0.25,0.4,0.25,0.4,0.25,0.3;
 	// GridCV grid_qt(&X, &y, &W, etas, lambdas, 10);
 

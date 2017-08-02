@@ -346,8 +346,11 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data) throw (CGWASDataExc
 }
 
 void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encoding) throw (CGWASDataException) {
-    if(data->raw_snps.size()==0)
-        throw CGWASDataException("Heterozygous encoding error: GWASData object not initialized. raw_snps is empty.");
+
+	if(data->raw_snps.size() == 0) {
+	    throw CGWASDataException("Heterozygous encoding error: GWASData object not initialized. raw_snps is empty.");
+    }
+
     std::locale loc;
     std::vector<uint> index_T;
     std::vector<uint> index_C;
@@ -359,30 +362,35 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
     std::vector<uint> index_W;
     std::vector<uint> index_K;
     std::vector<uint> index_M;
-    //Init X and MAF
-    data->X = MatrixXd::Ones(data->n_samples,data->n_snps);
+
+    // init MAF
+	data->MAF.resize(data->n_snps);
+
+	// init X to the minor homozygous by default
+    data->X = MatrixXd::Ones(data->n_samples, data->n_snps);
     uint het_encoding = 1;
     data->genotype_data_type = "Heterozygous";
-    if(encoding==CGWASDataHelper::additive) {
-               data->genotype_encoding = "additive (0: Major, 1: Heterozygous, 2: Minor)";
+    if(encoding == CGWASDataHelper::additive) {
+        data->genotype_encoding = "additive (0: Major, 1: Heterozygous, 2: Minor)";
         data->X.array() *= 2;
         het_encoding = 1;
-    } else if(encoding==CGWASDataHelper::dominant) {
-               data->genotype_encoding = "dominant (0: Major, 1: Heterozygous, 1: Minor)";
+    } else if(encoding == CGWASDataHelper::dominant) {
+        data->genotype_encoding = "dominant (0: Major, 1: Heterozygous, 1: Minor)";
         data->X.array() *= 1;
         het_encoding = 1;
-    } else if(encoding==CGWASDataHelper::codominant) {
+    } else if(encoding == CGWASDataHelper::codominant) {
         data->genotype_encoding = "co-dominant (0: Major, 1: Heterozygous, 0: Minor)";
         data->X.array() *= 0;
         het_encoding = 1;
-    } else if(encoding==CGWASDataHelper::recessive) {
-               data->genotype_encoding = "recessive (0: Major, 0: Heterozygous, 1: Minor)";
+    } else if(encoding == CGWASDataHelper::recessive) {
+	    data->genotype_encoding = "recessive (0: Major, 0: Heterozygous, 1: Minor)";
         data->X.array() *= 1;
         het_encoding = 0;
     }
-    
-    data->MAF.resize(data->n_snps);
-    for(uint64 i=0; i<data->n_snps; i++) {
+
+    for(uint64 i = 0; i < data->n_snps; i++) {
+
+	    // count each genotype for that SNP
         index_T.clear();
         index_C.clear();
         index_G.clear();
@@ -393,7 +401,8 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
         index_W.clear();
         index_K.clear();
         index_M.clear();
-        for(uint j=0; j<data->n_samples; j++) {
+
+        for(uint j = 0; j < data->n_samples; j++) {
             char nuc = std::toupper(data->raw_snps[j][i]);
             if(nuc == 'T') {
                 index_T.push_back(j);
@@ -420,36 +429,49 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
                 throw CGWASDataException("[Encode Heterozygous Data]: Unknown nucleotide: " + tmp + " (Line: " + StringHelper::to_string(j+1) + " , SNP-Position: " + StringHelper::to_string(i));
             }
         }
+
+        // find the major and minor homozygous in biallelic SNP
         vector<uint64> max_elements;
         max_elements.push_back(index_T.size());
         max_elements.push_back(index_C.size());
         max_elements.push_back(index_G.size());
         max_elements.push_back(index_A.size());
-        int index=0;
+        int index = 0;
         uint64 max = 0;
         uint64 min = ULONG_MAX;
-        int zero_counter=0;
+        int zero_counter = 0;
         int n_elements = 0;
-        for(uint j=0; j<max_elements.size(); j++) {
-            if(max_elements[j]>0) {
+
+        for(uint j = 0; j < max_elements.size(); j++) {
+
+	        if(max_elements[j] > 0) {
                 n_elements += 1;
             }
-            if(max_elements[j]>max) {
+
+            if(max_elements[j] > max) {
                 max = max_elements[j];
                 index = j;
             }
-            if(max_elements[j]==0) zero_counter++;
-            else if(max_elements[j]<min) {
-                max = max_elements[j];
-                index = j;
+
+            if(max_elements[j] == 0) {
+	            zero_counter++;
+            } else if(max_elements[j] < min) {
+	            min = max_elements[j];
             }
         }
-        if(zero_counter==3) min = 0;
+
+        if(zero_counter == 3) min = 0;
         uint64 het_count = data->n_samples - max - min;
-        if(n_elements>2)
-            throw CGWASDataException("[Encode Heterozygous Data]: Non-biallelic SNP found at SNP-Position: " + StringHelper::to_string(i));
+
+	    // warning if non-biallelic SNP
+        if(n_elements > 2) {
+	        throw CGWASDataException("[Encode Heterozygous Data]: Non-biallelic SNP found at SNP-Position: " + StringHelper::to_string(i));
+        }
+
         data->MAF(i) = ((float64)min)/((float64)data->n_samples) + 0.5 * ((float64)het_count)/((float64)data->n_samples);
         //data->MAF(i) = 1.0 - ((float64)max)/((float64)data->n_samples);
+
+        // assign major homozygous
         if(index==0) {
             for(uint64 j=0; j < index_T.size(); j++) {
                 data->X(index_T[j],i) = 0;
@@ -467,6 +489,8 @@ void CGWASDataHelper::encodeHeterozygousData(GWASData* data, uint const& encodin
                 data->X(index_A[j],i) = 0;
             }
         }
+
+        // assign heterozygous
         for(uint64 j=0; j < index_R.size(); j++) {
             data->X(index_R[j],i) = het_encoding;
         }
