@@ -5,7 +5,6 @@
 #include "gin/feature_selection/shake.h"
 #include "gin/gwas/CGWASData.h"
 #include "gtest/gtest.h"
-#include "gin/globals.h"
 
 TEST(Shake, readGWAS) {
 
