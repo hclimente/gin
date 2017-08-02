@@ -9,6 +9,11 @@ Shake::Shake() {
 	__cvgrid = NULL;
 }
 
+Shake::Shake(GWASData* gwas) {
+	__gwas = gwas;
+	__cvgrid = NULL;
+}
+
 Shake::~Shake() {
 	delete __gwas;
 	delete __cvgrid;

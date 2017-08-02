@@ -19,7 +19,7 @@ public:
 	void search();
 
 	// getters
-	std::map<double, std::map<double, VectorXd>> grid() { return __grid; }
+	std::map<double, std::map<double, VectorXd> > grid() { return __grid; }
 	VectorXd selected(double const&, double const&);
 	std::vector<VectorXd> selected(VectorXd const &etas, VectorXd const &lambdas);
 
@@ -38,7 +38,7 @@ private:
 	VectorXd __etas;
 	VectorXd __lambdas;
 
-	std::map<double, std::map<double, VectorXd>> __grid;
+	std::map<double, std::map<double, VectorXd> > __grid;
 
 	void __initGrid();
 	void __computeUnivariate(uint const&);

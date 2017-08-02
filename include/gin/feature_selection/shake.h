@@ -16,6 +16,7 @@
 class Shake {
 public:
 	Shake();
+	Shake(GWASData*);
 	~Shake();
 
 	// GWAS operations

@@ -2,8 +2,8 @@
 // Created by hclimente on 23/07/2017.
 //
 
-#ifndef GIN_GRID_CV_H_H
-#define GIN_GRID_CV_H_H
+#ifndef GIN_GRID_CV_H
+#define GIN_GRID_CV_H
 
 #include "gin/model_selection/grid.h"
 #include "gin/model_selection/CCrossValidation.h"
@@ -28,7 +28,7 @@ public:
 	VectorXd lambdas() { return __lambdas; }
 	std::vector<Grid*> grids() { return __grids; }
 	bool binary_y() { return __binary_y; }
-	std::map<double, std::map<double, VectorXd>> aggregatedFolds() { return __aggregatedFolds; };
+	std::map<double, std::map<double, VectorXd> > aggregatedFolds() { return __aggregatedFolds; };
 	VectorXd aggregatedFolds(uint const& e, uint const& l) { return __aggregatedFolds[__etas(e)][__lambdas(l)]; };
 	MatrixXd scoredFolds() { return __scoredFolds; }
 
@@ -43,7 +43,7 @@ private:
 	VectorXd __lambdas;
 
 	// grid results
-	std::map<double, std::map<double, VectorXd>> __aggregatedFolds;
+	std::map<double, std::map<double, VectorXd> > __aggregatedFolds;
 	MatrixXd __scoredFolds;
 	std::pair<double, double> __bestParameters;
 

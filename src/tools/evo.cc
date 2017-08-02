@@ -14,26 +14,26 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	Shake shake = Shake();
+	Shake experiment = Shake();
 
 	// read the data
 
-	shake.readGWAS(s.pedBasename(), s.encoding());
-	shake.readNetwork(s.networkFilename());
+	experiment.readGWAS(s.pedBasename(), s.encoding());
+	experiment.readNetwork(s.networkFilename());
 
 	// Preprocess the data
-	// shake.filterMAF(maf);
-	// shake.adjustPC(pcs);
+	// experiment.filterMAF(maf);
+	// experiment.adjustPC(pcs);
 
 	VectorXd etas(4);
 	etas << 0, 1, 2, 3;
 	VectorXd lambdas(4);
 	lambdas << 0, 1, 2, 3;
 
-	shake.searchHyperparameters(10, s.modelScore(), s.associationScore());
-	shake.selectSnps();
+	experiment.searchHyperparameters(10, s.modelScore(), s.associationScore());
+	experiment.selectSnps();
 
-	shake.writeResults(s.output());
+	experiment.writeResults(s.output());
 	return 0;
 
 }
