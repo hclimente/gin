@@ -12,7 +12,8 @@ UnivariateAssociation::UnivariateAssociation(MatrixXd* X, VectorXd* y) {
 
 	__binary_y = true;
 	for(int64 i = 0; i < __y -> rows(); i++) {
-		if(!( (*__y)(i) == 0 || (*__y)(i) == 1)) {
+		// check if 0=unknown, 1=unaffected or 2=affected
+		if(!( (*__y)(i) == 0 || (*__y)(i) == 1 || (*__y)(i) == 2)) {
 			__binary_y = false;
 			break;
 		}
