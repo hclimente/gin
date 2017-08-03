@@ -14,7 +14,7 @@ TEST(GridCV, GridCV) {
 			0,1,2,2;
 
 	VectorXd y(3);
-	y <<    0,1,2;
+	y <<    0,1,3;
 
 	MatrixXd dW(4,4);
 	dW <<   0, 1, 0, 0,
