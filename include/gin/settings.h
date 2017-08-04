@@ -45,16 +45,16 @@ private:
 
 	string __pedBasename;
 	string __networkFilename;
-	double __maf;
+	// double __maf;
 	string __output;
-	int __pcs;
-	int __seed;
+	// int __pcs;
+	// int __seed;
 	uint __associationScore;
-	double __lambda;
-	double __eta;
-	bool __debug;
+	// double __lambda;
+	// double __eta;
+	// bool __debug;
 	uint __modelScore;
-	int __depth;
+	// int __depth;
 	uint __encoding;
 
 	bool __flag;

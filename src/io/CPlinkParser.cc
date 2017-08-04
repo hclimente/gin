@@ -31,7 +31,6 @@ void CPlinkParser::readPEDFile(std::string const& file,
 	logging(INFO,"File Size: " + StringHelper::to_string<float64>(((float64)fsize)/1024/1024) + " MB");
 
 	std::string line;
-	uint64 i = 0;
 	uint64 size = 0;
 	uint64 lcounter = 0;
 	std::vector<std::string> sv;
@@ -62,7 +61,7 @@ void CPlinkParser::readPEDFile(std::string const& file,
 		snps.resize(size);
 		lcounter = 0;
 
-		for(i = 6; i < sv.size(); i++) {
+		for(uint64 i = 6; i < sv.size(); i = i + 2) {
 			std::string iupac = sv[i] + sv[i+1];
 			iupac_iterator = __iupac_map.find(iupac);
 			if(iupac_iterator != __iupac_map.end()) {
@@ -71,7 +70,6 @@ void CPlinkParser::readPEDFile(std::string const& file,
 				throw CPlinkParserException("ERROR in PED Parser: Wrong Nucleotide encoding");
 			}
 			lcounter++;
-			i++;
 		}
 
 		data->raw_snps.push_back(snps);

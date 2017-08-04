@@ -147,18 +147,16 @@ double GridCV::__computeConsistency(VectorXd const& folds) {
 
 double GridCV::__computeInformation(VectorXd folds, uint scoringFunction) {
 
-	double score;
+    // max possible value if no features selected
+	double score = 1e31;
 
 	for(uint64 i = 0; i < folds.rows(); i++) {
 		if(folds(i) < 1) {
 			folds(i) = 0;
 		}
 	}
-
-	// max possible value if no features selected
-	if (folds.sum() == 0)
-		score = 1e31;
-	else {
+	
+	if (folds.sum() != 0) {
 		MatrixXd x_tr = sliceColsMatrixByBinaryVector(*__X, folds);
 		CRegression* regression;
 

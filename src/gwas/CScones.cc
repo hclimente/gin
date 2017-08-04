@@ -520,10 +520,8 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
     float64 maxn = ceil(N*0.1);
     gridResults = MatrixXd::Zero(__settings.etas.rows(),__settings.lambdas.rows());
     for(int e=0; e<__settings.etas.rows();e++){
-        float64 eta = __settings.etas[e];
 
         for(int l=0; l<__settings.lambdas.rows();l++) {
-            float64 lambda = __settings.lambdas[l];
             VectorXd indicator_vector = VectorXd::Zero(__n_features);
             for(uint k = 0; k < __settings.folds; k++){
                 float64 n = __result_stack[k][l][e].nonZeros();
@@ -539,12 +537,11 @@ MatrixXd CScones::__evaluateInformation() throw (CSconesException) {
             }
 
             // fit a model to the selected features
-            float64 informationMetric;
             // max possible value if no features selected
-            if (indicator_vector.sum() == 0)
-				informationMetric = 1e31;
-            else
-            {
+            float64 informationMetric = 1e31;
+            
+            if (indicator_vector.sum() != 0)
+			{
                 MatrixXd x_tr = sliceColsMatrixByBinaryVector(__X, indicator_vector);
                 if(__binary_y==true) {
                     __logistic_regression.fit(__y, x_tr);
