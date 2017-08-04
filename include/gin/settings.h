@@ -15,10 +15,12 @@ class Settings
 public:
 
 	Settings(int argc, const char* const argv[]) {
+		__flag = false;
 		__parseOptions(argc, argv);
 	}
 
 	Settings(string pedBasename, string networkFilename, uint encoding, uint modelScore, uint associationScore, string output) {
+		__flag = false;
 		__pedBasename = pedBasename;
 		__networkFilename = networkFilename;
 		__encoding = encoding;
@@ -63,14 +65,14 @@ private:
 		desc.add_options()
 				("ped,p", po::value<string>(), "Plink genotype file.")
 				("net,n", po::value<string>(), "Sparse network file.")
-				("association_score,t", po::value<string>()->default_value("chi2"), "Association score.")
-				("model_selection,x", po::value<string>()->default_value("cons"), "Metric to evaluate models.")
+				("association_score,c", po::value<string>()->default_value("chi2"), "Association score.")
+				("model_score,m", po::value<string>()->default_value("cons"), "Metric to evaluate the models.")
 				// ("depth,y", po::value<int>()->default_value(3), "Depth of the grid search.")
 				// ("maf,m", po::value<double>()->default_value(0.05), "Float minor allele frequency filter.")
 				// ("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
 				// ("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
-				("ofile,o", po::value<string>()->default_value("results.txt"), "Output file.")
-				("encoding,s", po::value<string>()->default_value("additive"), "Model of inheritance (additive, recessive, dominant or codominant).")
+				("out,o", po::value<string>()->default_value("results.txt"), "Output file.")
+				("encoding,e", po::value<string>()->default_value("additive"), "Model of inheritance (additive, recessive, dominant or codominant).")
 				// ("pc,c", po::value<int>()->default_value(0), "PC.")
 				// ("seed,z", po::value<int>()->default_value(0), "Random state seed.")
 				// ("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
@@ -93,7 +95,7 @@ private:
 		__pedBasename = vm["ped"].as<string>();
 		__networkFilename = vm["net"].as<string>();
 		// __maf = vm["maf"].as<double>();
-		__output = vm["ofile"].as<string>();
+		__output = vm["out"].as<string>();
 		string snp_encoding = vm["encoding"].as<string>();
 		// __pcs = vm["pc"].as<int>();
 		// __seed = vm["seed"].as<int>();
@@ -101,7 +103,7 @@ private:
 		// __lambda = vm["lambda"].as<double>();
 		// __eta = vm["eta"].as<double>();
 		// __debug = vm["debug"].as<bool>();
-		string model_selection_str = vm["model_selection"].as<string>();
+		string model_selection_str = vm["model_score"].as<string>();
 		// __depth = vm["depth"].as<int>();
 
 		__encoding = 0;
