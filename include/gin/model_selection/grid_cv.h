@@ -23,7 +23,8 @@ public:
 	void scoreModels(uint);
 
 	// setters & getters
-	std::pair<double, double> bestParameters() { return __bestParameters; }
+	double bestEta() { return __bestEta; }
+	double bestLambda() { return __bestLambda; }
 	VectorXd etas() { return __etas; }
 	VectorXd lambdas() { return __lambdas; }
 	std::vector<Grid*> grids() { return __grids; }
@@ -45,7 +46,8 @@ private:
 	// grid results
 	std::map<double, std::map<double, VectorXd> > __aggregatedFolds;
 	MatrixXd __scoredFolds;
-	std::pair<double, double> __bestParameters;
+	double __bestEta;
+	double __bestLambda;
 
 	void __setAggregatedFolds(uint const &e, uint const &l, VectorXd const &val) { __aggregatedFolds[__etas(e)][__lambdas(l)] = val; }
 
@@ -54,6 +56,7 @@ private:
 	VectorXd* __y;
 	SparseMatrixXd* __W;
 	bool __binary_y;
+	CRegression* __regressor;
 
 	// methods
 	double __computeConsistency(VectorXd const&);

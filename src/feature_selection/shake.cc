@@ -54,8 +54,8 @@ void Shake::searchHyperparameters(uint folds, uint const& modelScore, uint const
 	__cvgrid->runFolds(associationScore);
 	__cvgrid->scoreModels(modelScore);
 
-	__bestEta = __cvgrid -> bestParameters().first;
-	__bestLambda = __cvgrid -> bestParameters().second;
+	__bestEta = __cvgrid->bestEta();
+	__bestLambda = __cvgrid->bestLambda();
 
 }
 

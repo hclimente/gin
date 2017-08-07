@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 #include "gin/globals.h"
 
-TEST(GridCV, GridCV) {
+TEST(GridCV, Constructor) {
 
 	MatrixXd X(3,4);
 	X <<    0,0,0,1,
@@ -147,19 +147,19 @@ TEST(GridCV, scoreModels) {
 	grid_ql.runFolds(CHI2);
 
 	grid_ql.scoreModels(AIC);
-	EXPECT_EQ(grid_ql.bestParameters().first, 6);
+	EXPECT_EQ(grid_ql.bestEta(), 6);
 	EXPECT_EQ(grid_ql.scoredFolds()(1,1), -6);
 
 	grid_ql.scoreModels(BIC);
-	EXPECT_EQ(grid_ql.bestParameters().first, 6);
+	EXPECT_EQ(grid_ql.bestEta(), 6);
 	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), -7.45, 0.01);
 
 	grid_ql.scoreModels(AICc);
-	EXPECT_EQ(grid_ql.bestParameters().first, 6);
+	EXPECT_EQ(grid_ql.bestEta(), 6);
 	EXPECT_EQ(grid_ql.scoredFolds()(1,1), -9);
 
 	grid_ql.scoreModels(CONSISTENCY);
-	EXPECT_EQ(grid_ql.bestParameters().first, 0);
+	EXPECT_EQ(grid_ql.bestEta(), 0);
 	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 0.85, 0.01);
 
 	// TODO check BIC, AIC, CONSISTENCY for continuous when SKAT is implemented

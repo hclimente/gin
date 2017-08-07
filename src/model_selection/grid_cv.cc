@@ -27,6 +27,14 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 		}
 	}
 
+	if(__binary_y) {
+		// TODO check how to make logistic regression less computationally expensive
+		// __regressor = new CLogisticRegression();
+		__regressor = new CLinearRegression();
+	} else {
+		__regressor = new CLinearRegression();
+	}
+
 	__folds = folds;
 	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
 
@@ -46,6 +54,14 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 		}
 	}
 
+	if(__binary_y) {
+		// TODO check how to make logistic regression less computationally expensive
+		// __regressor = new CLogisticRegression();
+		__regressor = new CLinearRegression();
+	} else {
+		__regressor = new CLinearRegression();
+	}
+
 	__etas = etas;
 	__lambdas = lambdas;
 	__folds = folds;
@@ -58,6 +74,8 @@ GridCV::~GridCV() {
 	for (int i = 0; i < __grids.size(); i++) {
 		delete __grids[i];
 	}
+
+	delete __regressor;
 
 }
 
@@ -124,7 +142,8 @@ void GridCV::scoreModels(uint scoring_function) {
 
 	MatrixXd::Index best_eta_index, best_lambda_index;
 	__scoredFolds.maxCoeff(&best_eta_index, &best_lambda_index);
-	__bestParameters = std::pair<double, double> (__etas[best_eta_index], __lambdas[best_lambda_index]);
+	__bestEta = __etas[best_eta_index];
+	__bestLambda = __lambdas[best_lambda_index];
 
 }
 
@@ -158,27 +177,19 @@ double GridCV::__computeInformation(VectorXd folds, uint scoringFunction) {
 	
 	if (folds.sum() != 0) {
 		MatrixXd x_tr = sliceColsMatrixByBinaryVector(*__X, folds);
-		CRegression* regression;
 
-		if(__binary_y) {
-			regression = new CLogisticRegression();
-			regression -> fit(*__y, x_tr);
-		} else {
-			regression = new CLinearRegression();
-			regression -> fit(*__y, x_tr);
-		}
-
+		__regressor->fit(*__y, x_tr);
+		
 		if (scoringFunction == BIC) {
-			score = regression -> getBIC();
+			score = __regressor->getBIC();
 		} else if(scoringFunction == AIC) {
-			score = regression -> getAIC();
+			score = __regressor->getAIC();
 		}  else if(scoringFunction == AICc) {
-			score = regression -> getAICc();
+			score = __regressor->getAICc();
 		}  else if(scoringFunction == mBIC) {
 			// TODO implement network information
-			score = regression -> getBIC();
+			score = __regressor->getBIC();
 		}
-		delete regression;
 	}
 
 	return score;
