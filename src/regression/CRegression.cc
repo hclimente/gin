@@ -275,32 +275,35 @@ uint CLogisticRegression::getIterations() {
 
 void CLogisticRegression::_estimateBetas() {
 	MatrixXd beta0 = MatrixXd::Zero(_n_features,1);
-	MatrixXd h = (_x*beta0).array().exp()/(1+(_x*beta0).array().exp());
-	MatrixXd h_1 = 1.0-h.array();
+	MatrixXd h = (_x * beta0).array().exp() / (1 + (_x * beta0).array().exp());
+	MatrixXd h_1 = 1.0 - h.array();
 	DiagXd Eye(_n_samples);
 	Eye.diagonal() = VectorXd::Ones(_n_samples).cwiseProduct(h).cwiseProduct(h_1);
 	MatrixXd W = Eye;
-	__F = _x.transpose()*(W*_x);
-	MatrixXd S = _x.transpose()*(_y-h);
+	__F = _x.transpose() * (W * _x);
+	MatrixXd S = _x.transpose() * (_y - h);
 	_betas = __F.colPivHouseholderQr().solve(S);
 	_betas = beta0 + _betas;
 	//_betas = beta0 + __F.inverse()*S;
 	//Performe Fisher Scoring
-	__iterations=0;
-	while((_betas-beta0).norm()>__epsilon) {
+	__iterations = 0;
+	while((_betas - beta0).norm() > __epsilon) {
 		beta0 = _betas;
-		h = (_x*beta0).array().exp()/(1.0+(_x*beta0).array().exp());
-		h_1 = 1.0-h.array();
+		h = (_x * beta0).array().exp() / (1.0 + (_x * beta0).array().exp());
+		h_1 = 1.0 - h.array();
 		Eye.diagonal() = VectorXd::Ones(_n_samples).cwiseProduct(h).cwiseProduct(h_1);
 		W = Eye;
-		__F = _x.transpose()*(W*_x);
+		__F = _x.transpose() * (W * _x);
 		__F.array() += 1e-32;
-		S = _x.transpose()*(_y-h);
+		S = _x.transpose() * (_y - h);
 		_betas = __F.colPivHouseholderQr().solve(S);
 		_betas = beta0 + _betas;
 		//_betas = beta0 + __F.inverse()*S;
 		__iterations++;
-		if(__iterations>=500) break;
+
+		if(__iterations >= 500) {
+			break;
+		}
 	}
 }
 
