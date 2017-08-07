@@ -148,15 +148,15 @@ TEST(GridCV, scoreModels) {
 
 	grid_ql.scoreModels(AIC);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_EQ(grid_ql.scoredFolds()(1,1), -6);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 841, 1);
 
 	grid_ql.scoreModels(BIC);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), -7.45, 0.01);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 839, 1);
 
 	grid_ql.scoreModels(AICc);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_EQ(grid_ql.scoredFolds()(1,1), -9);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 838, 1);
 
 	grid_ql.scoreModels(CONSISTENCY);
 	EXPECT_EQ(grid_ql.bestEta(), 0);
