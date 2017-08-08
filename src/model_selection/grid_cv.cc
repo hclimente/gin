@@ -131,11 +131,15 @@ void GridCV::scoreModels(uint scoring_function) {
 			}
 			__setAggregatedFolds(e, l, aggregatedFolds(e, l) / __folds);
 
-			// TODO consider cases where a number > that a threshold are picked
-			if (scoring_function == CONSISTENCY) {
-				__scoredFolds(e, l) = __computeConsistency(aggregatedFolds(e,l));
-			} else if(scoring_function == AICc | scoring_function == AIC | scoring_function == BIC | scoring_function == mBIC) {
-				__scoredFolds(e, l) = - __computeInformation(aggregatedFolds(e,l), scoring_function);
+			if (aggregatedFolds(e,l).array().sum() > (__X->cols() * 0.05) | aggregatedFolds(e,l).array().sum() == 0) {
+				__scoredFolds(e, l) = -1e31;
+			} else {
+				if (scoring_function == CONSISTENCY) {
+					__scoredFolds(e, l) = __computeConsistency(aggregatedFolds(e, l));
+				} else if (scoring_function == AICc | scoring_function == AIC | scoring_function == BIC |
+				           scoring_function == mBIC) {
+					__scoredFolds(e, l) = -__computeInformation(aggregatedFolds(e, l), scoring_function);
+				}
 			}
 		}
 	}
