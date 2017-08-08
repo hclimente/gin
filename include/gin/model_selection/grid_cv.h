@@ -20,6 +20,7 @@ public:
 
 	// grid exploration functions
 	void runFolds(uint);
+	void runFolds(uint, CCrossValidation);
 	void scoreModels(uint);
 
 	// setters & getters
@@ -56,11 +57,12 @@ private:
 	VectorXd* __y;
 	SparseMatrixXd* __W;
 	bool __binary_y;
-	CRegression* __regressor;
+	CRegression* __classifier;
 
 	// methods
 	double __computeConsistency(VectorXd const&);
 	double __computeInformation(VectorXd, uint);
+	void __getClassifier();
 
 };
 

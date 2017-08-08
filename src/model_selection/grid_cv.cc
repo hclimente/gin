@@ -5,6 +5,7 @@
 #include "gin/model_selection/grid_cv.h"
 
 GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd c, uint folds) {
+
 	__X = X;
 	__y = y;
 	__W = W;
@@ -17,22 +18,7 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	for(int i = 0; i < __lambdas.rows(); i++)
 		__lambdas(i) = pow(10, __lambdas(i));
 
-	__binary_y = true;
-	for(int64 i = 0; i < __y->rows(); i++) {
-		// check if 0=unknown, 1=unaffected or 2=affected
-		if(!( (*__y)(i) == 0 || (*__y)(i) == 1 || (*__y)(i) == 2)) {
-			__binary_y = false;
-			break;
-		}
-	}
-
-	if(__binary_y) {
-		// TODO check how to make logistic regression less computationally expensive
-		// __regressor = new CLogisticRegression();
-		__regressor = new CLinearRegression();
-	} else {
-		__regressor = new CLinearRegression();
-	}
+	__getClassifier();
 
 	__folds = folds;
 	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
@@ -40,26 +26,12 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 }
 
 GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd etas, VectorXd lambdas, uint folds) {
+
 	__X = X;
 	__y = y;
 	__W = W;
 
-	__binary_y = true;
-	for(int64 i = 0; i < __y->rows(); i++) {
-		// check if 0=unknown, 1=unaffected or 2=affected
-		if(!( (*__y)(i) == 0 || (*__y)(i) == 1 || (*__y)(i) == 2)) {
-			__binary_y = false;
-			break;
-		}
-	}
-
-	if(__binary_y) {
-		// TODO check how to make logistic regression less computationally expensive
-		// __regressor = new CLogisticRegression();
-		__regressor = new CLinearRegression();
-	} else {
-		__regressor = new CLinearRegression();
-	}
+	__getClassifier();
 
 	__etas = etas;
 	__lambdas = lambdas;
@@ -74,21 +46,26 @@ GridCV::~GridCV() {
 		delete __grids[i];
 	}
 
-	delete __regressor;
+	delete __classifier;
 
 }
 
 void GridCV::runFolds(uint association) {
+
+	// TODO get seed from user settings
+	CCrossValidation cv(0);
+	cv.kFold(__folds, __y->rows());
+	runFolds(association, cv);
+
+}
+
+void GridCV::runFolds(uint association, CCrossValidation cv) {
 
 	// delete previous iteration, if any
 	for (int i = 0; i < __grids.size(); i++) {
 		delete __grids[i];
 		__grids[i] = NULL;
 	}
-
-	// TODO get seed from user settings
-	CCrossValidation cv(0);
-	cv.kFold(__folds, __y -> rows());
 
 	for (int i = 0; i < __folds; i++) {
 		VectorXd tr_indices = cv.getTrainingIndices(i);
@@ -181,20 +158,40 @@ double GridCV::__computeInformation(VectorXd folds, uint scoringFunction) {
 	if (folds.sum() != 0) {
 		MatrixXd x_tr = sliceColsMatrixByBinaryVector(*__X, folds);
 
-		__regressor->fit(*__y, x_tr);
+		__classifier->fit(*__y, x_tr);
 		
 		if (scoringFunction == BIC) {
-			score = __regressor->getBIC();
+			score = __classifier->getBIC();
 		} else if(scoringFunction == AIC) {
-			score = __regressor->getAIC();
+			score = __classifier->getAIC();
 		}  else if(scoringFunction == AICc) {
-			score = __regressor->getAICc();
+			score = __classifier->getAICc();
 		}  else if(scoringFunction == mBIC) {
 			// TODO implement network information
-			score = __regressor->getBIC();
+			score = __classifier->getBIC();
 		}
 	}
 
 	return score;
 
+}
+
+void GridCV::__getClassifier() {
+
+	__binary_y = true;
+	for(int64 i = 0; i < __y->rows(); i++) {
+		// check if 0=unknown, 1=unaffected or 2=affected
+		if(!( (*__y)(i) == 0 || (*__y)(i) == 1 || (*__y)(i) == 2)) {
+			__binary_y = false;
+			break;
+		}
+	}
+
+	if(__binary_y) {
+		// TODO check how to make logistic regression less computationally expensive
+		// __classifier = new CLogisticRegression();
+		__classifier = new CLinearRegression();
+	} else {
+		__classifier = new CLinearRegression();
+	}
 }
