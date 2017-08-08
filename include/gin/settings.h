@@ -19,7 +19,7 @@ public:
 		__parseOptions(argc, argv);
 	}
 
-	Settings(string pedBasename, string networkFilename, uint encoding, uint modelScore, uint associationScore, string output) {
+	Settings(std::string pedBasename, std::string networkFilename, uint encoding, uint modelScore, uint associationScore, std::string output) {
 		__flag = false;
 		__pedBasename = pedBasename;
 		__networkFilename = networkFilename;
@@ -33,20 +33,20 @@ public:
 		std::cout << __options() << "\n";
 	}
 
-	string pedBasename() { return __pedBasename; }
+	std::string pedBasename() { return __pedBasename; }
 	uint encoding() { return __encoding; }
-	string networkFilename() { return __networkFilename; }
+	std::string networkFilename() { return __networkFilename; }
 	uint modelScore() { return __modelScore; }
 	uint associationScore() { return __associationScore; }
-	string output() { return __output; }
+	std::string output() { return __output; }
 	bool flag() { return __flag; }
 
 private:
 
-	string __pedBasename;
-	string __networkFilename;
+	std::string __pedBasename;
+	std::string __networkFilename;
 	// double __maf;
-	string __output;
+	std::string __output;
 	// int __pcs;
 	// int __seed;
 	uint __associationScore;
@@ -63,16 +63,16 @@ private:
 		po::options_description desc("Allowed options");
 
 		desc.add_options()
-				("ped,p", po::value<string>(), "Plink genotype file.")
-				("net,n", po::value<string>(), "Sparse network file.")
-				("association_score,c", po::value<string>()->default_value("chi2"), "Association score.")
-				("model_score,m", po::value<string>()->default_value("cons"), "Metric to evaluate the models.")
+				("ped,p", po::value<std::string>(), "Plink genotype file.")
+				("net,n", po::value<std::string>(), "Sparse network file.")
+				("association_score,c", po::value<std::string>()->default_value("chi2"), "Association score.")
+				("model_score,m", po::value<std::string>()->default_value("cons"), "Metric to evaluate the models.")
 				// ("depth,y", po::value<int>()->default_value(3), "Depth of the grid search.")
 				// ("maf,m", po::value<double>()->default_value(0.05), "Float minor allele frequency filter.")
 				// ("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
 				// ("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
-				("out,o", po::value<string>()->default_value("results.txt"), "Output file.")
-				("encoding,e", po::value<string>()->default_value("additive"), "Model of inheritance (additive, recessive, dominant or codominant).")
+				("out,o", po::value<std::string>()->default_value("results.txt"), "Output file.")
+				("encoding,e", po::value<std::string>()->default_value("additive"), "Model of inheritance (additive, recessive, dominant or codominant).")
 				// ("pc,c", po::value<int>()->default_value(0), "PC.")
 				// ("seed,z", po::value<int>()->default_value(0), "Random state seed.")
 				// ("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
@@ -92,18 +92,18 @@ private:
 			__flag = true;
 		}
 
-		__pedBasename = vm["ped"].as<string>();
-		__networkFilename = vm["net"].as<string>();
+		__pedBasename = vm["ped"].as<std::string>();
+		__networkFilename = vm["net"].as<std::string>();
 		// __maf = vm["maf"].as<double>();
-		__output = vm["out"].as<string>();
-		string snp_encoding = vm["encoding"].as<string>();
+		__output = vm["out"].as<std::string>();
+		std::string snp_encoding = vm["encoding"].as<std::string>();
 		// __pcs = vm["pc"].as<int>();
 		// __seed = vm["seed"].as<int>();
-		string association_score_str = vm["association_score"].as<string>();
+		std::string association_score_str = vm["association_score"].as<std::string>();
 		// __lambda = vm["lambda"].as<double>();
 		// __eta = vm["eta"].as<double>();
 		// __debug = vm["debug"].as<bool>();
-		string model_selection_str = vm["model_score"].as<string>();
+		std::string model_selection_str = vm["model_score"].as<std::string>();
 		// __depth = vm["depth"].as<int>();
 
 		__encoding = 0;
