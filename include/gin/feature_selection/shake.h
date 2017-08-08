@@ -12,11 +12,12 @@
 #include "gin/gwas/CGWASData.h"
 #include "gin/io/CPlinkParser.h"
 #include "gin/io/CSconesIO.h"
+#include "gin/utils/StringHelper.h"
 
 class Shake {
 public:
 	Shake();
-	Shake(GWASData*);
+	Shake(MatrixXd, VectorXd, SparseMatrixXd);
 	~Shake();
 
 	// GWAS operations
