@@ -29,10 +29,12 @@ TEST(GridCV, Constructor) {
 	GridCV g1(&X, &y, &W, c, 10);
 	EXPECT_EQ(g1.grids().size(), 0);
 	EXPECT_EQ(g1.lambdas().size(), 10);
-	EXPECT_NEAR(g1.lambdas().minCoeff(), 0.5, 0.1);
+	EXPECT_NEAR(g1.lambdas().minCoeff(), 0.05, 0.1);
 	EXPECT_NEAR(g1.lambdas()(5), 1, 2);
-	EXPECT_NEAR(g1.lambdas().maxCoeff(), 4, 0.1);
-	EXPECT_EQ(g1.lambdas(), g1.etas());
+	EXPECT_NEAR(g1.lambdas().maxCoeff(), 40, 0.1);
+	EXPECT_NEAR(g1.etas().minCoeff(), 0.5, 0.1);
+	EXPECT_NEAR(g1.etas()(5), 1, 2);
+	EXPECT_NEAR(g1.etas().maxCoeff(), 4, 0.1);
 	EXPECT_EQ(g1.binary_y(), false);
 
 	VectorXd etas(2);

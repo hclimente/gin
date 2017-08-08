@@ -9,12 +9,11 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	__y = y;
 	__W = W;
 
-	__etas = VectorXd::LinSpaced(10, log10(c.maxCoeff()), log10(c.minCoeff()));
+	__etas = VectorXd::LinSpaced(10, log10(c.minCoeff()), log10(c.maxCoeff()));
 	for(int i = 0; i < __etas.rows(); i++)
 		__etas(i) = pow(10, __etas(i));
 
-	// TODO extend range for lambdas
-	__lambdas = VectorXd::LinSpaced(10, log10(c.maxCoeff()), log10(c.minCoeff()));
+	__lambdas = VectorXd::LinSpaced(10, log10(c.minCoeff()) - 1, log10(c.maxCoeff()) + 1);
 	for(int i = 0; i < __lambdas.rows(); i++)
 		__lambdas(i) = pow(10, __lambdas(i));
 
