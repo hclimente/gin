@@ -39,6 +39,7 @@ class CCrossValidation {
 		void train_test_split(uint64 const&, float64 const&);
 		//Split data into k folds
 		void kFold(uint const&, uint64 const&);
+		void kFold(uint const& k, uint64 const& n, VectorXd);
 		void ShuffleSplit(uint64 const&, uint64 const&, float64 const&);
 		//Split data into k stratified folds
 		void stratifiedKFold(uint const&, VectorXd const&);

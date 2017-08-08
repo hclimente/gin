@@ -45,14 +45,26 @@ void CCrossValidation::train_test_split(uint64 const& n, float64 const& ratio) {
 }
 
 void CCrossValidation::kFold(uint const& k, uint64 const& n) {
+
 	__ratio = 0.0;
 	__n = n;
 	__k = k;
+
 	VectorXd indices = VectorXd::LinSpaced(__n,0,__n-1);
 	Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(__n);
 	perm.setIdentity();
 	std::random_shuffle(perm.indices().data(),perm.indices().data()+perm.indices().size());
 	indices = perm*indices;
+
+	kFold(k, n, indices);
+}
+
+void CCrossValidation::kFold(uint const& k, uint64 const& n, VectorXd indices) {
+
+	__ratio = 0.0;
+	__n = n;
+	__k = k;
+
 	float64 split = floor((float)__n/((float)__k));
 	for(uint i=0; i<__k;i++) {
 		if(! (i==__k-1)) {
@@ -69,7 +81,7 @@ void CCrossValidation::kFold(uint const& k, uint64 const& n) {
 			VectorXd tmp = VectorXd::Zero(__n-__testingData[i].rows());
 			tmp << indices.segment(0,i*split);
 			__trainingData.push_back(tmp);
-		
+
 		}
 	}
 }
