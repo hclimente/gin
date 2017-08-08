@@ -85,6 +85,15 @@ TEST(GridCV, runFolds) {
 	GridCV g(&X, &y, &W, etas, lambdas, 10);
 
 	// k-fold
+	// create k-folds
+	VectorXd indices = VectorXd::LinSpaced(12,0,12-1);
+	Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(12);
+	perm.setIdentity();
+	indices = perm*indices;
+
+	CCrossValidation cv(0);
+	cv.kFold(10, y.rows(), indices);
+
 	// values are not initialized
 	for (uint i = 0; i < g.grids().size(); i++) {
 		for (int e = 0; e < etas.rows(); e++) {
@@ -96,7 +105,7 @@ TEST(GridCV, runFolds) {
 		}
 	}
 
-	g.runFolds(BIC);
+	g.runFolds(BIC, cv);
 	EXPECT_NE(g.grids()[0] -> X(), g.grids()[1] -> X());
 	for (uint i = 0; i < g.grids().size(); i++) {
 		EXPECT_EQ(g.grids()[0] -> X().rows(), 9);
@@ -119,7 +128,7 @@ TEST(GridCV, scoreModels) {
 
 	// only the two first SNPs are causal
 	MatrixXd X(12, 54);
-	X <<    2,1,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,
+	X   <<  2,1,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,
 			2,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,
 			2,1,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,
 			1,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,
@@ -133,10 +142,10 @@ TEST(GridCV, scoreModels) {
 			0,0,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2,0,1,0,2;
 
 	VectorXd y(12);
-	y <<    1,1,1,1,1,1,0,0,0,0,0,0;
+	y << 1,1,1,1,1,1,0,0,0,0,0,0;
 
 	// network doesnt play a role here
-	MatrixXd dW = MatrixXd::Zero(54,54);
+	MatrixXd dW = MatrixXd::Zero(54, 54);
 	dW.diagonal(1) = VectorXd::Ones(53);
 	dW.diagonal(-1) = VectorXd::Ones(53);
 	SparseMatrixXd W = dW.sparseView();
@@ -145,24 +154,34 @@ TEST(GridCV, scoreModels) {
 	VectorXd lambdas(2);
 	lambdas << 0, 1;
 
+	// create k-folds
+	VectorXd indices = VectorXd::LinSpaced(12,0,12-1);
+	Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(12);
+	perm.setIdentity();
+	indices = perm*indices;
+
+	CCrossValidation cv(0);
+	cv.kFold(10, y.rows(), indices);
+
+	// create and run grids
 	GridCV grid_ql(&X, &y, &W, etas, lambdas, 10);
-	grid_ql.runFolds(CHI2);
+	grid_ql.runFolds(CHI2, cv);
 
 	grid_ql.scoreModels(AIC);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 841, 1);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 841, 1);
 
 	grid_ql.scoreModels(BIC);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 839, 1);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 839, 1);
 
 	grid_ql.scoreModels(AICc);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 838, 1);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 838, 1);
 
 	grid_ql.scoreModels(CONSISTENCY);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1,1), 1, 0.01);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 1, 0.01);
 
 	// TODO check BIC, AIC, CONSISTENCY for continuous when SKAT is implemented
 	// y <<    0.97,0.98,0.94,0.75,0.8,0.77,0.25,0.4,0.25,0.4,0.25,0.3;
