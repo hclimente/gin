@@ -69,6 +69,7 @@ void GridCV::runFolds(uint association, CCrossValidation cv) {
 
 	for (int i = 0; i < __folds; i++) {
 		VectorXd tr_indices = cv.getTrainingIndices(i);
+		std::cout << "index  " << i << "\n" << tr_indices << "\n";
 		MatrixXd x_train = sliceRowsMatrix(*__X, tr_indices);
 		VectorXd y_train = sliceRowsMatrix(*__y, tr_indices);
 		/* TODO what is this
