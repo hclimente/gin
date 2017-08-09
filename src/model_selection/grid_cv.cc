@@ -152,7 +152,6 @@ double GridCV::__computeInformation(VectorXd folds, uint scoringFunction) {
 		MatrixXd x_tr = sliceColsMatrixByBinaryVector(*__X, folds);
 
 		__classifier->fit(*__y, x_tr);
-		std::cout << __classifier->getLogLikelihood() << "\n";
 		
 		if (scoringFunction == BIC) {
 			score = __classifier->getBIC();
