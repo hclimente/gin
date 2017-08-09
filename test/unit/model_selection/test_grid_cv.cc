@@ -169,15 +169,33 @@ TEST(GridCV, scoreModels) {
 
 	grid_ql.scoreModels(AIC);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 841, 1);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
+#ifdef __APPLE__
+841
+#else
+821
+#endif
+	, 1);
 
 	grid_ql.scoreModels(BIC);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 839, 1);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
+#ifdef __APPLE__
+839
+#else
+819
+#endif
+	, 1);
 
 	grid_ql.scoreModels(AICc);
 	EXPECT_EQ(grid_ql.bestEta(), 6);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 838, 1);
+	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
+#ifdef __APPLE__
+838
+#else
+818
+#endif
+	, 1);
 
 	grid_ql.scoreModels(CONSISTENCY);
 	EXPECT_EQ(grid_ql.bestEta(), 6);

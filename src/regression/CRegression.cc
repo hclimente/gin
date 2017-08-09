@@ -180,10 +180,6 @@ void CLinearRegression::_estimateLogLikelihood() {
 	__variance = (_residuals.transpose()*_residuals);
 	__variance = __variance/(_n_samples-_rank);
 	_loglikelihood = -(_n_samples/2.0f) * log(2.0f*PI*__variance) - 1.0f/(2.0f*__variance) * (_residuals.array().pow(2)).sum();
-
-	std::cout << "y hats " << _yhat << "\n"
-			<< "y " << _y << "\n"
-			<< "sq residuals " << _residuals << "\n";
 	
 	/* This is only if matrix is not invertible
 	MatrixXd pinv_x;
