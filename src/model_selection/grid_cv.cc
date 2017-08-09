@@ -82,13 +82,6 @@ void GridCV::runFolds(uint association, CCrossValidation cv) {
 		__grids.push_back(g);
 	}
 
-	for (int e = 0; e < __etas.rows(); e++ ) {
-		for (int l = 0; l < __lambdas.rows(); l++ ) {
-			__setAggregatedFolds(e, l, VectorXd());
-			__scoredFolds(e,l) = -1;
-		}
-	}
-
 	for (int i = 0; i < __folds; i++) {
 		__grids[i] -> search();
 	}
@@ -103,9 +96,11 @@ void GridCV::scoreModels(uint scoring_function) {
 
 			for (int i = 0; i < __folds; i++) {
 				VectorXd u = __grids[i] -> selected(__etas[e], __lambdas[l]);
-				__setAggregatedFolds(e, l, aggregatedFolds(e, l) + u);
+				__setAggregatedFolds(e, l, aggregatedFolds(e,l) + u);
 			}
-			__setAggregatedFolds(e, l, aggregatedFolds(e, l) / __folds);
+			__setAggregatedFolds(e, l, aggregatedFolds(e,l) / __folds);
+
+			std::cout << e << "\t" << l << "\n" << aggregatedFolds(e,l) << "\n";
 
 			if (aggregatedFolds(e,l).array().sum() > (__X->cols() * 0.05) | aggregatedFolds(e,l).array().sum() == 0) {
 				__scoredFolds(e, l) = -1e31;

@@ -31,7 +31,6 @@ Grid::Grid(MatrixXd const& X, VectorXd const& y, SparseMatrixXd* const& W, uint 
 	__W = W;
 	__initGrid();
 	__computeUnivariate(association);
-	std::cout << __c << "\n";
 
 }
 
