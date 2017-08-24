@@ -32,6 +32,7 @@ public:
 	VectorXd selectedSnps() { return __selectedSnps; }
 	double bestEta() { return __bestEta; }
 	double bestLambda() { return __bestLambda; }
+	VectorXd c() { return __c; }
 	GWASData* gwas() { return __gwas; }
 
 	void setDebug(bool debug) { __debug = debug; }
