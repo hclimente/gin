@@ -10,8 +10,8 @@ GridCV::GridCV() {
 	__W = NULL;
 
 	__folds = 0;
-	__etas = VectorXd::Zero(1);
-	__lambdas = VectorXd::Zero(1);
+	__etas = VectorXd();
+	__lambdas = VectorXd();
 
 	__classifier = NULL;
 	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
@@ -23,11 +23,21 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	__y = y;
 	__W = W;
 
-	__etas = VectorXd::LinSpaced(10, log10(c.minCoeff()), log10(c.maxCoeff()));
+
+	double minc = c.minCoeff();
+
+	// change by small quantity to avoid problems with log(0)
+	if (minc == 0) {
+		minc = minc + 0.000001;
+	}
+
+	double maxc = c.maxCoeff();
+
+	__etas = VectorXd::LinSpaced(10, log10(minc), log10(maxc));
 	for(int i = 0; i < __etas.rows(); i++)
 		__etas(i) = pow(10, __etas(i));
 
-	__lambdas = VectorXd::LinSpaced(10, log10(c.minCoeff()) - 1, log10(c.maxCoeff()) + 1);
+	__lambdas = VectorXd::LinSpaced(10, log10(minc) - 1, log10(maxc) + 1);
 	for(int i = 0; i < __lambdas.rows(); i++)
 		__lambdas(i) = pow(10, __lambdas(i));
 
