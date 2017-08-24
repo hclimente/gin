@@ -82,12 +82,24 @@ void Shake::searchHyperparameters(uint folds, uint const& modelScore, uint const
 	__bestLambda = __cvgrid->bestLambda();
 	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
+	if(__debug) {
+
+		GridViews g(__cvgrid);
+
+		logging(DEBUG, "Model score matrix");
+		logging(DEBUG, g.viewSelectionCriterion());
+
+		logging(DEBUG, "Average number of selected SNPs.");
+		logging(DEBUG, g.viewSelectedAvg());
+
+	}
+
 }
 
 void Shake::selectSnps() {
 
 	float64 begin = clock();
-	logging(STATUS,"Searching ConES...\n");
+	logging(STATUS,"Searching ConES with eta = " + StringHelper::to_string<float64>(__bestEta) + " and lambda = " + StringHelper::to_string<float64>(__bestLambda) + "\n");
 	SparseMatrixXd W = __gwas -> network;
 
 	Scones s = Scones(__c, __bestEta, __bestLambda, &W);

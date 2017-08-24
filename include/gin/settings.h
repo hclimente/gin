@@ -15,12 +15,13 @@ class Settings
 public:
 
 	Settings(int argc, const char* const argv[]) {
-		__flag = false;
+		__error = false;
 		__parseOptions(argc, argv);
 	}
 
 	Settings(std::string pedBasename, std::string networkFilename, uint encoding, uint modelScore, uint associationScore, std::string output) {
-		__flag = false;
+		__error = false;
+		__debug = true;
 		__pedBasename = pedBasename;
 		__networkFilename = networkFilename;
 		__encoding = encoding;
@@ -39,7 +40,8 @@ public:
 	uint modelScore() { return __modelScore; }
 	uint associationScore() { return __associationScore; }
 	std::string output() { return __output; }
-	bool flag() { return __flag; }
+	bool debug() { return __debug; }
+	bool error() { return __error; }
 
 private:
 
@@ -52,12 +54,12 @@ private:
 	uint __associationScore;
 	// double __lambda;
 	// double __eta;
-	// bool __debug;
+	bool __debug;
 	uint __modelScore;
 	// int __depth;
 	uint __encoding;
 
-	bool __flag;
+	bool __error;
 
 	po::options_description __options() {
 		po::options_description desc("Allowed options");
@@ -75,7 +77,7 @@ private:
 				("encoding,e", po::value<std::string>()->default_value("additive"), "Model of inheritance (additive, recessive, dominant or codominant).")
 				// ("pc,c", po::value<int>()->default_value(0), "PC.")
 				// ("seed,z", po::value<int>()->default_value(0), "Random state seed.")
-				// ("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
+				("debug,d", po::bool_switch()->default_value(false), "Debug flag (display extra information).")
 				("help,h", "Produce this help message and exit.")
 				;
 
@@ -89,7 +91,7 @@ private:
 		po::notify(vm);
 
 		if (vm.count("help")) {
-			__flag = true;
+			__error = true;
 		}
 
 		__pedBasename = vm["ped"].as<std::string>();
@@ -102,7 +104,7 @@ private:
 		std::string association_score_str = vm["association_score"].as<std::string>();
 		// __lambda = vm["lambda"].as<double>();
 		// __eta = vm["eta"].as<double>();
-		// __debug = vm["debug"].as<bool>();
+		__debug = vm["debug"].as<bool>();
 		std::string model_selection_str = vm["model_score"].as<std::string>();
 		// __depth = vm["depth"].as<int>();
 
@@ -117,7 +119,7 @@ private:
 			__encoding = 3;
 		} else {
 			logging(ERROR,"Encoding does not exist!");
-			__flag = true;
+			__error = true;
 		}
 
 		__associationScore = SKAT;

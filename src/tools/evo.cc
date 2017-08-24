@@ -9,12 +9,13 @@ int main(int argc, char* argv[]) {
 
 	Settings s(argc, argv);
 
-	if(s.flag()) {
+	if(s.error()) {
 		s.printHelp();
 		return 1;
 	}
 
 	Shake experiment = Shake();
+	experiment.setDebug(s.debug());
 
 	// read the data
 

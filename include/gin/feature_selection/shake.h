@@ -5,6 +5,7 @@
 #ifndef GIN_SHAKE_H
 #define GIN_SHAKE_H
 
+#include "gin/io/grid_views.h"
 #include "gin/model_selection/grid_cv.h"
 #include "gin/feature_selection/scones.h"
 #include "gin/stats/univariate_association.h"
@@ -33,6 +34,8 @@ public:
 	double bestLambda() { return __bestLambda; }
 	GWASData* gwas() { return __gwas; }
 
+	void setDebug(bool debug) { __debug = debug; }
+
 private:
 	GWASData* __gwas;
 	GridCV* __cvgrid;
@@ -41,6 +44,8 @@ private:
 	double __bestLambda;
 	VectorXd __c;
 	VectorXd __selectedSnps;
+
+	bool __debug;
 
 };
 
