@@ -31,8 +31,8 @@ int main(int argc, char* argv[]) {
 	VectorXd lambdas(4);
 	lambdas << 0, 1, 2, 3;
 
-	experiment.searchHyperparameters(10, s.modelScore(), s.associationScore());
-	experiment.selectSnps();
+	experiment.selectHyperparameters(10, s.modelScore(), s.associationScore());
+	experiment.selectSNPs();
 
 	experiment.writeResults(s.output());
 	return 0;

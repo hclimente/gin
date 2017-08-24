@@ -52,13 +52,13 @@ void Shake::readNetwork(string const& networkFilename) {
 
 }
 
-void Shake::searchHyperparameters(uint folds, uint const& modelScore, uint const& associationScore) {
+void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const &associationScore) {
 
 	float64 begin = clock();
 	logging(STATUS,"Selecting the best hyperparameters...");
-	MatrixXd X = __gwas -> X;
-	VectorXd y = __gwas -> Y.col(0);
-	SparseMatrixXd W = __gwas -> network;
+	MatrixXd X = __gwas->X;
+	VectorXd y = __gwas->Y.col(0);
+	SparseMatrixXd W = __gwas->network;
 
 	logging(INFO,"Computing univariate association.");
 	UnivariateAssociation univar( &X, &y );
@@ -83,24 +83,20 @@ void Shake::searchHyperparameters(uint folds, uint const& modelScore, uint const
 	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 	if(__debug) {
-
 		GridViews g(__cvgrid);
-
 		logging(DEBUG, "Model score matrix");
 		logging(DEBUG, g.viewSelectionCriterion());
-
 		logging(DEBUG, "Average number of selected SNPs.");
 		logging(DEBUG, g.viewSelectedAvg());
-
 	}
 
 }
 
-void Shake::selectSnps() {
+void Shake::selectSNPs() {
 
 	float64 begin = clock();
 	logging(STATUS,"Searching ConES with eta = " + StringHelper::to_string<float64>(__bestEta) + " and lambda = " + StringHelper::to_string<float64>(__bestLambda) + "\n");
-	SparseMatrixXd W = __gwas -> network;
+	SparseMatrixXd W = __gwas->network;
 
 	Scones s = Scones(__c, __bestEta, __bestLambda, &W);
 	__selectedSnps = s.selected();

@@ -44,4 +44,4 @@ TEST(Shake, readNetwork) {
 
 }
 
-// TODO searchHyperparameters, selectSnps
+// TODO selectHyperparameters, selectSNPs
