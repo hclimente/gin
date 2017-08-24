@@ -14,25 +14,27 @@ class GridCV {
 
 public:
 
+	GridCV();
 	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, uint);
 	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, VectorXd, uint);
-	~GridCV();
+	virtual ~GridCV();
 
 	// grid exploration functions
-	void runFolds(uint);
-	void runFolds(uint, CCrossValidation);
-	void scoreModels(uint);
+	virtual void runFolds(uint);
+	virtual void runFolds(uint, CCrossValidation);
+	virtual void scoreModels(uint);
 
 	// setters & getters
-	double bestEta() { return __bestEta; }
-	double bestLambda() { return __bestLambda; }
-	VectorXd etas() { return __etas; }
-	VectorXd lambdas() { return __lambdas; }
-	std::vector<Grid*> grids() { return __grids; }
-	bool binary_y() { return __binary_y; }
-	std::map<double, std::map<double, VectorXd> > aggregatedFolds() { return __aggregatedFolds; };
-	VectorXd aggregatedFolds(uint const& e, uint const& l) { return __aggregatedFolds[__etas(e)][__lambdas(l)]; };
-	MatrixXd scoredFolds() { return __scoredFolds; }
+	virtual double bestEta() { return __bestEta; }
+	virtual double bestLambda() { return __bestLambda; }
+	virtual VectorXd etas() { return __etas; }
+	virtual VectorXd lambdas() { return __lambdas; }
+	virtual std::vector<Grid*> grids() { return __grids; }
+	virtual bool binary_y() { return __binary_y; }
+	virtual std::map<double, std::map<double, VectorXd> > aggregatedFolds() { return __aggregatedFolds; };
+	virtual VectorXd aggregatedFolds(uint const& e, uint const& l) { return __aggregatedFolds[__etas(e)][__lambdas(l)]; };
+	virtual MatrixXd scoredFolds() { return __scoredFolds; }
+	virtual double scoredFolds(uint const& e, uint const& l) { return __scoredFolds(e,l); }
 
 	void set_binary_y(bool binary_y) { __binary_y = binary_y; }
 

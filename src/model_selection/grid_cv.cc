@@ -4,6 +4,19 @@
 
 #include "gin/model_selection/grid_cv.h"
 
+GridCV::GridCV() {
+	__X = NULL;
+	__y = NULL;
+	__W = NULL;
+
+	__folds = 0;
+	__etas = VectorXd::Zero(1);
+	__lambdas = VectorXd::Zero(1);
+
+	__classifier = NULL;
+	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
+}
+
 GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd c, uint folds) {
 
 	__X = X;
