@@ -17,12 +17,43 @@ GridCV::GridCV() {
 	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
 }
 
-GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd c, uint folds) {
+GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, uint folds) {
 
+	// constructor just sets up the data, and partitions it in the k-fold setting
 	__X = X;
 	__y = y;
 	__W = W;
+	__folds = folds;
 
+	// TODO get seed from user settings
+	__cv = 	CCrossValidation(0);
+	__cv.kFold(__folds, __y->rows());
+
+	__getClassifier();
+
+}
+
+GridCV::~GridCV() {
+
+	for (int i = 0; i < __grids.size(); i++) {
+		delete __grids[i];
+	}
+
+	delete __classifier;
+
+}
+
+void GridCV::initFolds(VectorXd etas, VectorXd lambdas, uint associationScore) {
+
+	__etas = etas;
+	__lambdas = lambdas;
+	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
+
+	initFolds(associationScore);
+
+}
+
+void GridCV::initFolds(VectorXd c, uint associationScore) {
 
 	double minc = c.minCoeff();
 
@@ -41,48 +72,13 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	for(int i = 0; i < __lambdas.rows(); i++)
 		__lambdas(i) = pow(10, __lambdas(i));
 
-	__getClassifier();
-
-	__folds = folds;
 	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
 
-}
-
-GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W, VectorXd etas, VectorXd lambdas, uint folds) {
-
-	__X = X;
-	__y = y;
-	__W = W;
-
-	__getClassifier();
-
-	__etas = etas;
-	__lambdas = lambdas;
-	__folds = folds;
-	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
+	initFolds(associationScore);
 
 }
 
-GridCV::~GridCV() {
-
-	for (int i = 0; i < __grids.size(); i++) {
-		delete __grids[i];
-	}
-
-	delete __classifier;
-
-}
-
-void GridCV::runFolds(uint association) {
-
-	// TODO get seed from user settings
-	CCrossValidation cv(0);
-	cv.kFold(__folds, __y->rows());
-	runFolds(association, cv);
-
-}
-
-void GridCV::runFolds(uint association, CCrossValidation cv) {
+void GridCV::initFolds(uint associationScore) {
 
 	// delete previous iteration, if any
 	for (int i = 0; i < __grids.size(); i++) {
@@ -91,7 +87,7 @@ void GridCV::runFolds(uint association, CCrossValidation cv) {
 	}
 
 	for (int i = 0; i < __folds; i++) {
-		VectorXd tr_indices = cv.getTrainingIndices(i);
+		VectorXd tr_indices = __cv.getTrainingIndices(i);
 		MatrixXd x_train = sliceRowsMatrix(*__X, tr_indices);
 		VectorXd y_train = sliceRowsMatrix(*__y, tr_indices);
 		/* TODO what is this
@@ -101,9 +97,13 @@ void GridCV::runFolds(uint association, CCrossValidation cv) {
 		}
 		 */
 
-		Grid* g = new Grid(x_train, y_train, __W, association, __etas, __lambdas);
+		Grid* g = new Grid(x_train, y_train, __W, associationScore, __etas, __lambdas);
 		__grids.push_back(g);
 	}
+
+}
+
+void GridCV::runFolds() {
 
 	for (int i = 0; i < __folds; i++) {
 		__grids[i] -> search();

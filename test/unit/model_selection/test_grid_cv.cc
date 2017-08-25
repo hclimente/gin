@@ -26,8 +26,9 @@ TEST(GridCV, Constructor) {
 	VectorXd c(4);
 	c << 0.5, 1, 2, 4;
 
-	GridCV g1(&X, &y, &W, c, 10);
-	EXPECT_EQ(g1.grids().size(), 0);
+	GridCV g1(&X, &y, &W, 10);
+	g1.initFolds(c, 0);
+	EXPECT_EQ(g1.grids().size(), 10);
 	EXPECT_EQ(g1.lambdas().size(), 10);
 	EXPECT_NEAR(g1.lambdas().minCoeff(), 0.05, 0.1);
 	EXPECT_NEAR(g1.lambdas()(5), 1, 2);
@@ -42,8 +43,9 @@ TEST(GridCV, Constructor) {
 	VectorXd lambdas(3);
 	lambdas << 3, 5, 7;
 
-	GridCV g2(&X, &y, &W, etas, lambdas, 10);
-	EXPECT_EQ(g2.grids().size(), 0);
+	GridCV g2(&X, &y, &W, 10);
+	g2.initFolds(etas, lambdas, 0);
+	EXPECT_EQ(g2.grids().size(), 10);
 	EXPECT_EQ(g2.lambdas().size(), 3);
 	EXPECT_NEAR(g2.lambdas().minCoeff(), 3, 0.1);
 	EXPECT_NEAR(g2.lambdas().maxCoeff(), 7, 0.1);
@@ -82,7 +84,8 @@ TEST(GridCV, runFolds) {
 	VectorXd lambdas(3);
 	lambdas << 3, 5, 7;
 
-	GridCV g(&X, &y, &W, etas, lambdas, 10);
+	GridCV g(&X, &y, &W, 10);
+	g.initFolds(etas, lambdas, CHI2);
 
 	// k-fold
 	// create k-folds
@@ -93,6 +96,7 @@ TEST(GridCV, runFolds) {
 
 	CCrossValidation cv(0);
 	cv.kFold(10, y.rows(), indices);
+	g.setCV(cv);
 
 	// values are not initialized
 	for (uint i = 0; i < g.grids().size(); i++) {
@@ -105,7 +109,7 @@ TEST(GridCV, runFolds) {
 		}
 	}
 
-	g.runFolds(BIC, cv);
+	g.runFolds();
 	EXPECT_NE(g.grids()[0] -> X(), g.grids()[1] -> X());
 	for (uint i = 0; i < g.grids().size(); i++) {
 		EXPECT_EQ(g.grids()[0] -> X().rows(), 9);
@@ -164,8 +168,9 @@ TEST(GridCV, scoreModels) {
 	cv.kFold(10, y.rows(), indices);
 
 	// create and run grids
-	GridCV grid_ql(&X, &y, &W, etas, lambdas, 10);
-	grid_ql.runFolds(CHI2, cv);
+	GridCV grid_ql(&X, &y, &W, 10);
+	grid_ql.initFolds(etas, lambdas, CHI2);
+	grid_ql.runFolds();
 
 	grid_ql.scoreModels(AIC);
 	EXPECT_EQ(grid_ql.bestEta(), 6);

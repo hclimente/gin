@@ -15,13 +15,14 @@ class GridCV {
 public:
 
 	GridCV();
-	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, uint);
-	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, VectorXd, VectorXd, uint);
+	GridCV(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&, uint);
 	virtual ~GridCV();
 
 	// grid exploration functions
-	virtual void runFolds(uint);
-	virtual void runFolds(uint, CCrossValidation);
+	virtual void initFolds(VectorXd, VectorXd, uint);
+	virtual void initFolds(VectorXd, uint);
+	virtual void initFolds(uint);
+	virtual void runFolds();
 	virtual void scoreModels(uint);
 
 	// setters & getters
@@ -35,6 +36,8 @@ public:
 	virtual VectorXd aggregatedFolds(uint const& e, uint const& l) { return __aggregatedFolds[__etas(e)][__lambdas(l)]; };
 	virtual MatrixXd scoredFolds() { return __scoredFolds; }
 	virtual double scoredFolds(uint const& e, uint const& l) { return __scoredFolds(e,l); }
+
+	virtual void setCV(CCrossValidation cv) { __cv = cv; }
 
 	void set_binary_y(bool binary_y) { __binary_y = binary_y; }
 
@@ -60,6 +63,7 @@ private:
 	SparseMatrixXd* __W;
 	bool __binary_y;
 	CRegression* __classifier;
+	CCrossValidation __cv;
 
 	// methods
 	double __computeConsistency(VectorXd const&);

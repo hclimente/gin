@@ -45,8 +45,9 @@ private:
 	double __bestLambda;
 	VectorXd __c;
 	VectorXd __selectedSnps;
-
 	bool __debug;
+
+	void __computeAssociation(uint const &);
 
 };
 

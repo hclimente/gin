@@ -62,21 +62,12 @@ void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const
 	VectorXd y = __gwas->Y.col(0);
 	SparseMatrixXd W = __gwas->network;
 
-	logging(INFO,"Computing univariate association.");
-	UnivariateAssociation univar( &X, &y );
+	__computeAssociation(associationScore);
 
-	if (associationScore == CHI2) {
-		__c = univar.computeChi2();
-	} else if (associationScore == TREND) {
-		// TODO implement different trend scores
-		__c = univar.computeTrendTest("additive");
-	} else if (associationScore == SKAT) {
-		__c = univar.computeSKAT();
-	}
-
-	__cvgrid = new GridCV(&X, &y, &W, __c, folds);
+	__cvgrid = new GridCV(&X, &y, &W, folds);
+	__cvgrid->initFolds(__c, associationScore);
 	logging(INFO,"Running models.");
-	__cvgrid->runFolds(associationScore);
+	__cvgrid->runFolds();
 	logging(INFO,"Finding best models.");
 	__cvgrid->scoreModels(modelScore);
 
@@ -112,5 +103,23 @@ void Shake::writeResults(string const& output) {
 	logging(STATUS,"Writing results...");
 	CSconesIO::writeOutput(output, __gwas, __selectedSnps, __bestEta, __bestLambda, __c);
 	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+
+}
+
+void Shake::__computeAssociation(uint const &associationScore) {
+
+	logging(INFO,"Computing univariate association.");
+	MatrixXd X = __gwas->X;
+	VectorXd y = __gwas->Y.col(0);
+	UnivariateAssociation univar( &X, &y );
+
+	if (associationScore == CHI2) {
+		__c = univar.computeChi2();
+	} else if (associationScore == TREND) {
+		// TODO implement different trend scores
+		__c = univar.computeTrendTest("additive");
+	} else if (associationScore == SKAT) {
+		__c = univar.computeSKAT();
+	}
 
 }
