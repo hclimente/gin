@@ -21,7 +21,7 @@ public:
 
 	Settings(std::string pedBasename, std::string networkFilename, uint encoding, uint modelScore, uint associationScore, std::string output) {
 		__error = false;
-		__debug = true;
+		__debug = false;
 		__pedBasename = pedBasename;
 		__networkFilename = networkFilename;
 		__encoding = encoding;

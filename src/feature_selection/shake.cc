@@ -7,6 +7,7 @@
 Shake::Shake() {
 	__gwas = new GWASData();
 	__cvgrid = NULL;
+	__debug = false;
 }
 
 Shake::Shake(MatrixXd X, VectorXd Y, SparseMatrixXd W) {
@@ -15,6 +16,7 @@ Shake::Shake(MatrixXd X, VectorXd Y, SparseMatrixXd W) {
 	__gwas->Y = Y;
 	__gwas->network = W;
 	__cvgrid = NULL;
+	__debug = false;
 }
 
 Shake::~Shake() {
