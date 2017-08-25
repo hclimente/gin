@@ -58,13 +58,9 @@ void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const
 
 	float64 begin = clock();
 	logging(STATUS,"Selecting the best hyperparameters...");
-	MatrixXd X = __gwas->X;
-	VectorXd y = __gwas->Y.col(0);
-	SparseMatrixXd W = __gwas->network;
-
 	__computeAssociation(associationScore);
 
-	__cvgrid = new GridCV(&X, &y, &W, folds);
+	__cvgrid = new GridCV(&(__gwas->X), &(__gwas->y), &(__gwas->network), folds);
 	__cvgrid->initFolds(__c, associationScore);
 	logging(INFO,"Running models.");
 	__cvgrid->runFolds();
@@ -109,9 +105,7 @@ void Shake::writeResults(string const& output) {
 void Shake::__computeAssociation(uint const &associationScore) {
 
 	logging(INFO,"Computing univariate association.");
-	MatrixXd X = __gwas->X;
-	VectorXd y = __gwas->Y.col(0);
-	UnivariateAssociation univar( &X, &y );
+	UnivariateAssociation univar( &(__gwas->X), &(__gwas->y) );
 
 	if (associationScore == CHI2) {
 		__c = univar.computeChi2();

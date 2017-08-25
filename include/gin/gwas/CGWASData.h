@@ -46,6 +46,7 @@ class GWASData {
 		std::vector<uint> sex;
 		VectorXd MAF;
 		MatrixXd Y;
+		VectorXd y;
 		MatrixXd X;
 		MatrixXd K;
 		SparseMatrixXd network;

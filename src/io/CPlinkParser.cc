@@ -14,7 +14,7 @@ void CPlinkParser::readPEDFile(std::string const& file,
 	std::map<std::string,char>::const_iterator iupac_iterator;
 	std::ifstream ifs;
 
-	std::vector<double> Y;
+	std::vector<double> y;
 	data->family_ids.clear();
 	data->sample_ids.clear();
 	data->paternal_ids.clear();
@@ -51,7 +51,7 @@ void CPlinkParser::readPEDFile(std::string const& file,
 		data->paternal_ids.push_back(sv[2]);
 		data->maternal_ids.push_back(sv[3]);
 		data->sex.push_back(StringHelper::string_to<int>(sv[4]));
-		Y.push_back(StringHelper::string_to<double>(sv[5]));
+		y.push_back(StringHelper::string_to<double>(sv[5]));
 
 		if((sv.size() - 6) % 2 != 0)
 			throw CPlinkParserException("ERROR: PED file has wrong file format.");
@@ -82,9 +82,9 @@ void CPlinkParser::readPEDFile(std::string const& file,
 	data->n_samples = data->raw_snps.size();
 	ifs.close();
 
-	data->Y = VectorXd::Zero(data->n_samples);
+	data->y = VectorXd::Zero(data->n_samples);
 	for (uint i = 0; i < data->n_samples; i++) {
-		data->Y(i) = Y[i];
+		data->y(i) = y[i];
 	}
 
 }

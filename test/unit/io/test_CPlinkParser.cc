@@ -40,7 +40,7 @@ TEST(CPlinkParser, readPEDFile) {
 	y << .1, .2, .3, .4, .5, .6, .7, .8, .9, 1;
 
 	for (uint i = 0; i < g.n_samples; i++) {
-		EXPECT_NEAR(g.Y(i), y[i], 0.01);
+		EXPECT_NEAR(g.y(i), y[i], 0.01);
 	}
 }
 
