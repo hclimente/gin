@@ -25,6 +25,7 @@ public:
 	void readGWAS(string const&, uint);
 	void readNetwork(string const&);
 	void selectHyperparameters(uint, uint const &, uint const &);
+	void selectHyperparameters(uint, uint const &, uint const &, VectorXd const &, VectorXd const&);
 	void selectSNPs();
 	void writeResults(string const&);
 

@@ -19,7 +19,7 @@ public:
 		__parseOptions(argc, argv);
 	}
 
-	Settings(std::string pedBasename, std::string networkFilename, uint encoding, uint modelScore, uint associationScore, std::string output) {
+	Settings(std::string pedBasename, std::string networkFilename, uint encoding, uint modelScore, uint associationScore, VectorXd eta, VectorXd lambda, std::string output) {
 		__error = false;
 		__debug = false;
 		__pedBasename = pedBasename;
@@ -27,6 +27,8 @@ public:
 		__encoding = encoding;
 		__modelScore = modelScore;
 		__associationScore = associationScore;
+		__etas = eta;
+		__lambdas = lambda;
 		__output = output;
 	}
 
@@ -39,6 +41,8 @@ public:
 	std::string networkFilename() { return __networkFilename; }
 	uint modelScore() { return __modelScore; }
 	uint associationScore() { return __associationScore; }
+	VectorXd etas() { return __etas; }
+	VectorXd lambdas() { return __lambdas; }
 	std::string output() { return __output; }
 	bool debug() { return __debug; }
 	bool error() { return __error; }
@@ -52,8 +56,8 @@ private:
 	// int __pcs;
 	// int __seed;
 	uint __associationScore;
-	// double __lambda;
-	// double __eta;
+	VectorXd __lambdas;
+	VectorXd __etas;
 	bool __debug;
 	uint __modelScore;
 	// int __depth;
@@ -71,8 +75,8 @@ private:
 				("model_score,m", po::value<std::string>()->default_value("cons"), "Metric to evaluate the models.")
 				// ("depth,y", po::value<int>()->default_value(3), "Depth of the grid search.")
 				// ("maf,m", po::value<double>()->default_value(0.05), "Float minor allele frequency filter.")
-				// ("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
-				// ("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
+				("lambda,l", po::value<double>()->default_value(-1), "Lambda parameter.")
+				("eta,e", po::value<double>()->default_value(-1), "Eta parameter.")
 				("out,o", po::value<std::string>()->default_value("results.txt"), "Output file.")
 				("encoding,e", po::value<std::string>()->default_value("additive"), "Model of inheritance (additive, recessive, dominant or codominant).")
 				// ("pc,c", po::value<int>()->default_value(0), "PC.")
@@ -102,8 +106,8 @@ private:
 		// __pcs = vm["pc"].as<int>();
 		// __seed = vm["seed"].as<int>();
 		std::string association_score_str = vm["association_score"].as<std::string>();
-		// __lambda = vm["lambda"].as<double>();
-		// __eta = vm["eta"].as<double>();
+		double lambda = vm["lambda"].as<double>();
+		double eta = vm["eta"].as<double>();
 		__debug = vm["debug"].as<bool>();
 		std::string model_selection_str = vm["model_score"].as<std::string>();
 		// __depth = vm["depth"].as<int>();
@@ -123,12 +127,30 @@ private:
 		}
 
 		__associationScore = SKAT;
-		if (association_score_str == "chi2")
+		if (association_score_str == "chi2") {
 			__associationScore = CHI2;
+		} else if (association_score_str == "trend") {
+			__associationScore = TREND;
+		}
 
 		__modelScore = CONSISTENCY;
-		if (model_selection_str == "bic")
+		if (model_selection_str == "bic") {
 			__modelScore = BIC;
+		} else if (model_selection_str == "aic") {
+			__modelScore = AIC;
+		} else if (model_selection_str == "aicc") {
+			__modelScore = AICc;
+		} else if (model_selection_str == "mbic") {
+			__modelScore = mBIC;
+		}
+
+		if (eta != -1 & lambda != -1) {
+			__etas = VectorXd(1);
+			__etas(0) = eta;
+			__lambdas = VectorXd(1);
+			__lambdas(0) = lambda;
+		}
+
 
 	}
 

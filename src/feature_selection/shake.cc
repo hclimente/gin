@@ -81,6 +81,33 @@ void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const
 
 }
 
+void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const &associationScore, VectorXd const &etas, VectorXd const& lambdas) {
+
+	float64 begin = clock();
+	logging(STATUS,"Selecting the best hyperparameters...");
+	__computeAssociation(associationScore);
+
+	__cvgrid = new GridCV(&(__gwas->X), &(__gwas->y), &(__gwas->network), folds);
+	__cvgrid->initFolds(etas, lambdas, associationScore);
+	logging(INFO,"Running models.");
+	__cvgrid->runFolds();
+	logging(INFO,"Finding best models.");
+	__cvgrid->scoreModels(modelScore);
+
+	__bestEta = __cvgrid->bestEta();
+	__bestLambda = __cvgrid->bestLambda();
+	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+
+	if(__debug) {
+		GridViews g(__cvgrid);
+		logging(DEBUG, "Model score matrix");
+		logging(DEBUG, g.viewSelectionCriterion());
+		logging(DEBUG, "Average number of selected SNPs.");
+		logging(DEBUG, g.viewSelectedAvg());
+	}
+
+}
+
 void Shake::selectSNPs() {
 
 	float64 begin = clock();
