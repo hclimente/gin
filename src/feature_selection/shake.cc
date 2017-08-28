@@ -57,14 +57,14 @@ void Shake::readNetwork(string const& networkFilename) {
 void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const &associationScore) {
 
 	float64 begin = clock();
-	logging(STATUS,"Selecting the best hyperparameters...");
 	__computeAssociation(associationScore);
 
+	logging(STATUS,"Selecting the best hyperparameters...");
 	__cvgrid = new GridCV(&(__gwas->X), &(__gwas->y), &(__gwas->network), folds);
 	__cvgrid->initFolds(__c, associationScore);
 	logging(INFO,"Running models.");
 	__cvgrid->runFolds();
-	logging(INFO,"Finding best models.");
+	logging(INFO,"Finding best model.");
 	__cvgrid->scoreModels(modelScore);
 
 	__bestEta = __cvgrid->bestEta();
@@ -84,14 +84,14 @@ void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const
 void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const &associationScore, VectorXd const &etas, VectorXd const& lambdas) {
 
 	float64 begin = clock();
-	logging(STATUS,"Selecting the best hyperparameters...");
 	__computeAssociation(associationScore);
 
+	logging(STATUS,"Selecting the best hyperparameters...");
 	__cvgrid = new GridCV(&(__gwas->X), &(__gwas->y), &(__gwas->network), folds);
 	__cvgrid->initFolds(etas, lambdas, associationScore);
 	logging(INFO,"Running models.");
 	__cvgrid->runFolds();
-	logging(INFO,"Finding best models.");
+	logging(INFO,"Finding best model.");
 	__cvgrid->scoreModels(modelScore);
 
 	__bestEta = __cvgrid->bestEta();
