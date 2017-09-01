@@ -88,8 +88,10 @@ void GridCV::initFolds(uint associationScore) {
 
 	for (int i = 0; i < __folds; i++) {
 		VectorXd tr_indices = __cv.getTrainingIndices(i);
-		MatrixXd x_train = sliceRowsMatrix(*__X, tr_indices);
+		MatrixXd X_train = sliceRowsMatrix(*__X, tr_indices);
 		VectorXd y_train = sliceRowsMatrix(*__y, tr_indices);
+
+		VectorXd c = __computeUnivariate(&X_train, &y_train, associationScore);
 		/* TODO what is this
 		MatrixXd cov_train;
 		if(__covs_set) {
@@ -97,7 +99,7 @@ void GridCV::initFolds(uint associationScore) {
 		}
 		 */
 
-		Grid* g = new Grid(x_train, y_train, __W, associationScore, __etas, __lambdas);
+		Grid* g = new Grid(c, __W, __etas, __lambdas);
 		__grids.push_back(g);
 	}
 
@@ -210,4 +212,21 @@ void GridCV::__getClassifier() {
 	} else {
 		__classifier = new CLinearRegression();
 	}
+}
+
+VectorXd GridCV::__computeUnivariate(MatrixXd* const& X, VectorXd* const& y, uint const& association) {
+
+	UnivariateAssociation snpAssociation(X, y);
+	VectorXd c;
+
+	if(association == SKAT) {
+		c = snpAssociation.computeSKAT();
+	} else if (association == CHI2) {
+		c = snpAssociation.computeChi2();
+	} else if (association == TREND) {
+		c = snpAssociation.computeTrendTest("additive");
+	}
+
+	return c;
+
 }

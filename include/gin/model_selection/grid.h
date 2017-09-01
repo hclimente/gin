@@ -6,15 +6,14 @@
 #define GIN_GRID_H
 
 #include "gin/feature_selection/scones.h"
-#include "gin/stats/univariate_association.h"
 #include "gin/globals.h"
 
 class Grid {
 
 public:
 
-	Grid(MatrixXd const&, VectorXd const&, SparseMatrixXd* const&, uint const&);
-	Grid(MatrixXd const&, VectorXd const&, SparseMatrixXd* const&, uint const&, VectorXd const&, VectorXd const&);
+	Grid(VectorXd const&, SparseMatrixXd* const&);
+	Grid(VectorXd const&, SparseMatrixXd* const&, VectorXd const&, VectorXd const&);
 
 	void search();
 
@@ -23,16 +22,12 @@ public:
 	VectorXd selected(double const&, double const&);
 	std::vector<VectorXd> selected(VectorXd const &etas, VectorXd const &lambdas);
 
-	MatrixXd X() { return __X; }
-	VectorXd y() { return __y; }
 	VectorXd c() { return __c; }
 	VectorXd etas() { return __etas; }
 	VectorXd lambdas() { return __lambdas; }
 
 private:
 
-	MatrixXd __X;
-	VectorXd __y;
 	SparseMatrixXd* __W;
 	VectorXd __c;
 	VectorXd __etas;

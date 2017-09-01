@@ -8,6 +8,7 @@
 #include "gin/model_selection/grid.h"
 #include "gin/model_selection/CCrossValidation.h"
 #include "gin/regression/CRegression.h"
+#include "gin/stats/univariate_association.h"
 #include "gin/utils/CMatrixHelper.h"
 
 class GridCV {
@@ -68,6 +69,7 @@ private:
 	// methods
 	double __computeConsistency(VectorXd const&);
 	double __computeInformation(VectorXd, uint);
+	VectorXd __computeUnivariate(MatrixXd* const&, VectorXd* const&, uint const&);
 	void __getClassifier();
 
 };

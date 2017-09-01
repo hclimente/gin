@@ -110,10 +110,8 @@ TEST(GridCV, runFolds) {
 	}
 
 	g.runFolds();
-	EXPECT_NE(g.grids()[0] -> X(), g.grids()[1] -> X());
 	for (uint i = 0; i < g.grids().size(); i++) {
-		EXPECT_EQ(g.grids()[0] -> X().rows(), 9);
-		EXPECT_EQ(g.grids()[0] -> y().rows(), 9);
+		EXPECT_EQ(g.grids()[0] -> c().rows(), 3);
 
 		for (int e = 0; e < etas.rows(); e++) {
 			for (int l = 0; l < lambdas.rows(); l++) {

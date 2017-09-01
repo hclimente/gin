@@ -3,21 +3,16 @@
 //
 
 #include "gin/model_selection/grid.h"
-#include "gtest/gtest.h"
 #include "gin/globals.h"
+
+#include "gtest/gtest.h"
 
 // TODO set more setters and getters
 
 TEST(Grid, HasExpectedDimensions) {
 
-	MatrixXd X(3, 3);
-	X <<    0, 1, 2,
-			0, 1, 2,
-			0, 1, 2;
-
-	VectorXd y(3);
-	y << 0, 0, 1;
-
+	VectorXd c(3);
+	c << 1, 1, 1;
 	MatrixXd dW(3, 3);
 	dW <<   0, 1, 0,
 			1, 0, 1,
@@ -30,7 +25,9 @@ TEST(Grid, HasExpectedDimensions) {
 	VectorXd lambdas(5);
 	lambdas << 0, 1, 2, 3, 4;
 
-	Grid g = Grid(X, y, &W, CHI2, etas, lambdas);
+	std::cout << c << "\n";
+
+	Grid g = Grid(c, &W, etas, lambdas);
 	g.search();
 
 	// check dimensions
@@ -49,25 +46,10 @@ TEST(Grid, HasExpectedDimensions) {
 
 }
 
-TEST(Grid, RunsScones) {
+TEST(Grid, search_runsScones) {
 
-	// transposed matrix
-	// chi2 equals to 10 on associated snps and to 0.4 on unassociated snps
-	MatrixXd tX(10, 60);
-	tX <<   0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,
-			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,
-			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,
-			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,
-			0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,
-			0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,
-			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,
-			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,
-			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,
-			0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2;
-
-	VectorXd y(60);
-	y <<    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1;
-
+	VectorXd c(10);
+	c << 10, 0.4, 0.4, 0.4, 10, 10, 0.4, 0.4, 0.4, 0.4;
 	MatrixXd dW(10, 10);
 	dW <<   0, 1, 0, 0, 1, 1, 0, 0, 0, 0,
 			1, 0, 1, 0, 0, 0, 0, 0, 0, 0,
@@ -80,24 +62,21 @@ TEST(Grid, RunsScones) {
 			0, 0, 0, 0, 0, 0, 0, 1, 0, 1,
 			0, 0, 0, 0, 0, 0, 0, 0, 1, 0;
 	SparseMatrixXd W = dW.sparseView();
-
-	VectorXd solution(10);
-	solution << 1, 0, 0, 0, 1, 1, 0, 0, 0, 0;
-	VectorXd all(10);
-	all << 1, 1, 1, 1, 1, 1, 1, 1, 1, 1;
-	VectorXd none(10);
-	none << 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
-
 	VectorXd etas(4);
-	etas << 0, 1, 10, 11;
+	etas << 0, 1, 9, 11;
 	VectorXd lambdas(2);
 	lambdas << 0, 0.3;
 
-	Grid g(Eigen::Transpose< MatrixXd >(tX), y, &W, 1, etas, lambdas);
+	Grid g(c, &W, etas, lambdas);
 	g.search();
 
+	VectorXd solution(10);
+	solution << 1, 0, 0, 0, 1, 1, 0, 0, 0, 0;
+	VectorXd all = VectorXd::Ones(10);
+	VectorXd none = VectorXd::Zero(10);
+
 	// same tests run in test_scones
-	EXPECT_EQ(g.selected(10,0), solution);
+	EXPECT_EQ(g.selected(9,0), solution);
 	EXPECT_EQ(g.selected(1,0.3), solution);
 	EXPECT_EQ(g.selected(11,0), none);
 	EXPECT_EQ(g.selected(0,0), all);

@@ -4,12 +4,10 @@
 
 #include "gin/model_selection/grid.h"
 
-Grid::Grid(MatrixXd const& X, VectorXd const& y, SparseMatrixXd* const& W, uint const& association ) {
-	__X = X;
-	__y = y;
+Grid::Grid(VectorXd const& c, SparseMatrixXd* const& W) {
+	__c = c;
 	__W = W;
 
-	__computeUnivariate(association);
 
 	__etas = VectorXd::LinSpaced(10, log10(__c.maxCoeff()), log10(__c.minCoeff()));
 	for(int i = 0; i < __etas.rows(); i++)
@@ -23,14 +21,12 @@ Grid::Grid(MatrixXd const& X, VectorXd const& y, SparseMatrixXd* const& W, uint 
 
 }
 
-Grid::Grid(MatrixXd const& X, VectorXd const& y, SparseMatrixXd* const& W, uint const& association, VectorXd const& etas, VectorXd const& lambdas) {
-	__X = X;
-	__y = y;
+Grid::Grid(VectorXd const& c, SparseMatrixXd* const& W, VectorXd const& etas, VectorXd const& lambdas) {
+	__c = c;
 	__etas = etas;
 	__lambdas = lambdas;
 	__W = W;
 	__initGrid();
-	__computeUnivariate(association);
 
 }
 
@@ -43,20 +39,6 @@ void Grid::__initGrid() {
 			__grid[eta][lambda] = VectorXd();
 		}
 	}
-}
-
-void Grid::__computeUnivariate(uint const& association) {
-
-	UnivariateAssociation snpAssociation(&__X, &__y);
-
-	if(association == SKAT) {
-		__c = snpAssociation.computeSKAT();
-	} else if (association == CHI2) {
-		__c = snpAssociation.computeChi2();
-	} else if (association == TREND) {
-		__c = snpAssociation.computeTrendTest("additive");
-	}
-
 }
 
 void Grid::search() {
