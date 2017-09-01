@@ -5,6 +5,15 @@
 #include "gin/stats/univariate_association.h"
 #include "gin/regression/CRegression.h"
 
+UnivariateAssociation::UnivariateAssociation() {
+	__X = NULL;
+	__y = NULL;
+	__n_features = 0;
+
+	__binary_y = true;
+
+}
+
 UnivariateAssociation::UnivariateAssociation(MatrixXd* X, VectorXd* y) {
 	__X = X;
 	__y = y;

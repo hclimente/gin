@@ -11,12 +11,13 @@
 class UnivariateAssociation {
 public:
 
+	UnivariateAssociation();
 	UnivariateAssociation(MatrixXd*, VectorXd*);
 
 	// association scores
-	VectorXd computeSKAT();
-	VectorXd computeChi2();
-	VectorXd computeTrendTest(std::string const&);
+	virtual VectorXd computeSKAT();
+	virtual VectorXd computeChi2();
+	virtual VectorXd computeTrendTest(std::string const&);
 
 private:
 	MatrixXd* __X;
