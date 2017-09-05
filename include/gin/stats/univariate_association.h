@@ -16,6 +16,7 @@ public:
 
 	// association scores
 	virtual VectorXd computeSKAT();
+	virtual VectorXd computeSKAT(VectorXd);
 	virtual VectorXd computeChi2();
 	virtual VectorXd computeTrendTest(std::string const&);
 
