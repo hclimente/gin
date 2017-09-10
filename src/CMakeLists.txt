@@ -34,13 +34,18 @@ list (REMOVE_ITEM SOURCES
 		${GIN_SOURCE_DIR}/src/tools/linreg.cc
 		${GIN_SOURCE_DIR}/src/tools/scones.cc )
 
+# locate boost
+find_package (Boost)
+include_directories (${Boost_INCLUDE_DIRS})
+
 # create library
-add_library (${libgin} STATIC ${SOURCES} $<TARGET_OBJECTS:maxflow> $<TARGET_OBJECTS:cephes>)
+add_library (${libgin} SHARED ${SOURCES} $<TARGET_OBJECTS:maxflow> $<TARGET_OBJECTS:cephes>)
+target_link_libraries (${libgin} boost_program_options)
 target_include_directories (${libgin} INTERFACE ${GIN_SOURCE_DIR}/include ${GIN_SOURCE_DIR}/lib)
 
 # installation configuration
 install (TARGETS ${libgin}
-		 ARCHIVE DESTINATION lib INCLUDES DESTINATION include)
+		 LIBRARY DESTINATION lib INCLUDES DESTINATION include)
 install (DIRECTORY ${GIN_SOURCE_DIR}/include/ DESTINATION include
 		 FILES_MATCHING PATTERN "*.h")
 install (DIRECTORY ${GIN_SOURCE_DIR}/lib/Cephes DESTINATION include
@@ -52,10 +57,6 @@ add_library (gin ALIAS ${libgin})
 ########################################################################
 #
 # Compile the CLI tools
-
-# fetch boost
-find_package (Boost)
-include_directories (${Boost_INCLUDE_DIRS})
 
 # compile tools
 add_executable (evo tools/evo.cc)
