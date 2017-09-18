@@ -261,16 +261,11 @@ void CScones::__autoParameters() {
 	float64 minc = floor(log10(tmpc.minCoeff()));
 	float64 maxc = ceil(log10(c.maxCoeff()));
 
-	// etas: minc to maxc
 	__settings.etas = VectorXd::LinSpaced(__settings.nParameters, minc, maxc);
 	for(int i=0; i<__settings.etas.rows(); i++)
 		__settings.etas(i) = pow(10,__settings.etas(i));
 
-	// lambdas: expanded range
-	float64 delta = abs(minc - maxc)/(__settings.nParameters - 1) ;
-	int n = ceil(5/(delta)) ;
-
-	__settings.lambdas = VectorXd::LinSpaced(__settings.nParameters + 2 * n, minc - n * delta , maxc + n * delta );
+	__settings.lambdas = VectorXd::LinSpaced(__settings.nParameters, minc - 1, maxc + 1);
 	for(int i=0; i<__settings.lambdas.rows(); i++)
 		__settings.lambdas(i) = pow(10,__settings.lambdas(i));
 }
