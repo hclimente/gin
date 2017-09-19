@@ -5,8 +5,7 @@ set -e
 
 INSTALL_PATH=`pwd`/gin/build
 
-if [ ! -z "$1" ]
-  then
+if [ ! -z "$1" ]; then
     INSTALL_PATH=$1
 fi
 
@@ -17,6 +16,11 @@ make all install
 export CPLUS_INCLUDE_PATH=$INSTALL_PATH/include:${CPLUS_INCLUDE_PATH}
 export LIBRARY_PATH=$INSTALL_PATH/lib:${LIBRARY_PATH}
 export PATH=$INSTALL_PATH/bin:${PATH}
+if [ "$(uname)" == "Darwin" ]; then
+    export DYLD_LIBRARY_PATH=$INSTALL_PATH/lib:${DYLD_LIBRARY_PATH}
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    export LD_LIBRARY_PATH=$INSTALL_PATH/lib:${LD_LIBRARY_PATH}
+fi
 
 cat <<- EOF
 
@@ -26,3 +30,8 @@ export CPLUS_INCLUDE_PATH=$INSTALL_PATH/include:\${CPLUS_INCLUDE_PATH}
 export LIBRARY_PATH=$INSTALL_PATH/lib:\${LIBRARY_PATH}
 export PATH=$INSTALL_PATH/bin:\${PATH}
 EOF
+if [ "$(uname)" == "Darwin" ]; then
+    echo "export DYLD_LIBRARY_PATH=$INSTALL_PATH/lib:\${DYLD_LIBRARY_PATH}"
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    echo "export LD_LIBRARY_PATH=$INSTALL_PATH/lib:\${LD_LIBRARY_PATH}"
+fi
