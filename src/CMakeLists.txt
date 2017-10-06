@@ -50,6 +50,7 @@ install (DIRECTORY ${GIN_SOURCE_DIR}/include/ DESTINATION include
 		 FILES_MATCHING PATTERN "*.h")
 install (DIRECTORY ${GIN_SOURCE_DIR}/lib/Cephes DESTINATION include
 		 FILES_MATCHING PATTERN "*.h")
+install (DIRECTORY ${GIN_SOURCE_DIR}/lib/eigen/Eigen DESTINATION include)
 
 # define alias for linking purposes (in TESTS)
 add_library (gin ALIAS ${libgin})

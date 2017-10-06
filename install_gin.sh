@@ -13,6 +13,7 @@ cd gin
 cmake -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_PATH .
 make all install
 
+export GIN_PATH=$INSTALL_PATH/lib
 export CPLUS_INCLUDE_PATH=$INSTALL_PATH/include:${CPLUS_INCLUDE_PATH}
 export LIBRARY_PATH=$INSTALL_PATH/lib:${LIBRARY_PATH}
 export PATH=$INSTALL_PATH/bin:${PATH}
@@ -26,6 +27,7 @@ cat <<- EOF
 
 Copy to your .bashrc to add gin and the executables to your PATHs:
 
+export GIN_PATH=$INSTALL_PATH/lib
 export CPLUS_INCLUDE_PATH=$INSTALL_PATH/include:\${CPLUS_INCLUDE_PATH}
 export LIBRARY_PATH=$INSTALL_PATH/lib:\${LIBRARY_PATH}
 export PATH=$INSTALL_PATH/bin:\${PATH}
