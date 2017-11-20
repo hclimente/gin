@@ -9,13 +9,20 @@
 
 TEST(GridCV, Constructor) {
 
-	MatrixXd X(3,4);
-	X <<    0,0,0,1,
-			0,0,1,2,
-			0,1,2,2;
+	MatrixXd X(10,3);
+	X <<    2,0,0,
+			2,0,1,
+			2,1,0,
+			0,1,2,
+			1,0,2,
+			1,2,0,
+			0,2,1,
+			0,0,1,
+			0,1,0,
+			1,0,0;
 
-	VectorXd y(3);
-	y <<    0,1,3;
+	VectorXd y(10);
+	y <<    0,0,0,0,0,1,1,1,1,2.5;
 
 	MatrixXd dW(4,4);
 	dW <<   0, 1, 0, 0,
@@ -27,7 +34,7 @@ TEST(GridCV, Constructor) {
 	c << 0.5, 1, 2, 4;
 
 	GridCV g1(&X, &y, &W, 10);
-	g1.initFolds(c, 0);
+	g1.initFolds(c, SKAT);
 	EXPECT_EQ(g1.grids().size(), 10);
 	EXPECT_EQ(g1.lambdas().size(), 10);
 	EXPECT_NEAR(g1.lambdas().minCoeff(), 0.05, 0.1);
