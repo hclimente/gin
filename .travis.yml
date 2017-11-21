@@ -18,6 +18,7 @@ matrix:
       cache: ccache
       compiler: clang
       install:
+        - brew update
         - brew install ccache
         - brew install lcov
         - export PATH="/usr/local/opt/ccache/libexec:$PATH"
