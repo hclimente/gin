@@ -159,7 +159,7 @@ TEST(GridCV, scoreModels) {
 	dW.diagonal(-1) = VectorXd::Ones(53);
 	SparseMatrixXd W = dW.sparseView();
 	VectorXd etas(2);
-	etas << 0, 6;
+	etas << 0, 4;
 	VectorXd lambdas(2);
 	lambdas << 0, 1;
 
@@ -178,7 +178,7 @@ TEST(GridCV, scoreModels) {
 	grid_ql.runFolds();
 
 	grid_ql.scoreModels(AIC);
-	EXPECT_EQ(grid_ql.bestEta(), 6);
+	EXPECT_EQ(grid_ql.bestEta(), 4);
 	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
 #ifdef __APPLE__
 841
@@ -188,7 +188,7 @@ TEST(GridCV, scoreModels) {
 	, 1);
 
 	grid_ql.scoreModels(BIC);
-	EXPECT_EQ(grid_ql.bestEta(), 6);
+	EXPECT_EQ(grid_ql.bestEta(), 4);
 	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
 #ifdef __APPLE__
 839
@@ -198,7 +198,7 @@ TEST(GridCV, scoreModels) {
 	, 1);
 
 	grid_ql.scoreModels(AICc);
-	EXPECT_EQ(grid_ql.bestEta(), 6);
+	EXPECT_EQ(grid_ql.bestEta(), 4);
 	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
 #ifdef __APPLE__
 838
@@ -208,7 +208,7 @@ TEST(GridCV, scoreModels) {
 	, 1);
 
 	grid_ql.scoreModels(CONSISTENCY);
-	EXPECT_EQ(grid_ql.bestEta(), 6);
+	EXPECT_EQ(grid_ql.bestEta(), 4);
 	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 1, 0.01);
 
 	// TODO check BIC, AIC, CONSISTENCY for continuous when SKAT is implemented

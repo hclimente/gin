@@ -53,7 +53,7 @@ float64 CChi2::logpdf(float64 const& x, float64 const& k) throw (CChi2Exception)
 	return log(pdf(x,k));
 }
 
-MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y) throw (CChi2Exception) {
+MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y, bool pseudoCounts) throw (CChi2Exception) {
 
 	if (x.size() != Y.size()) throw CChi2Exception("Variable vector lengths are different.");
 
@@ -63,6 +63,9 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y) thro
 		counts[Y(i)][x(i)] += 1;
 
 	MatrixXd table = MatrixXd::Zero(2, 3);
+	if (pseudoCounts) {
+		table = MatrixXd::Ones(2, 3);
+	}
 
 	int row = 0;
 	for (std::map<int, std::map<int,int>>::iterator it = counts.begin(); it!= counts.end(); ++it) {
@@ -71,7 +74,7 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y) thro
 
 			std::map<int,int>::iterator f = it->second.find(i);
 			if (f != it->second.end()) {
-				table(row, col) = it->second[i];
+				table(row, col) = table(row, col) + it->second[i];
 			}
 			col++;
 		}

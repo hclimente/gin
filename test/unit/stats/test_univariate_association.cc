@@ -18,11 +18,11 @@ TEST(UnivariateAssociation, testComputeChi2) {
 	UnivariateAssociation u1(&X1, &y1);
 	VectorXd c1 = u1.computeChi2();
 
-	EXPECT_NEAR(c1[0], 10, 0.1);
-	EXPECT_NEAR(c1[1], 0.4, 0.01);
+	EXPECT_NEAR(c1[0], 9.09, 0.1);
+	EXPECT_NEAR(c1[1], 0.36, 0.01);
 
 	MatrixXd X2(10, 5);
-	X2 <<    0, 0, 0, 0, 0,
+	X2 <<   0, 0, 0, 0, 0,
 			0, 0, 1, 1, 1,
 			0, 0, 1, 1, 2,
 			0, 0, 1, 1, 2,
@@ -39,12 +39,12 @@ TEST(UnivariateAssociation, testComputeChi2) {
 	VectorXd c2 = u2.computeChi2();
 
 	VectorXd chi2(5);
-	chi2 << 2.5, 10, 2, 10, 2.5;
+	chi2 << 1.07, 6.57, 0.67, 6.57, 1.07;
 
 	EXPECT_EQ(c2.rows(), chi2.rows());
 
 	for (int i = 0; i < 5; i++) {
-		EXPECT_NEAR(c2[i], chi2[i], 0.1);
+		EXPECT_NEAR(c2[i], chi2[i], 0.01);
 	}
 
 }

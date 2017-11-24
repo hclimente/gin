@@ -42,7 +42,7 @@ public:
 	static float64 sf(float64 const &, float64 const &) throw(CChi2Exception);
 	static float64 isf(float64 const &, float64 const &) throw(CChi2Exception);
 	static float64 logsf(float64 const &, float64 const &) throw(CChi2Exception);
-	static MatrixXd get2DContingencyTable(VectorXd const &, VectorXd const &) throw(CChi2Exception);
+	static MatrixXd get2DContingencyTable(VectorXd const &, VectorXd const &, bool) throw(CChi2Exception);
 	static double calculateChi2(MatrixXd const &) throw(CChi2Exception);
 	static double calculateChi2Trend(MatrixXd const &, VectorXd const &) throw(CChi2Exception);
 

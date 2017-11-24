@@ -57,7 +57,7 @@ VectorXd UnivariateAssociation::computeChi2() {
 	VectorXd chi2(__n_features);
 
 	for (int i = 0; i < __n_features; i++) {
-		MatrixXd tab = CChi2::get2DContingencyTable(__X -> col(i), (*__y) );
+		MatrixXd tab = CChi2::get2DContingencyTable(__X -> col(i), (*__y), true );
 		chi2(i) = CChi2::calculateChi2(tab);
 	}
 
@@ -84,7 +84,7 @@ VectorXd UnivariateAssociation::computeTrendTest(std::string const& geneticModel
 		model << 1, 1, 1;
 
 	for (int i = 0; i < __X -> cols(); i++) {
-		MatrixXd tab = CChi2::get2DContingencyTable( (*__y), __X -> col(i));
+		MatrixXd tab = CChi2::get2DContingencyTable(__X -> col(i), (*__y), true);
 		T(i) = CChi2::calculateChi2Trend(tab, model);
 	}
 

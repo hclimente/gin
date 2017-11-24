@@ -9,7 +9,7 @@ TEST(Chi2, ContingencyTable) {
     x << 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2;
     y << 2, 2, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2;
 
-    MatrixXd table = CChi2::get2DContingencyTable(x, y);
+    MatrixXd table = CChi2::get2DContingencyTable(x, y, false);
 
     MatrixXd exp(2,3);
     exp << 1, 2, 1,

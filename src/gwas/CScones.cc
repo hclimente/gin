@@ -201,7 +201,7 @@ VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
     VectorXd chisq(X.cols());
 
     for (int i = 0; i < X.cols(); i++) {
-        MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i));
+        MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i), true);
         chisq(i) = CChi2::calculateChi2(tab);
     }
 
@@ -223,7 +223,7 @@ VectorXd CScones::__computeCochranArmitageT(MatrixXd const& X, VectorXd const& r
         model << 1, 1, 1;
 
     for (int i = 0; i < X.cols(); i++) {
-		MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i));
+		MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i), true);
         T(i) = CChi2::calculateChi2Trend(tab, model);
     }
 
