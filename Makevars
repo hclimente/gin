@@ -1,0 +1,29 @@
+GINOBJ_0 = feature_selection/feature_selector.o feature_selection/scones.o feature_selection/shake.o \
+	gwas/CGWASData.o gwas/CScones.o gwas/CSingleTraitGWAS.o \
+	io/CGWASDataIO.o io/CIOProgress.o io/CLogging.o io/CPlinkParser.o io/CSconesIO.o io/grid_views.o \
+	meta/CEffectSize.o meta/CMetaAnalysis.o \
+	model_selection/CCrossValidation.o model_selection/grid.o model_selection/grid_cv.o \
+	regression/CRegression.o \
+	stats/CBeta.o stats/CFisherF.o stats/CGaussian.o stats/CStats.o stats/univariate_association.o stats/CChi2.o stats/CGamma.o stats/CHSIC.o stats/CStudentT.o \
+	utils/CKernels.o utils/CMisc.o utils/CRootFinding.o utils/StringHelper.o utils/utils.o
+
+OBJECTS=$(GINOBJ_0:%=src/%)
+
+PKG_CXXFLAGS = \
+  $(SHLIB_OPENMP_CFLAGS) \
+  $(DFLAGS) -I./include -I./lib
+
+PKG_LIBS = -pthread \
+  $(SHLIB_OPENMP_CFLAGS)
+
+.PHONY: all libs clean
+
+all: $(SHLIB)
+
+$(SHLIB): libs
+
+libs: libgin.a
+	cp -r include "${R_PACKAGE_DIR}"
+
+clean:
+	rm -r $(OBJECTS) *.a *.o *.so *.dll
