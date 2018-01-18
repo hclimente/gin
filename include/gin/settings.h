@@ -20,7 +20,9 @@ public:
 
 	Settings(int argc, const char* const argv[]) {
 		__error = false;
+		#ifndef AS_GINLIB
 		__parseOptions(argc, argv);
+		#endif
 	}
 
 	Settings(std::string pedBasename, std::string networkFilename, uint encoding, uint modelScore, uint associationScore, VectorXd eta, VectorXd lambda, std::string output) {
