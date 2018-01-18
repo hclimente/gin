@@ -1,16 +1,57 @@
-CC = clang
-AR = ar
-CFLAGS = -c -Wall
-CXX_INCLUDES = -Iinclude -Ilib/eigen -Ilib
--D AS_GINLIB=1
+GINOBJ_0 = feature_selection/feature_selector.o feature_selection/scones.o feature_selection/shake.o \
+	gwas/CGWASData.o gwas/CScones.o gwas/CSingleTraitGWAS.o \
+	io/CGWASDataIO.o io/CIOProgress.o io/CLogging.o io/CPlinkParser.o io/CSconesIO.o io/grid_views.o \
+	meta/CEffectSize.o meta/CMetaAnalysis.o \
+	model_selection/CCrossValidation.o model_selection/grid.o model_selection/grid_cv.o \
+	regression/CRegression.o \
+	stats/CBeta.o stats/CFisherF.o stats/CGaussian.o stats/CStats.o stats/univariate_association.o stats/CChi2.o stats/CGamma.o stats/CHSIC.o stats/CStudentT.o \
+	utils/CKernels.o utils/CMisc.o utils/CRootFinding.o utils/StringHelper.o utils/utils.o
+GINOBJ=$(GINOBJ_0:%=src/%)
+MAXFLOWOBJ = lib/maxflow/maxflow.o
+CEPHESOBJ_0 = acosh.o airy.o asin.o asinh.o atan.o atanh.o bdtr.o beta.o \
+	btdtr.o cbrt.o chbevl.o chdtr.o clog.o cmplx.o const.o \
+	cosh.o dawsn.o drand.o ei.o ellie.o ellik.o ellpe.o ellpj.o ellpk.o \
+	exp.o exp10.o exp2.o expn.o expx2.o fabs.o fac.o fdtr.o \
+	fresnl.o gamma.o gdtr.o hyp2f1.o hyperg.o i0.o i1.o igami.o incbet.o \
+	incbi.o igam.o isnan.o iv.o j0.o j1.o jn.o jv.o k0.o k1.o kn.o kolmogorov.o \
+	log.o log2.o log10.o lrand.o nbdtr.o ndtr.o ndtri.o pdtr.o planck.o \
+	polevl.o polmisc.o polylog.o polyn.o pow.o powi.o psi.o rgamma.o round.o \
+	shichi.o sici.o sin.o sindg.o sinh.o spence.o stdtr.o struve.o \
+	tan.o tandg.o tanh.o unity.o yn.o zeta.o zetac.o \
+	sqrt.o floor.o setprec.o mtherr.o
+CEPHESOBJ=$(CEPHESOBJ_0:%=lib/Cephes/double/%)
 
-GINOBJ = CKernels.o CMisc.o CRootFinding.o StringHelper.o utils.o
+OBJECTS=$(GINOBJ)
+OBJECTS+=$(MAXFLOWOBJ)
+OBJECTS+=$(CEPHESOBJ)
 
-utils:
-	$(CC) $(CFLAGS) src/utils/CKernels.cc src/utils/CMisc.cc src/utils/CRootFinding.cc src/utils/StringHelper.cc src/utils/utils.cc
+PKG_CXXFLAGS = \
+  $(SHLIB_OPENMP_CFLAGS) \
+  $(DFLAGS) -I./include -I./lib \
+  -D AS_GINLIB=1
 
-libgin: libgin.dynlib
-	$(AR)
+PKG_LIBS = -pthread \
+  $(SHLIB_OPENMP_CFLAGS)
+
+.PHONY: all libs clean
+
+all: $(SHLIB)
+
+$(SHLIB): libs
+
+libs: libgin.a libmaxflow.a libcephes.a
+	cp -r include "${R_PACKAGE_DIR}"
+	mkdir -p "${R_PACKAGE_DIR}/usrlib${R_ARCH}"
+	cp libgin.a libmaxflow.a libcephes.a "${R_PACKAGE_DIR}/usrlib${R_ARCH}"
+
+libgin.a:
+	$(AR) -crus libgin.a $(GINOBJ)
+
+libmaxflow.a:
+	$(AR) -crus libmaxflow.a $(MAXFLOWOBJ)
+
+libcephes.a:
+	$(AR) -crus libcephes.a $(CEPHESOBJ)
 
 clean:
-	rm -r $(GINOBJ)
+	rm -r $(OBJECTS) *.a *.o *.so *.dll

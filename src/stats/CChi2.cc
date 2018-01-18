@@ -14,7 +14,7 @@ float64 CChi2::cdf(float64 const& x, float64 const& k) throw (CChi2Exception) {
 		return 1.0 - exp(-0.5*x);
 	} else { //for any k
 		return (CGamma::Special::regularizedLowerIncompleteGamma(0.5*x,0.5*k));
-	}*/	
+	}*/
 }
 
 float64 CChi2::logcdf(float64 const& x, float64 const& k) throw (CChi2Exception) {
@@ -45,7 +45,7 @@ float64 CChi2::logsf(float64 const& x, float64 const& k) throw (CChi2Exception) 
 float64 CChi2::pdf(float64 const& x, float64 const& k) throw (CChi2Exception) {
 	__checkParameters(k);
 	if(x<0.0) return 0.0;
-	return pow(x,0.5*k-1)*exp(-0.5*x)/(pow(2.0,0.5*k)*tgamma(0.5*k));	
+	return pow(x,0.5*k-1)*exp(-0.5*x)/(pow(2.0,0.5*k)*tgamma(0.5*k));
 }
 
 float64 CChi2::logpdf(float64 const& x, float64 const& k) throw (CChi2Exception) {
@@ -57,7 +57,7 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y, bool
 
 	if (x.size() != Y.size()) throw CChi2Exception("Variable vector lengths are different.");
 
-	std::map<int, std::map<int,int>> counts;
+	std::map<int, std::map<int,int> > counts;
 
 	for (int i = 0; i < x.size(); i++)
 		counts[Y(i)][x(i)] += 1;
@@ -68,7 +68,7 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y, bool
 	}
 
 	int row = 0;
-	for (std::map<int, std::map<int,int>>::iterator it = counts.begin(); it!= counts.end(); ++it) {
+	for (std::map<int, std::map<int,int> >::iterator it = counts.begin(); it!= counts.end(); ++it) {
 		int col = 0;
 		for (int i = 0; i <= 2; i++){
 
