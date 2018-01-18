@@ -18,12 +18,16 @@ class Settings
 {
 public:
 
+	#ifndef AS_GINLIB
 	Settings(int argc, const char* const argv[]) {
 		__error = false;
-		#ifndef AS_GINLIB
 		__parseOptions(argc, argv);
-		#endif
 	}
+
+	void printHelp() {
+		std::cout << __options() << "\n";
+	}
+	#endif
 
 	Settings(std::string pedBasename, std::string networkFilename, uint encoding, uint modelScore, uint associationScore, VectorXd eta, VectorXd lambda, std::string output) {
 		__error = false;
@@ -36,10 +40,6 @@ public:
 		__etas = eta;
 		__lambdas = lambda;
 		__output = output;
-	}
-
-	void printHelp() {
-		std::cout << __options() << "\n";
 	}
 
 	std::string pedBasename() { return __pedBasename; }
