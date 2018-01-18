@@ -39,7 +39,7 @@ float64 CGaussian::logsf(float64 const& x, float64 const& mean, float64 const& s
 
 float64 CGaussian::pdf(float64 const& x, float64 const& mean, float64 const& std) throw (CGaussianException) {
 	__checkParameters(std);
-    return 1.0f/(std*sqrt(2.0f*PI)) * exp(-(pow(x-mean,2))/(2.0f*pow(std,2)));
+    return 1.0f/(std*sqrt(2.0f*GIN_PI)) * exp(-(pow(x-mean,2))/(2.0f*pow(std,2)));
 }
 
 float64 CGaussian::logpdf(float64 const& x, float64 const& mean, float64 const& std) throw (CGaussianException) {

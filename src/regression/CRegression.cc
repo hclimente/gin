@@ -179,7 +179,7 @@ void CLinearRegression::_estimateLogLikelihood() {
 	_rank = luX.rank();
 	__variance = (_residuals.transpose()*_residuals);
 	__variance = __variance/(_n_samples-_rank);
-	_loglikelihood = -(_n_samples/2.0f) * log(2.0f*PI*__variance) - 1.0f/(2.0f*__variance) * (_residuals.array().pow(2)).sum();
+	_loglikelihood = -(_n_samples/2.0f) * log(2.0f*GIN_PI*__variance) - 1.0f/(2.0f*__variance) * (_residuals.array().pow(2)).sum();
 	
 	/* This is only if matrix is not invertible
 	MatrixXd pinv_x;
@@ -532,10 +532,10 @@ void CLinearMixedRegression::__evaluateNLL(float64 const& ldelta, VectorXd* beta
 		float64 ldetXSX = (log(tmp_S.array())).sum();
 		//compute LogLikelihood
 		(*sigma) = _residuals.sum()/(_n_samples-_n_features);
-		(*logLikelihood) = 0.5*(_n_samples-_n_features)*log((*sigma)) + 0.5*((_n_samples-_n_features)*log(2.0*PI)+ldet+tmp+ldetXSX+(_n_samples-_n_features));
+		(*logLikelihood) = 0.5*(_n_samples-_n_features)*log((*sigma)) + 0.5*((_n_samples-_n_features)*log(2.0*GIN_PI)+ldet+tmp+ldetXSX+(_n_samples-_n_features));
 	} else {
 		(*sigma) = _residuals.sum()/_n_samples;
-		(*logLikelihood) = 0.5*(_n_samples*log(2.0*PI*(*sigma))+ldet+_n_samples);
+		(*logLikelihood) = 0.5*(_n_samples*log(2.0*GIN_PI*(*sigma))+ldet+_n_samples);
 	}
 
 	__covarianceBetas = xSx.inverse();
@@ -679,9 +679,9 @@ float64 BrentFunction::evaluate(float64 const& ldelta) {
 		float64 ldetXSX = (log(tmp_S.array())).sum();
 		//compute LogLikelihood
 		float64 sigma = residuals.sum()/(n_samples-n_features);
-		return 0.5*(n_samples-n_features)*log(sigma) + 0.5*((n_samples-n_features)*log(2.0*PI)+ldet+tmp+ldetXSX+(n_samples-n_features));
+		return 0.5*(n_samples-n_features)*log(sigma) + 0.5*((n_samples-n_features)*log(2.0*GIN_PI)+ldet+tmp+ldetXSX+(n_samples-n_features));
 	} else {
 		float64 sigma = residuals.sum()/n_samples;
-		return 0.5*(n_samples*log(2.0*PI*sigma)+ldet+n_samples);
+		return 0.5*(n_samples*log(2.0*GIN_PI*sigma)+ldet+n_samples);
 	}
 }

@@ -30,7 +30,7 @@
 #define GIN_STATUS	"STATUS"
 #define GIN_ATTENTION	"ATTENTION"
 
-#define PI 3.14159265359f
+#define GIN_PI 3.14159265359f
 
 //Writing log files
 #ifndef AS_RGINLIB

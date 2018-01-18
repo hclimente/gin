@@ -53,7 +53,7 @@ inline float64 erfinv(float64 const& p) {
 	if(p==-1) return -INFINITY;
 	float64 sign=1.0;
 	if(p<0) sign=-1.0;
-	float64 s = sqrt(PI)/2.0;
+	float64 s = sqrt(GIN_PI)/2.0;
 	float64 z = sqrt(-log(1.0-fabs(p)))*sign;
 	uint iter=0;
 	while(fabs(erf(z)-p)>1e-16*fabs(p)) {

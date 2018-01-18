@@ -23,7 +23,7 @@ CLogging::~CLogging() {
 void CLogging::log(std::string const& mode, std::string const& msg) {
 	if(file_logging) {
 		logging(mode,msg);
-		if(mode==ERROR) {
+		if(mode==GIN_ERROR) {
 			time_t rt;
 			struct tm* ct;
 			time(&rt);
