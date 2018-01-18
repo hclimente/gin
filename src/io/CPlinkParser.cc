@@ -28,7 +28,7 @@ void CPlinkParser::readPEDFile(std::string const& file,
 
 	CIOProgress progress(ifs,1);
 	uint64 fsize = progress.getFileSize();
-	logging(INFO,"File Size: " + StringHelper::to_string<float64>(((float64)fsize)/1024/1024) + " MB");
+	logging(GIN_INFO,"File Size: " + StringHelper::to_string<float64>(((float64)fsize)/1024/1024) + " MB");
 
 	std::string line;
 	uint64 size = 0;

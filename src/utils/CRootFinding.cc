@@ -10,7 +10,7 @@ float64 CBrentOptimizer::solve(CBrentFunction* func, float64 const& lower, float
 	float64 b = upper;
 
 	if(b <= a) {
-		logging(ERROR,"ERROR: a must be smaller than b");
+		logging(GIN_ERROR,"ERROR: a must be smaller than b");
 		throw(-1);
 	}
 	
@@ -69,7 +69,7 @@ float64 CBrentOptimizer::solve(CBrentFunction* func, float64 const& lower, float
 		}
 		i++;
 		if(i>max_iterations) {
-			logging(ERROR,"ERROR: Maximum number of iterations exeeded!");
+			logging(GIN_ERROR,"ERROR: Maximum number of iterations exeeded!");
 			throw(-1);
 		}
 	}

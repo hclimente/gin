@@ -594,7 +594,7 @@ void CLinearMixedRegression::predict(VectorXd* results,MatrixXd const& x,MatrixX
         xtmp << x;
         VectorXd fixed_component = xtmp*_betas;
 		//MatrixXd random_component = __K.array()+exp(__logDelta);
-        //logging(STATUS,random_component.sum());
+        //logging(GIN_STATUS,random_component.sum());
         MatrixXd identity = MatrixXd::Identity(__K.rows(),__K.cols());
 		MatrixXd random_component = __K.array()+identity.array()*exp(__logDelta);
 		random_component = random_component.inverse();

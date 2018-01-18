@@ -17,7 +17,7 @@ void CSconesIO::readSparseNetworkFile(std::string const& file, GWASData* data) t
 		throw CSconesIOException("Error opening sparse network file " + file);
 	CIOProgress progress(ifs,1);
 	uint fsize = progress.getFileSize();
-	logging(INFO,"File Size: " + StringHelper::to_string<float64>(((float64)fsize)/1024.0/1024.0) + " MB");
+	logging(GIN_INFO,"File Size: " + StringHelper::to_string<float64>(((float64)fsize)/1024.0/1024.0) + " MB");
 	//Create temporary positions map
 	std::map<std::string,uint64> position_map;
 	std::map<std::string,uint64>::iterator piter;
@@ -74,7 +74,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
 	std::ofstream ofs;
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
+		logging(GIN_ERROR,"Writing output failed!");
 		exit(-1);
 	}
     ofs << "#Best Lambda:\t" << best_lambda << "\n";
@@ -94,7 +94,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
     std::ofstream ofs;
     ofs.open(outfile.c_str());
     if(!ofs.is_open()) {
-        logging(ERROR,"Writing output failed!");
+        logging(GIN_ERROR,"Writing output failed!");
         exit(-1);
     }
     ofs << "#Best Lambda:\t" << best_lambda << "\n";
@@ -117,7 +117,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData* const& data, V
 	std::ofstream ofs;
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
+		logging(GIN_ERROR,"Writing output failed!");
 		exit(-1);
 	}
 	ofs << "#Best Lambda:\t" << best_lambda << "\n";
@@ -137,7 +137,7 @@ void CSconesIO::writeCMatrix(std::string const& outfile, MatrixXd const& cmat, C
 	std::ofstream ofs;
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
+		logging(GIN_ERROR,"Writing output failed!");
 		exit(-1);
 	}
     ofs << "\t";
@@ -161,7 +161,7 @@ void CSconesIO::writeAdjacencyMatrix(std::string const &outfile, GWASData const 
     std::ofstream ofs;
     ofs.open(outfile.c_str());
     if(!ofs.is_open()) {
-        logging(ERROR,"Writing output failed!");
+        logging(GIN_ERROR,"Writing output failed!");
         exit(-1);
     }
 
@@ -189,7 +189,7 @@ void CSconesIO::writeAdjacencyMatrix(std::string const &outfile, MatrixXd const&
 	std::ofstream ofs;
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
+		logging(GIN_ERROR,"Writing output failed!");
 		exit(-1);
 	}
 

@@ -313,7 +313,7 @@ void CScones::__optimize_objective(VectorXd const& c, float64 const& lambda, Vec
 	SparseMatrixXd lW = lambda * __W;
 	//Add source and sink
 	//if((c.array()>0).count()==0 || (c.array()<=0).count()==0)
-	//	logging(WARNING,"WARNING: Trivial solution ahead!");
+	//	logging(GIN_WARNING,"WARNING: Trivial solution ahead!");
 
 	// Matrix A containing As and At
 	MatrixXd A(__n_features,2);
@@ -399,11 +399,11 @@ void CScones::test_associations() throw (CSconesException) {
     cv.kFold(__settings.folds,__n_samples);
     MatrixXd::Index best_eta_index, best_lambda_index;
 
-	logging(STATUS, "Choosing eta and lambda values.");
+	logging(GIN_STATUS, "Choosing eta and lambda values.");
 
     for (int i=1; i <= __settings.gridsearch_depth; i++){
 
-		logging(INFO, "Grid search " + StringHelper::to_string<int>(i) + " / " + StringHelper::to_string<int>(__settings.gridsearch_depth) + ".");
+		logging(GIN_INFO, "Grid search " + StringHelper::to_string<int>(i) + " / " + StringHelper::to_string<int>(__settings.gridsearch_depth) + ".");
 
         for(uint k=0;k<__settings.folds;k++) {
             VectorXd tr_indices = cv.getTrainingIndices(k);
@@ -452,7 +452,7 @@ void CScones::test_associations() throw (CSconesException) {
         }
     }
 
-	logging(STATUS, "Feature selection.");
+	logging(GIN_STATUS, "Feature selection.");
 
     //Selected Features for the best eta and lambda are those selected in all folds
     __indicator_vector = VectorXd::Zero(__n_features);

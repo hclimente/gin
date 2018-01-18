@@ -81,7 +81,7 @@ VectorXd CStats::std(MatrixXd const& m, uint const& dim, bool const& flag) {
 			result(i) = CStats::stdf(m.col(i),flag);
 		}
 	} else {
-		logging(ERROR, "Dim has to be 0 or 1");
+		logging(GIN_ERROR, "Dim has to be 0 or 1");
 		throw -1;
 	}
 	return result;
@@ -104,7 +104,7 @@ VectorXd CStats::mean(MatrixXd const& m, uint const& dim) {
 			result(i) = m.col(i).mean();
 		}
 	} else {
-		logging(ERROR, "Dim has to be 0 or 1");
+		logging(GIN_ERROR, "Dim has to be 0 or 1");
 		throw -1;
 	}
 	return result;

@@ -654,10 +654,10 @@ void CGWASDataHelper::filterSNPsBySmallIndel(GWASData* data, int const& indel) t
 //TODO: Implement filtering method
 void CGWASDataHelper::filterUniqueSNPs(GWASData* data) throw (CGWASDataException) {
     VectorXd randv = VectorXd::Random(data->X.rows());
-    logging(INFO,randv.rows());
-    logging(INFO,data->X.rows());
+    logging(GIN_INFO,randv.rows());
+    logging(GIN_INFO,data->X.rows());
     VectorXd hash = (data->X.array()*randv.replicate(1,data->X.cols()).array()).colwise().sum();
-    logging(STATUS,hash.rows());
+    logging(GIN_STATUS,hash.rows());
 }
 
 void CGWASDataHelper::createSNPHash(GWASData* data) throw (CGWASDataException) {
@@ -674,8 +674,8 @@ void CGWASDataHelper::createSNPHash(GWASData* data) throw (CGWASDataException) {
             }
         }
     }
-    logging(INFO,snp_hash.transpose());
-    logging(STATUS,data->n_unique_snps);
+    logging(GIN_INFO,snp_hash.transpose());
+    logging(GIN_STATUS,data->n_unique_snps);
     */
     
     //Accurate but extremely slowely!!

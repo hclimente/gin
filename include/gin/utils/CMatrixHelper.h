@@ -75,7 +75,7 @@ inline void loadMatrix(char const* filename, MatrixXd* m) {
 	f.read((char*)&rows,sizeof(rows));
 	m->resize(rows,cols);
 	f.read((char*)(m->data()),sizeof(MatrixXd::Scalar)*rows*cols);
-	if(f.bad()) logging(ERROR, "Loading matrix file");
+	if(f.bad()) logging(GIN_ERROR, "Loading matrix file");
 	f.close();
 }
 

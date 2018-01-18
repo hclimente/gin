@@ -22,13 +22,13 @@
 #define YELLOW	"\e[0;33m"
 
 #define LOG 	""
-#define FERROR	"FATAL ERROR"
-#define ERROR	"ERROR"
-#define INFO	"INFORMATION"
-#define WARNING "WARNING"
-#define DEBUG	"DEBUG"
-#define STATUS	"STATUS"
-#define ATTENTION	"ATTENTION"
+#define GIN_FERROR	"FATAL ERROR"
+#define GIN_ERROR	"ERROR"
+#define GIN_INFO	"INFORMATION"
+#define GIN_WARNING "WARNING"
+#define GIN_DEBUG	"DEBUG"
+#define GIN_STATUS	"STATUS"
+#define GIN_ATTENTION	"ATTENTION"
 
 #define PI 3.14159265359f
 
@@ -38,20 +38,20 @@
 	time_t rt; struct tm* ct;\
 	time(&rt);\
 	ct = localtime(&rt);\
-	if((std::string)B==ERROR || (std::string)B==FERROR){\
+	if((std::string)B==GIN_ERROR || (std::string)B==GIN_FERROR){\
 		std::cerr << RED << "[" << ct->tm_mday << "." << ct->tm_mon+1 << "." << ct->tm_year + 1900\
 		     << "," << ct->tm_hour << ":" << ct->tm_min << ":" << ct->tm_sec << "] " << B << " in "\
 		     << __FILE__ << " at line " << __LINE__  << ": "\
 		     << C << BLACK << "\n";\
-	} else if((std::string)B==WARNING) {\
+	} else if((std::string)B==GIN_WARNING) {\
 		std::cerr << YELLOW <<  C << BLACK << "\n";\
-	} else if((std::string)B==INFO) {\
+	} else if((std::string)B==GIN_INFO) {\
 		std::cout << GREEN <<  C << BLACK << "\n";\
-	} else if((std::string)B==STATUS) {\
+	} else if((std::string)B==GIN_STATUS) {\
 		std::cout << BLUE <<  C << BLACK << "\n";\
-	} else if((std::string)B==ATTENTION) {\
+	} else if((std::string)B==GIN_ATTENTION) {\
 		std::cout << RED <<  C << BLACK << "\n";\
-	} else if((std::string)B==DEBUG) {\
+	} else if((std::string)B==GIN_DEBUG) {\
 		std::cout << RED <<  C << BLACK << "\n";\
 	} else {\
 		std::cout << C << "\n";\
@@ -63,20 +63,20 @@
 	time_t rt; struct tm* ct;\
 	time(&rt);\
 	ct = localtime(&rt);\
-	if((std::string)B==ERROR || (std::string)B==FERROR){\
+	if((std::string)B==GIN_ERROR || (std::string)B==GIN_FERROR){\
 		Rcpp::Rcerr << RED << "[" << ct->tm_mday << "." << ct->tm_mon+1 << "." << ct->tm_year + 1900\
 		     << "," << ct->tm_hour << ":" << ct->tm_min << ":" << ct->tm_sec << "] " << B << " in "\
 		     << __FILE__ << " at line " << __LINE__  << ": "\
 		     << C << BLACK << "\n";\
-	} else if((std::string)B==WARNING) {\
+	} else if((std::string)B==GIN_WARNING) {\
 		Rcpp::Rcerr << YELLOW <<  C << BLACK << "\n";\
-	} else if((std::string)B==INFO) {\
+	} else if((std::string)B==GIN_INFO) {\
 		Rcpp::Rcout << GREEN <<  C << BLACK << "\n";\
-	} else if((std::string)B==STATUS) {\
+	} else if((std::string)B==GIN_STATUS) {\
 		Rcpp::Rcout << BLUE <<  C << BLACK << "\n";\
-	} else if((std::string)B==ATTENTION) {\
+	} else if((std::string)B==GIN_ATTENTION) {\
 		Rcpp::Rcout << RED <<  C << BLACK << "\n";\
-	} else if((std::string)B==DEBUG) {\
+	} else if((std::string)B==GIN_DEBUG) {\
 		Rcpp::Rcout << RED <<  C << BLACK << "\n";\
 	} else {\
 		Rcpp::Rcout << C << "\n";\

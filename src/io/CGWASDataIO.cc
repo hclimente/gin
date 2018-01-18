@@ -9,7 +9,7 @@ void CGWASDataIO::writeSummaryOutput(std::string const& outfile, GWASData const&
 	std::ofstream ofs;
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
+		logging(GIN_ERROR,"Writing output failed!");
 		exit(-1);
 	}
 	ofs << "SNP ID\tCHR\tPositions\t#Samples\tPValue\tTestStatistic\tBeta\tSEBeta\tLL0\tLLAlt\tSNPHash" << endl;
@@ -36,7 +36,7 @@ void CGWASDataIO::writeFilteredPlinkFile(std::string const& outfile, GWASData co
 	std::string ped_file = outfile + ".ped";
 	ofs.open(ped_file.c_str());
 	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
+		logging(GIN_ERROR,"Writing output failed!");
 		exit(-1);
 	}
 	uint64 snp_id = -1;
@@ -61,7 +61,7 @@ void CGWASDataIO::writeFilteredPlinkFile(std::string const& outfile, GWASData co
 	std::string map_file = outfile + ".map";
 	ofs.open(map_file.c_str());
 	if(!ofs.is_open()) {
-		logging(ERROR,"Writing output failed!");
+		logging(GIN_ERROR,"Writing output failed!");
 		exit(-1);
 	}
 	for(uint64 j=0; j<data.n_snps;j++) {

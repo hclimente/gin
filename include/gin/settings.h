@@ -130,7 +130,7 @@ private:
 		} else if(snp_encoding == "codominant") {
 			__encoding = 3;
 		} else {
-			logging(ERROR,"Encoding does not exist!");
+			logging(GIN_ERROR,"Encoding does not exist!");
 			__error = true;
 		}
 

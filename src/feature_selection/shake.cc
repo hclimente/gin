@@ -27,30 +27,30 @@ Shake::~Shake() {
 void Shake::readGWAS(string const& pedBasename, uint encoding) {
 
 	float64 begin = clock();
-	logging(STATUS,"Reading Genotype file...");
+	logging(GIN_STATUS,"Reading Genotype file...");
 	CPlinkParser::readPEDFile(pedBasename + ".ped", __gwas);
-	logging(INFO,"Number of SNPs: " + StringHelper::to_string<uint64>(__gwas->n_snps));
-	logging(INFO,"Number of Samples: " + StringHelper::to_string<uint64>(__gwas->n_samples));
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_INFO,"Number of SNPs: " + StringHelper::to_string<uint64>(__gwas->n_snps));
+	logging(GIN_INFO,"Number of Samples: " + StringHelper::to_string<uint64>(__gwas->n_samples));
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 	begin = clock();
-	logging(STATUS,"Reading Mapping file...");
+	logging(GIN_STATUS,"Reading Mapping file...");
 	CPlinkParser::readMAPFile(pedBasename + ".map", __gwas);
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 	begin = clock();
-	logging(STATUS,"Encoding SNP data...");
+	logging(GIN_STATUS,"Encoding SNP data...");
 	CGWASDataHelper::encodeHeterozygousData(__gwas, encoding);
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 }
 
 void Shake::readNetwork(string const& networkFilename) {
 
 	float64 begin = clock();
-	logging(STATUS,"Loading and filtering network file...");
+	logging(GIN_STATUS,"Loading and filtering network file...");
 	CSconesIO::readSparseNetworkFile(networkFilename, __gwas);
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 }
 
@@ -59,24 +59,24 @@ void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const
 	float64 begin = clock();
 	__computeAssociation(associationScore);
 
-	logging(STATUS,"Selecting the best hyperparameters...");
+	logging(GIN_STATUS,"Selecting the best hyperparameters...");
 	__cvgrid = new GridCV(&(__gwas->X), &(__gwas->y), &(__gwas->network), folds);
 	__cvgrid->initFolds(__c, associationScore);
-	logging(INFO,"Running models.");
+	logging(GIN_INFO,"Running models.");
 	__cvgrid->runFolds();
-	logging(INFO,"Finding best model.");
+	logging(GIN_INFO,"Finding best model.");
 	__cvgrid->scoreModels(modelScore);
 
 	__bestEta = __cvgrid->bestEta();
 	__bestLambda = __cvgrid->bestLambda();
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 	if(__debug) {
 		GridViews g(__cvgrid);
-		logging(DEBUG, "Model score matrix");
-		logging(DEBUG, g.viewSelectionCriterion());
-		logging(DEBUG, "Average number of selected SNPs.");
-		logging(DEBUG, g.viewSelectedAvg());
+		logging(GIN_DEBUG, "Model score matrix");
+		logging(GIN_DEBUG, g.viewSelectionCriterion());
+		logging(GIN_DEBUG, "Average number of selected SNPs.");
+		logging(GIN_DEBUG, g.viewSelectedAvg());
 	}
 
 }
@@ -86,24 +86,24 @@ void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const
 	float64 begin = clock();
 	__computeAssociation(associationScore);
 
-	logging(STATUS,"Selecting the best hyperparameters...");
+	logging(GIN_STATUS,"Selecting the best hyperparameters...");
 	__cvgrid = new GridCV(&(__gwas->X), &(__gwas->y), &(__gwas->network), folds);
 	__cvgrid->initFolds(etas, lambdas, associationScore);
-	logging(INFO,"Running models.");
+	logging(GIN_INFO,"Running models.");
 	__cvgrid->runFolds();
-	logging(INFO,"Finding best model.");
+	logging(GIN_INFO,"Finding best model.");
 	__cvgrid->scoreModels(modelScore);
 
 	__bestEta = __cvgrid->bestEta();
 	__bestLambda = __cvgrid->bestLambda();
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 	if(__debug) {
 		GridViews g(__cvgrid);
-		logging(DEBUG, "Model score matrix");
-		logging(DEBUG, g.viewSelectionCriterion());
-		logging(DEBUG, "Average number of selected SNPs.");
-		logging(DEBUG, g.viewSelectedAvg());
+		logging(GIN_DEBUG, "Model score matrix");
+		logging(GIN_DEBUG, g.viewSelectionCriterion());
+		logging(GIN_DEBUG, "Average number of selected SNPs.");
+		logging(GIN_DEBUG, g.viewSelectedAvg());
 	}
 
 }
@@ -111,26 +111,26 @@ void Shake::selectHyperparameters(uint folds, uint const &modelScore, uint const
 void Shake::selectSNPs() {
 
 	float64 begin = clock();
-	logging(STATUS,"Searching ConES with eta = " + StringHelper::to_string<float64>(__bestEta) + " and lambda = " + StringHelper::to_string<float64>(__bestLambda) + "\n");
+	logging(GIN_STATUS,"Searching ConES with eta = " + StringHelper::to_string<float64>(__bestEta) + " and lambda = " + StringHelper::to_string<float64>(__bestLambda) + "\n");
 	Scones s = Scones(__c, __bestEta, __bestLambda, &(__gwas->network));
 	s.selectSnps();
 	__selectedSnps = s.selected();
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 }
 
 void Shake::writeResults(string const& output) {
 
 	float64 begin = clock();
-	logging(STATUS,"Writing results...");
+	logging(GIN_STATUS,"Writing results...");
 	CSconesIO::writeOutput(output, __gwas, __selectedSnps, __bestEta, __bestLambda, __c);
-	logging(WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
+	logging(GIN_WARNING,"Finished in " + StringHelper::to_string<float64>(float64(clock()-begin)/CLOCKS_PER_SEC) + " sec\n");
 
 }
 
 void Shake::__computeAssociation(uint const &associationScore) {
 
-	logging(INFO,"Computing univariate association.");
+	logging(GIN_INFO,"Computing univariate association.");
 	UnivariateAssociation univar( &(__gwas->X), &(__gwas->y) );
 
 	if (associationScore == CHI2) {

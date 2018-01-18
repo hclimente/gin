@@ -59,7 +59,7 @@ inline float64 erfinv(float64 const& p) {
 	while(fabs(erf(z)-p)>1e-16*fabs(p)) {
 		z = z - (erf(z)-p)*exp(pow(z,2))*s;
 		if(iter>1000) {
-			logging(WARNING,"Maxiterations reached in erfinv");
+			logging(GIN_WARNING,"Maxiterations reached in erfinv");
 			break;
 		}
 		iter++;
