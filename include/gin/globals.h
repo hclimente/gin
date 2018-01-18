@@ -58,6 +58,7 @@
 	}\
 }
 #else
+#include "Rcpp.h"
 #define logging(B,C) {\
 	time_t rt; struct tm* ct;\
 	time(&rt);\
