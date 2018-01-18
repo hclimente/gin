@@ -5,10 +5,14 @@
 #ifndef GIN_SETTINGS_H
 #define GIN_SETTINGS_H
 
-#include "boost/program_options.hpp"
 #include "gin/globals.h"
 
+#ifndef AS_GINLIB
+
+#include "boost/program_options.hpp"
 namespace po = boost::program_options;
+
+#endif
 
 class Settings
 {
@@ -64,6 +68,8 @@ private:
 	uint __encoding;
 
 	bool __error;
+
+	#ifndef AS_GINLIB
 
 	po::options_description __options() {
 		po::options_description desc("Allowed options");
@@ -153,6 +159,8 @@ private:
 
 
 	}
+
+	#endif //AS_GINLIB
 
 };
 

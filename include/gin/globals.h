@@ -33,6 +33,7 @@
 #define PI 3.14159265359f
 
 //Writing log files
+#ifndef AS_RGINLIB
 #define logging(B,C) {\
 	time_t rt; struct tm* ct;\
 	time(&rt);\
@@ -55,7 +56,32 @@
 	} else {\
 		std::cout << C << "\n";\
 	}\
-} 
+}
+#else
+#define logging(B,C) {\
+	time_t rt; struct tm* ct;\
+	time(&rt);\
+	ct = localtime(&rt);\
+	if((std::string)B==ERROR || (std::string)B==FERROR){\
+		Rcpp::Rcerr << RED << "[" << ct->tm_mday << "." << ct->tm_mon+1 << "." << ct->tm_year + 1900\
+		     << "," << ct->tm_hour << ":" << ct->tm_min << ":" << ct->tm_sec << "] " << B << " in "\
+		     << __FILE__ << " at line " << __LINE__  << ": "\
+		     << C << BLACK << "\n";\
+	} else if((std::string)B==WARNING) {\
+		Rcpp::Rcerr << YELLOW <<  C << BLACK << "\n";\
+	} else if((std::string)B==INFO) {\
+		Rcpp::Rcout << GREEN <<  C << BLACK << "\n";\
+	} else if((std::string)B==STATUS) {\
+		Rcpp::Rcout << BLUE <<  C << BLACK << "\n";\
+	} else if((std::string)B==ATTENTION) {\
+		Rcpp::Rcout << RED <<  C << BLACK << "\n";\
+	} else if((std::string)B==DEBUG) {\
+		Rcpp::Rcout << RED <<  C << BLACK << "\n";\
+	} else {\
+		Rcpp::Rcout << C << "\n";\
+	}\
+}
+#endif //AS_GINLIB
 
 
 //Continued fraction struct

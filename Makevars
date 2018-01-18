@@ -1,0 +1,16 @@
+CC = clang
+AR = ar
+CFLAGS = -c -Wall
+CXX_INCLUDES = -Iinclude -Ilib/eigen -Ilib
+-D AS_GINLIB=1
+
+GINOBJ = CKernels.o CMisc.o CRootFinding.o StringHelper.o utils.o
+
+utils:
+	$(CC) $(CFLAGS) src/utils/CKernels.cc src/utils/CMisc.cc src/utils/CRootFinding.cc src/utils/StringHelper.cc src/utils/utils.cc
+
+libgin: libgin.dynlib
+	$(AR)
+
+clean:
+	rm -r $(GINOBJ)
