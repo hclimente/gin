@@ -5,7 +5,7 @@ GINOBJ_0 = feature_selection/feature_selector.o feature_selection/scones.o featu
 	model_selection/CCrossValidation.o model_selection/grid.o model_selection/grid_cv.o \
 	regression/CRegression.o \
 	stats/CBeta.o stats/CFisherF.o stats/CGaussian.o stats/CStats.o stats/univariate_association.o stats/CChi2.o stats/CGamma.o stats/CHSIC.o stats/CStudentT.o \
-	utils/CKernels.o utils/CMisc.o utils/CRootFinding.o utils/StringHelper.o utils/utils.o
+	utils/CKernels.o utils/CMisc.o utils/CRootFinding.o utils/random.o utils/StringHelper.o utils/utils.o
 GINOBJ=$(GINOBJ_0:%=src/%)
 MAXFLOWOBJ = lib/maxflow/maxflow.o
 CEPHESOBJ_0 = acosh.o airy.o asin.o asinh.o atan.o atanh.o bdtr.o beta.o \
