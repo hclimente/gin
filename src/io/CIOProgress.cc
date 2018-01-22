@@ -1,7 +1,7 @@
 #include "gin/io/CIOProgress.h"
 
 //#include <iostream>
-#include <stdio.h>
+//#include <stdio.h>
 
 CIOProgress::CIOProgress(std::ifstream& ifs, float64 const& step) {
 	__progress_step = step;
@@ -23,11 +23,9 @@ void CIOProgress::printProgress(std::ifstream& ifs) {
 	float64 current_per = __progress_per*current_pos;
     if(current_per >= __progress) {
 	    __progress += __progress_step;
-		printf("\rProcessing file: %.2f %%",current_per);
-        fflush(stdout);
-		//std::cout.precision(4);
-        //std::cout << "\rProcessing file: " << current_per << " %";
-	    //std::cout.flush();
+	    // commented out until an alternative that works in R is implemented
+		//printf("\rProcessing file: %.2f %%",current_per);
+        //fflush(stdout);
 	}
 }
 

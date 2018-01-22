@@ -1,17 +1,17 @@
 #include "gin/model_selection/CCrossValidation.h"
-#include "math.h"
 #include "gin/utils/StringHelper.h"
+#include "gin/utils/random.h"
 
 CCrossValidation::CCrossValidation() {
 	__seed = 0;
 	__k = 0;
-	srand(__seed);
+	set_seed(__seed);
 }
 
 CCrossValidation::CCrossValidation(float64 const& seed) {
 	__seed = seed;
 	__k = 0;
-	srand(__seed);
+	set_seed(__seed);
 }
 
 VectorXd CCrossValidation::getTrainingIndices(uint const& k) const throw (CCrossValidationException) {
@@ -32,11 +32,7 @@ void CCrossValidation::train_test_split(uint64 const& n, float64 const& ratio) {
 	__ratio = ratio;
 	__n = n;
 	__k = 1;
-	VectorXd tmp = VectorXd::LinSpaced(__n,0,__n-1);
-	Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(__n);
-	perm.setIdentity();
-	std::random_shuffle(perm.indices().data(),perm.indices().data()+perm.indices().size());
-	tmp = perm*tmp;
+	VectorXd tmp = shuffle_vector(__n);
 	uint sratio = ceil(__ratio*__n);
 	__trainingData.push_back(tmp.segment(0,__n-sratio));
 	__testingData.push_back(tmp.segment(__n-sratio,sratio));
@@ -48,12 +44,7 @@ void CCrossValidation::kFold(uint const& k, uint64 const& n) {
 	__n = n;
 	__k = k;
 
-	VectorXd indices = VectorXd::LinSpaced(__n,0,__n-1);
-	Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(__n);
-	perm.setIdentity();
-	std::random_shuffle(perm.indices().data(),perm.indices().data()+perm.indices().size());
-	indices = perm*indices;
-
+	VectorXd indices = shuffle_vector(__n);
 	kFold(k, n, indices);
 }
 
@@ -90,11 +81,7 @@ void CCrossValidation::ShuffleSplit(uint64 const& n, uint64 const& k, float64 co
 	__k = k;
 	uint sratio = ceil(__ratio*__n);
 	for(uint64 i=0; i<__k;i++) {
-        VectorXd tmp = VectorXd::LinSpaced(__n,0,__n-1);
-	    Eigen::PermutationMatrix<Eigen::Dynamic, Eigen::Dynamic> perm(__n);
-	    perm.setIdentity();
-	    std::random_shuffle(perm.indices().data(),perm.indices().data()+perm.indices().size());
-	    tmp = perm*tmp;
+		VectorXd tmp = shuffle_vector(__n);
 	    __trainingData.push_back(tmp.segment(0,__n-sratio));
 	    __testingData.push_back(tmp.segment(__n-sratio,sratio));
     }

@@ -6,6 +6,17 @@
 #include <string.h>
 #include "maxflow.h"
 
+#ifndef AS_RGINLIB
+#include <stdlib.h>
+void abort_mf(int status) {
+	exit(status);
+}
+#else
+#include "Rcpp.h"
+void abort_mf(int status) {
+	Rcpp::stop(StringHelper::to_string<int>(status));
+}
+#endif //AS_RGINLIB
 
 /*
 	special constants for node->parent. Duplicated in graph.cpp, both should match!
@@ -483,8 +494,8 @@ template <typename captype, typename tcaptype, typename flowtype>
 	}
 
 	changed_list = _changed_list;
-	if (maxflow_iteration == 0 && reuse_trees) { if (error_function) (*error_function)("reuse_trees cannot be used in the first call to maxflow()!"); exit(1); }
-	if (changed_list && !reuse_trees) { if (error_function) (*error_function)("changed_list cannot be used without reuse_trees!"); exit(1); }
+	if (maxflow_iteration == 0 && reuse_trees) { if (error_function) (*error_function)("reuse_trees cannot be used in the first call to maxflow()!"); abort_mf(1); }
+	if (changed_list && !reuse_trees) { if (error_function) (*error_function)("changed_list cannot be used without reuse_trees!"); abort_mf(1); }
 
 	if (reuse_trees) maxflow_reuse_trees_init();
 	else             maxflow_init();
@@ -703,7 +714,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 
 	nodes = (node*) malloc(node_num_max*sizeof(node));
 	arcs = (arc*) malloc(2*edge_num_max*sizeof(arc));
-	if (!nodes || !arcs) { if (error_function) (*error_function)("Not enough memory!"); exit(1); }
+	if (!nodes || !arcs) { if (error_function) (*error_function)("Not enough memory!"); abort_mf(1); }
 
 	node_last = nodes;
 	node_max = nodes + node_num_max;
@@ -752,7 +763,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 	node_num_max += node_num_max / 2;
 	if (node_num_max < node_num + num) node_num_max = node_num + num;
 	nodes = (node*) realloc(nodes_old, node_num_max*sizeof(node));
-	if (!nodes) { if (error_function) (*error_function)("Not enough memory!"); exit(1); }
+	if (!nodes) { if (error_function) (*error_function)("Not enough memory!"); abort_mf(1); }
 
 	node_last = nodes + node_num;
 	node_max = nodes + node_num_max;
@@ -781,7 +792,7 @@ template <typename captype, typename tcaptype, typename flowtype>
 
 	arc_num_max += arc_num_max / 2; if (arc_num_max & 1) arc_num_max ++;
 	arcs = (arc*) realloc(arcs_old, arc_num_max*sizeof(arc));
-	if (!arcs) { if (error_function) (*error_function)("Not enough memory!"); exit(1); }
+	if (!arcs) { if (error_function) (*error_function)("Not enough memory!"); abort_mf(1); }
 
 	arc_last = arcs + arc_num;
 	arc_max = arcs + arc_num_max;
