@@ -11,7 +11,7 @@ class CGaussianException {
 		std::string __error_msg;
 	public:
 		CGaussianException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CGaussian Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR,"CGaussian Exception: " + error_msg)
 		}
 
 		std::string what() {

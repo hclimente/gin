@@ -25,7 +25,7 @@ public:
 	}
 
 	void printHelp() {
-		std::cout << __options() << "\n";
+		logging(GIN_INFO, __options());
 	}
 	#endif
 

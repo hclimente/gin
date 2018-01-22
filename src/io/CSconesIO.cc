@@ -1,6 +1,7 @@
 #include "gin/io/CSconesIO.h"
 #include "gin/io/CIOProgress.h"
 #include "gin/utils/StringHelper.h"
+#include "gin/utils/utils.h"
 
 #include <sstream>
 #include <vector>
@@ -75,7 +76,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
 		logging(GIN_ERROR,"Writing output failed!");
-		exit(-1);
+		abort_gin(-1);
 	}
     ofs << "#Best Lambda:\t" << best_lambda << "\n";
     ofs << "#Best Eta:\t" << best_eta << "\n";
@@ -95,7 +96,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData const& data, Ve
     ofs.open(outfile.c_str());
     if(!ofs.is_open()) {
         logging(GIN_ERROR,"Writing output failed!");
-        exit(-1);
+        abort_gin(-1);
     }
     ofs << "#Best Lambda:\t" << best_lambda << "\n";
     ofs << "#Best Eta:\t" << best_eta << "\n";
@@ -118,7 +119,7 @@ void CSconesIO::writeOutput(std::string const& outfile, GWASData* const& data, V
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
 		logging(GIN_ERROR,"Writing output failed!");
-		exit(-1);
+		abort_gin(-1);
 	}
 	ofs << "#Best Lambda:\t" << best_lambda << "\n";
 	ofs << "#Best Eta:\t" << best_eta << "\n";
@@ -138,7 +139,7 @@ void CSconesIO::writeCMatrix(std::string const& outfile, MatrixXd const& cmat, C
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
 		logging(GIN_ERROR,"Writing output failed!");
-		exit(-1);
+		abort_gin(-1);
 	}
     ofs << "\t";
     for(int j=0;j<settings.lambdas.rows();j++) {
@@ -162,7 +163,7 @@ void CSconesIO::writeAdjacencyMatrix(std::string const &outfile, GWASData const 
     ofs.open(outfile.c_str());
     if(!ofs.is_open()) {
         logging(GIN_ERROR,"Writing output failed!");
-        exit(-1);
+        abort_gin(-1);
     }
 
     // convert sparse to dense matrix (painful)
@@ -190,7 +191,7 @@ void CSconesIO::writeAdjacencyMatrix(std::string const &outfile, MatrixXd const&
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
 		logging(GIN_ERROR,"Writing output failed!");
-		exit(-1);
+		abort_gin(-1);
 	}
 
 	for(int i=0; i<M.rows(); i++) {

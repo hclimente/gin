@@ -12,7 +12,7 @@ class CStudentTException {
 		std::string __error_msg;
 	public:
 		CStudentTException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CStudentT Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR,"CStudentT Exception: " + error_msg)
 		}
 
 		std::string what() {

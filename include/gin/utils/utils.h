@@ -9,4 +9,6 @@ extern "C" {
 	int libgin_present();
 }
 
+void abort_gin(int);
+
 #endif //GIN_UTILS_H

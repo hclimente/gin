@@ -15,7 +15,7 @@ class CRegressionException {
 		std::string __error_msg;
 	public:
 		CRegressionException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CRegression Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR, "CRegression Exception: " + error_msg);
 		}
 
 		std::string what() {

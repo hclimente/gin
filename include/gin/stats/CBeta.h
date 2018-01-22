@@ -12,7 +12,7 @@ class CBetaException {
 		std::string __error_msg;
 	public:
 		CBetaException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CBeta Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR,"CBeta Exception: " + error_msg)
 		}
 
 		std::string what() {

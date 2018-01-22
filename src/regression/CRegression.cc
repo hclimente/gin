@@ -99,13 +99,13 @@ void CRegression::print() {
 	parameters = "\t\tBetas\t\tSTD Betas\n";
 	for(uint i=0; i<_n_features;i++) {
 		if(_intercept && i==0){
-		       	formula += " 1";
+			formula += " 1";
 			parameters += "(Intercept)\t";
 			parameters += StringHelper::to_string<float64>(_betas[i]) + "\t";
 			parameters += StringHelper::to_string<float64>(getStdBetas()[i]) + "\n";
 		}
 		else if(_intercept==false && i==0) {
-		       	formula += " x" + StringHelper::to_string<uint>(i+1);
+			formula += " x" + StringHelper::to_string<uint>(i+1);
 			parameters += "x" + StringHelper::to_string<uint>(i+1) + "\t\t";
 			parameters += StringHelper::to_string<float64>(_betas[i]) + "\t";
 			parameters += StringHelper::to_string<float64>(getStdBetas()[i]) + "\n";
@@ -118,13 +118,11 @@ void CRegression::print() {
 		}
 	}
 	
-	std::cout << formula << "\n\n";
-	std::cout << "Estimated Parameters: \n";
-	std::cout << parameters << "\n\n";
-	std::cout << "LogLikelihood:\t" << getLogLikelihood() << "\n";
-	std::cout << "AIC:\t" << getAIC() << "\n";
-	std::cout << "AICc:\t" << getAICc() << "\n";
-	std::cout << "BIC:\t" << getBIC() << "\n";
+	logging(GIN_INFO, formula + "\n");
+	logging(GIN_INFO, "Estimated Parameters:\n" + parameters);
+	logging(GIN_INFO, "AIC: " + StringHelper::to_string<float64>(getAIC()));
+	logging(GIN_INFO, "AICc: " + StringHelper::to_string<float64>(getAICc()));
+	logging(GIN_INFO, "BIC: " + StringHelper::to_string<float64>(getBIC()));
 	
 }
 

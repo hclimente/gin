@@ -12,7 +12,7 @@ class CGammaException {
 		std::string __error_msg;
 	public:
 		CGammaException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CGamma Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR,"CGamma Exception: " + error_msg)
 		}
 
 		std::string what() {

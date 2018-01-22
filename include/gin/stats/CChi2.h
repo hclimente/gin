@@ -18,7 +18,7 @@ class CChi2Exception {
 		std::string __error_msg;
 	public:
 		CChi2Exception(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CChi2 Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR, "CChi2 Exception: " + error_msg);
 		}
 
 		std::string what() {

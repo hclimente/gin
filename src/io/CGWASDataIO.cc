@@ -1,5 +1,6 @@
 #include "gin/io/CGWASDataIO.h"
 #include "gin/utils/StringHelper.h"
+#include "gin/utils/utils.h"
 
 #include <fstream>
 #include <iterator>
@@ -10,7 +11,7 @@ void CGWASDataIO::writeSummaryOutput(std::string const& outfile, GWASData const&
 	ofs.open(outfile.c_str());
 	if(!ofs.is_open()) {
 		logging(GIN_ERROR,"Writing output failed!");
-		exit(-1);
+		abort_gin(-1);
 	}
 	ofs << "SNP ID\tCHR\tPositions\t#Samples\tPValue\tTestStatistic\tBeta\tSEBeta\tLL0\tLLAlt\tSNPHash" << endl;
 	for(uint i=0; i<results.p_values.rows();i++) {
@@ -37,7 +38,7 @@ void CGWASDataIO::writeFilteredPlinkFile(std::string const& outfile, GWASData co
 	ofs.open(ped_file.c_str());
 	if(!ofs.is_open()) {
 		logging(GIN_ERROR,"Writing output failed!");
-		exit(-1);
+		abort_gin(-1);
 	}
 	uint64 snp_id = -1;
 	for(uint64 i=0; i<data.n_samples;i++) {
@@ -62,7 +63,7 @@ void CGWASDataIO::writeFilteredPlinkFile(std::string const& outfile, GWASData co
 	ofs.open(map_file.c_str());
 	if(!ofs.is_open()) {
 		logging(GIN_ERROR,"Writing output failed!");
-		exit(-1);
+		abort_gin(-1);
 	}
 	for(uint64 j=0; j<data.n_snps;j++) {
 		ofs << data.chromosomes[j] << " " << data.snp_identifiers[j] << " " << data.snp_distance[j] << " " << data.positions[j] << "\n";
@@ -77,7 +78,7 @@ GWASResults CGWASDataIO::readGWASResults(std::string const& filename) {
 	
 	if(!ifs.is_open()) {
 		logging("ERROR", "Opening Result file " + filename);
-		exit(0);
+		abort_gin(0);
 	}
 	std::vector<float64> samples;
 	std::vector<float64> p_values;

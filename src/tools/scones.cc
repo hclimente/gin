@@ -9,6 +9,7 @@
 #include "gin/io/CSconesIO.h"
 #include "gin/stats/CStats.h"
 #include "gin/utils/CMatrixHelper.h"
+#include "gin/utils/utils.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ int main(int argc, char* argv[]) {
 		logging(GIN_WARNING,"");
 		logging(GIN_WARNING,"scones <plink genotype file> <plink phenotype file> <sparse network file> <float minor allele frequency filter> <outdir> <snp_encoding> <PC>");
 		logging(GIN_WARNING,"");
-		exit(-1);
+		abort_gin(-1);
 	}
 
 	float64 total_data = clock();
@@ -39,7 +40,7 @@ int main(int argc, char* argv[]) {
     else if(snp_encoding=="overdominant") encoding = 3;
     else {
         logging(GIN_ERROR,"Encoding does not exist!");
-        exit(-1);
+        abort_gin(-1);
     }
 	GWASData data;
 	

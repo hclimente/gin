@@ -13,7 +13,7 @@ class CHSICException {
 
     public:
         CHSICException(std::string const& error_msg) : __error_msg(error_msg) {
-            std::cout << RED << "CHSIC Esception: " << error_msg << BLACK << "\n";
+            logging(GIN_ERROR,"CHSIC Esception: " + error_msg)
         }
 
         std::string what() {

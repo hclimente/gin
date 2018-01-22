@@ -23,7 +23,7 @@ class CSconesException {
 		std::string __error_msg;
 	public:
 		CSconesException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CScones Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR, "CScones Exception: " + error_msg);
 		}
 
 		std::string what() {

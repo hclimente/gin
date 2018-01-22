@@ -19,7 +19,7 @@ class CGWASDataException {
 		std::string __error_msg;
 	public:
 		CGWASDataException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CGWASData Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR, "CGWASData Exception: " + error_msg);
 		}
 
 		std::string what() {

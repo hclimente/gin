@@ -82,8 +82,7 @@
 		Rcpp::Rcout << C << "\n";\
 	}\
 }
-#endif //AS_GINLIB
-
+#endif //AS_RGINLIB
 
 //Continued fraction struct
 typedef struct cf_param {

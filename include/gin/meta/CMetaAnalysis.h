@@ -12,7 +12,7 @@ class CMetaAnalysisException {
 		std::string __error_msg;
 	public:
 		CMetaAnalysisException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CMetaAnalysis Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR,"CMetaAnalysis Exception: " + error_msg)
 		}
 
 		std::string what() {

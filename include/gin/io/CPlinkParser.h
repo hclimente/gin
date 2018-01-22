@@ -18,7 +18,7 @@ class CPlinkParserException {
 		std::string __error_msg;
 	public:
 		CPlinkParserException(std::string const& error_msg) : __error_msg(error_msg) {
-			std::cout << RED << "CPlinkParser Exception: " << error_msg << BLACK << "\n";
+			logging(GIN_ERROR, "CPlinkParser Exception: " + error_msg);
 		}
 
 		std::string what() {
