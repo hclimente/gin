@@ -35,6 +35,7 @@ public:
 	double bestLambda() { return __bestLambda; }
 	VectorXd c() { return __c; }
 	GWASData* gwas() { return __gwas; }
+	GridCV* grid() { return __cvgrid; }
 
 	void setDebug(bool debug) { __debug = debug; }
 
