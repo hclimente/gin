@@ -151,12 +151,12 @@ char *p;
 p = form;
 *p++ = '%';
 d1 = d + 8;
-sprintf( p, "%d ", d1 );
+//sprintf( p, "%d ", d1 );
 p += 1;
 if( d1 >= 10 )
 	p += 1;
 *p++ = '.';
-sprintf( p, "%d ", d );
+//sprintf( p, "%d ", d );
 p += 1;
 if( d >= 10 )
 	p += 1;
@@ -175,12 +175,12 @@ for( i=0; i<=na; i++ )
 	j += d1;
 	if( j >= 78 )
 		{
-		printf( "\n" );
+		//printf( "\n" );
 		j = d1;
 		}
-	printf( form, a[i] );
+	//printf( form, a[i] );
 	}
-printf( "\n" );
+//printf( "\n" );
 }
 
 

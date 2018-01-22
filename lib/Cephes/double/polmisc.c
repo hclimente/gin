@@ -158,7 +158,7 @@ nzero:
     {
       if (n & 1)
         {
-	  printf("error, sqrt of odd polynomial\n");
+	  //printf("error, sqrt of odd polynomial\n");
 	  return;
 	}
       /* Divide by x^n.  */

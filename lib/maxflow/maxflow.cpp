@@ -14,7 +14,7 @@ void abort_mf(int status) {
 #else
 #include "Rcpp.h"
 void abort_mf(int status) {
-	Rcpp::stop(StringHelper::to_string<int>(status));
+	Rcpp::stop("maxflow exception");
 }
 #endif //AS_RGINLIB
 

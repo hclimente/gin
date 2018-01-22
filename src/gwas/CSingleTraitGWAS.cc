@@ -4,6 +4,7 @@
 #include "gin/utils/CMatrixHelper.h"
 #include "gin/model_selection/CCrossValidation.h"
 #include "gin/stats/CStats.h"
+#include "gin/utils/random.h"
 
 #include <stdlib.h>
 
@@ -590,7 +591,7 @@ float64 EMMAX::computeVarianceExplainedNullModel(uint const& folds) {
 		covariates = VectorXd::Ones(__y.rows());
     }
 
-    CCrossValidation cv(rand()%1000);
+    CCrossValidation cv(urand()%1000);
     cv.kFold(folds,__y.rows());
     //cv.ShuffleSplit(__X.rows(),folds,0.1);
 
@@ -903,7 +904,7 @@ float64 FaSTLMM::computeVarianceExplainedNullModel(uint const& folds) {
 		covariates = VectorXd::Ones(__y.rows());
     }
 
-    CCrossValidation cv(rand()%1000);
+    CCrossValidation cv(urand()%1000);
     cv.kFold(folds,__X.rows());
     //cv.ShuffleSplit(__X.rows(),folds,0.1);
 

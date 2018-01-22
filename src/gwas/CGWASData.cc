@@ -1,12 +1,6 @@
 #include "gin/gwas/CGWASData.h"
 #include "gin/utils/CMatrixHelper.h"
-#include <locale>
-//#include <tr1/random>
-#include <ctype.h>
-#include <string.h>
-#include <stdio.h>
-#include <math.h>
-#include <cctype>
+#include "gin/utils/random.h"
 
 const uint CGWASDataHelper::dominant;
 const uint CGWASDataHelper::codominant;
@@ -653,7 +647,7 @@ void CGWASDataHelper::filterSNPsBySmallIndel(GWASData* data, int const& indel) t
         
 //TODO: Implement filtering method
 void CGWASDataHelper::filterUniqueSNPs(GWASData* data) throw (CGWASDataException) {
-    VectorXd randv = VectorXd::Random(data->X.rows());
+    VectorXd randv = urand(data->X.rows());
     logging(GIN_INFO,randv.rows());
     logging(GIN_INFO,data->X.rows());
     VectorXd hash = (data->X.array()*randv.replicate(1,data->X.cols()).array()).colwise().sum();
@@ -705,10 +699,10 @@ void CGWASDataHelper::createSNPHash(GWASData* data) throw (CGWASDataException) {
     VectorXd hash = VectorXd::Ones(data->X.rows());
     for(int64 i=0; i<data->X.rows(); i++) {
         //float64 r = randn();
-        float64 r = fabs(rand()/(float64)(RAND_MAX) + 1);
+        float64 r = fabs(urand()/(float64)(RAND_MAX) + 1);
         uint found = (hash.array()==r).any();
         while(found>0) {
-            r = fabs(rand()/(float64)(RAND_MAX) + 1);
+            r = fabs(urand()/(float64)(RAND_MAX) + 1);
             found = (hash.array()==r).any();
         }
         hash(i) = r;
