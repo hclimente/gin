@@ -2,8 +2,6 @@
 #include "math.h"
 #include "gin/utils/StringHelper.h"
 
-#include <iostream>
-
 CCrossValidation::CCrossValidation() {
 	__seed = 0;
 	__k = 0;

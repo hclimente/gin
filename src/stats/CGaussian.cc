@@ -1,6 +1,4 @@
 #include <cmath>
-#include "math.h"
-#include <iostream>
 
 #include "gin/utils/CMathHelper.h"
 #include "gin/stats/CGaussian.h"

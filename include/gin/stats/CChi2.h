@@ -2,7 +2,6 @@
 #define CCHI2_CLASS
 
 #include <cmath>
-#include <iostream>
 #include <iterator>
 #include <set>
 

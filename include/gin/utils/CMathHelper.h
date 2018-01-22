@@ -6,7 +6,6 @@
 #include <Eigen/SVD>
 
 #include <cmath>
-#include <iostream>
 
 #include "gin/globals.h"
 /*
