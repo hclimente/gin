@@ -26,7 +26,7 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 	__folds = folds;
 
 	// TODO get seed from user settings
-	__cv = 	CCrossValidation(0);
+	__cv = CCrossValidation(0);
 	__cv.kFold(__folds, __y->rows());
 
 	__getClassifier();

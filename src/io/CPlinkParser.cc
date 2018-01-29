@@ -8,8 +8,7 @@
 
 const std::map<std::string,char> CPlinkParser::__iupac_map = CPlinkParser::__init_map();
 
-void CPlinkParser::readPEDFile(std::string const& file,
-			       GWASData* data)
+void CPlinkParser::readPEDFile(std::string const& file, GWASData* data)
 				throw (CPlinkParserException){
 	std::map<std::string,char>::const_iterator iupac_iterator;
 	std::ifstream ifs;
