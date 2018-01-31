@@ -200,7 +200,7 @@ VectorXd CScones::__computeSKATScore(MatrixXd const& X, VectorXd const& r) {
 VectorXd CScones::__computeChisqScore(MatrixXd const& X, VectorXd const& r) {
     VectorXd chisq(X.cols());
 
-    for (int i = 0; i < X.cols(); i++) {
+    for (uint64 i = 0; i < X.cols(); i++) {
         MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i), true);
         chisq(i) = CChi2::calculateChi2(tab);
     }
@@ -222,7 +222,7 @@ VectorXd CScones::__computeCochranArmitageT(MatrixXd const& X, VectorXd const& r
 	else
         model << 1, 1, 1;
 
-    for (int i = 0; i < X.cols(); i++) {
+    for (uint64 i = 0; i < X.cols(); i++) {
 		MatrixXd tab = CChi2::get2DContingencyTable(r, X.col(i), true);
         T(i) = CChi2::calculateChi2Trend(tab, model);
     }
@@ -401,7 +401,7 @@ void CScones::test_associations() throw (CSconesException) {
 
 	logging(GIN_STATUS, "Choosing eta and lambda values.");
 
-    for (int i=1; i <= __settings.gridsearch_depth; i++){
+    for (uint64 i=1; i <= __settings.gridsearch_depth; i++){
 
 		logging(GIN_INFO, "Grid search " + StringHelper::to_string<int>(i) + " / " + StringHelper::to_string<int>(__settings.gridsearch_depth) + ".");
 
@@ -418,13 +418,12 @@ void CScones::test_associations() throw (CSconesException) {
         }
 
         //Evaluate all solutions and select the best eta and lambda according to the selection criterion
-        if(__settings.selection_criterion==CONSISTENCY)
-        {
+        if(__settings.selection_criterion==CONSISTENCY) {
             __cMat = __evaluateConsistency();
             __best_c = __cMat.maxCoeff(&best_eta_index,&best_lambda_index);
-        }
-        else if(__settings.selection_criterion == AICc | __settings.selection_criterion == BIC | __settings.selection_criterion == mBIC)
-        {
+        } else if((__settings.selection_criterion == AICc) |
+                  (__settings.selection_criterion == BIC) |
+                  (__settings.selection_criterion == mBIC) ) {
             __cMat = __evaluateInformation();
             __best_c = __cMat.minCoeff(&best_eta_index,&best_lambda_index);
         }
@@ -632,11 +631,11 @@ SparseMatrixXd CScones::__computeLaplacianMatrix() {
 	diagonal.reserve(__n_features);
 
 	VectorXd degree = VectorXd::Zero(__n_features);
-	for (int k = 0; k < W.outerSize(); ++k)
+	for (uint64 k = 0; k < W.outerSize(); ++k)
 		for (SparseMatrixXd::InnerIterator it(W, k); it; ++it)
 			degree(it.row()) += 1;
 
-	for (int i = 0; i < __n_features; i++)
+	for (uint64 i = 0; i < __n_features; i++)
 		diagonal.push_back(T(i, i, degree(i)));
 
 	D.setFromTriplets(diagonal.begin(), diagonal.end());

@@ -10,7 +10,7 @@ Shake::Shake() {
 	__debug = false;
 }
 
-Shake::Shake(MatrixXd* X, VectorXd* y, SparseMatrixXd* W) {
+Shake::Shake(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W) {
 	__gwas = new GWASData();
 	__gwas->X = *X;
 	__gwas->y = *y;

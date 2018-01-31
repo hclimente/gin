@@ -35,7 +35,7 @@ GridCV::GridCV(MatrixXd* const& X, VectorXd* const& y, SparseMatrixXd* const& W,
 
 GridCV::~GridCV() {
 
-	for (int i = 0; i < __grids.size(); i++) {
+	for (uint64 i = 0; i < __grids.size(); i++) {
 		delete __grids[i];
 	}
 
@@ -81,12 +81,12 @@ void GridCV::initFolds(VectorXd c, uint associationScore) {
 void GridCV::initFolds(uint associationScore) {
 
 	// delete previous iteration, if any
-	for (int i = 0; i < __grids.size(); i++) {
+	for (uint64 i = 0; i < __grids.size(); i++) {
 		delete __grids[i];
 		__grids[i] = NULL;
 	}
 
-	for (int i = 0; i < __folds; i++) {
+	for (uint64 i = 0; i < __folds; i++) {
 		VectorXd tr_indices = __cv.getTrainingIndices(i);
 		MatrixXd X_train = sliceRowsMatrix(*__X, tr_indices);
 		VectorXd y_train = sliceRowsMatrix(*__y, tr_indices);
@@ -107,7 +107,7 @@ void GridCV::initFolds(uint associationScore) {
 
 void GridCV::runFolds() {
 
-	for (int i = 0; i < __folds; i++) {
+	for (uint64 i = 0; i < __folds; i++) {
 		__grids[i] -> search();
 	}
 }
@@ -119,7 +119,7 @@ void GridCV::scoreModels(uint scoring_function) {
 
 			__setAggregatedFolds(e, l, VectorXd::Zero(__X->cols()));
 
-			for (int i = 0; i < __folds; i++) {
+			for (uint64 i = 0; i < __folds; i++) {
 				VectorXd u = __grids[i] -> selected(__etas[e], __lambdas[l]);
 				__setAggregatedFolds(e, l, aggregatedFolds(e,l) + u);
 			}
@@ -130,8 +130,8 @@ void GridCV::scoreModels(uint scoring_function) {
 			} else {
 				if (scoring_function == CONSISTENCY) {
 					__scoredFolds(e, l) = __computeConsistency(aggregatedFolds(e, l));
-				} else if (scoring_function == AICc | scoring_function == AIC | scoring_function == BIC |
-				           scoring_function == mBIC) {
+				} else if ((scoring_function == AICc) | (scoring_function == AIC) |
+						   (scoring_function == BIC) | (scoring_function == mBIC) ){
 					__scoredFolds(e, l) = -__computeInformation(aggregatedFolds(e, l), scoring_function);
 				}
 			}

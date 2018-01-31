@@ -18,7 +18,7 @@
 class Shake {
 public:
 	Shake();
-	Shake(MatrixXd*, VectorXd*, SparseMatrixXd*);
+	Shake(MatrixXd* const&, VectorXd* const&, SparseMatrixXd* const&);
 	~Shake();
 
 	// GWAS operations

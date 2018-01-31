@@ -148,7 +148,7 @@ void LinearRegression::permutations(uint const& n_perm) {
 	std::sort(__permutation_pool.data(),__permutation_pool.data()+__permutation_pool.rows(),std::greater<float64>());
 	
     //Compute Permutation P-Values
-    for (int64 i=0;i<__test_statistics.rows();i++) {
+    for (uint64 i=0;i<__test_statistics.rows();i++) {
         uint64 n_elements = 0;
         for(int64 j=0; j<__permutation_pool.rows();j++) {
             if(__test_statistics(i)<=__permutation_pool(j)) {
@@ -339,7 +339,7 @@ void LogisticRegression::permutations(uint const& n_perm) {
 	std::sort(__permutation_pool.data(),__permutation_pool.data()+__permutation_pool.rows(),std::greater<float64>());
 	
     //Compute Permutation P-Values
-    for (int64 i=0;i<__test_statistics.rows();i++) {
+    for (uint64 i=0;i<__test_statistics.rows();i++) {
         uint64 n_elements = 0;
         for(int64 j=0; j<__permutation_pool.rows();j++) {
             if(__test_statistics(i)<=__permutation_pool(j)) {
@@ -553,7 +553,7 @@ void EMMAX::permutations(uint const& n_perm) {
 	std::sort(__permutation_pool.data(),__permutation_pool.data()+__permutation_pool.rows(),std::greater<float64>());
 	
     //Compute Permutation P-Values
-    for (int64 i=0;i<__test_statistics.rows();i++) {
+    for (uint64 i=0;i<__test_statistics.rows();i++) {
         uint64 n_elements = 0;
         for(int64 j=0; j<__permutation_pool.rows();j++) {
             if(__test_statistics(i)<=__permutation_pool(j)) {
@@ -865,7 +865,7 @@ void FaSTLMM::permutations(uint const& n_perm) {
 	std::sort(__permutation_pool.data(),__permutation_pool.data()+__permutation_pool.rows(),std::greater<float64>());
 	
     //Compute Permutation P-Values
-    for (int64 i=0;i<__test_statistics.rows();i++) {
+    for (uint64 i=0;i<__test_statistics.rows();i++) {
         uint64 n_elements = 0;
         for(int64 j=0; j<__permutation_pool.rows();j++) {
             if(__test_statistics(i)<=__permutation_pool(j)) {

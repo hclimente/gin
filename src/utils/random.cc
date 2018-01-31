@@ -66,7 +66,7 @@ int urand() {
 VectorXd urand(int size) {
 
 	VectorXd x = VectorXd::Zero(size);
-	for (int i = 0; i < size; i++) {
+	for (uint64 i = 0; i < size; i++) {
 		x(i) = R::runif(-1,1);
 	}
 	return x;

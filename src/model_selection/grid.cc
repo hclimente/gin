@@ -32,8 +32,8 @@ Grid::Grid(VectorXd const& c, SparseMatrixXd* const& W, VectorXd const& etas, Ve
 
 void Grid::__initGrid() {
 
-	for (int e = 0; e < __etas.rows(); e++) {
-		for (int l = 0; l < __lambdas.rows(); l++) {
+	for (uint64 e = 0; e < __etas.rows(); e++) {
+		for (uint64 l = 0; l < __lambdas.rows(); l++) {
 			double eta = __etas[e];
 			double lambda = __lambdas[l];
 			__grid[eta][lambda] = VectorXd();
@@ -43,8 +43,8 @@ void Grid::__initGrid() {
 
 void Grid::search() {
 
-	for (int e = 0; e < __etas.rows(); e++) {
-		for (int l = 0; l < __lambdas.rows(); l++) {
+	for (uint64 e = 0; e < __etas.rows(); e++) {
+		for (uint64 l = 0; l < __lambdas.rows(); l++) {
 
 			double eta = __etas[e];
 			double lambda = __lambdas[l];
@@ -65,8 +65,8 @@ VectorXd Grid::selected(double const& eta, double const& lambda) {
 std::vector<VectorXd> Grid::selected(VectorXd const &etas, VectorXd const &lambdas) {
 	std::vector<VectorXd> selected;
 
-	for (int e = 0; e < etas.rows(); e++) {
-		for (int l = 0; l < lambdas.rows(); l++) {
+	for (uint64 e = 0; e < etas.rows(); e++) {
+		for (uint64 l = 0; l < lambdas.rows(); l++) {
 			double eta = etas[e];
 			double lambda = lambdas[l];
 			selected.push_back(__grid[eta][lambda]);

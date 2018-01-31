@@ -59,7 +59,7 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y, bool
 
 	std::map<int, std::map<int,int> > counts;
 
-	for (int i = 0; i < x.size(); i++)
+	for (uint64 i = 0; i < x.size(); i++)
 		counts[Y(i)][x(i)] += 1;
 
 	MatrixXd table = MatrixXd::Zero(2, 3);
@@ -70,7 +70,7 @@ MatrixXd CChi2::get2DContingencyTable(VectorXd const& x, VectorXd const& Y, bool
 	int row = 0;
 	for (std::map<int, std::map<int,int> >::iterator it = counts.begin(); it!= counts.end(); ++it) {
 		int col = 0;
-		for (int i = 0; i <= 2; i++){
+		for (uint64 i = 0; i <= 2; i++){
 
 			std::map<int,int>::iterator f = it->second.find(i);
 			if (f != it->second.end()) {
