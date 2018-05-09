@@ -94,6 +94,11 @@ TEST(GridCV, runFolds) {
 	GridCV g(&X, &y, &W, 10);
 	g.initFolds(etas, lambdas, CHI2);
 
+	// etas are sorted in decreasing order
+	VectorXd orderedEtas(2);
+	orderedEtas << 8, 4;
+	EXPECT_EQ(g.etas(), orderedEtas);
+
 	// k-fold
 	// create k-folds
 	VectorXd indices = VectorXd::LinSpaced(12,0,12-1);
@@ -159,7 +164,7 @@ TEST(GridCV, scoreModels) {
 	dW.diagonal(-1) = VectorXd::Ones(53);
 	SparseMatrixXd W = dW.sparseView();
 	VectorXd etas(2);
-	etas << 0, 4;
+	etas << 4, 0;
 	VectorXd lambdas(2);
 	lambdas << 0, 1;
 
@@ -179,7 +184,7 @@ TEST(GridCV, scoreModels) {
 
 	grid_ql.scoreModels(AIC);
 	EXPECT_EQ(grid_ql.bestEta(), 4);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
+	EXPECT_NEAR(grid_ql.scoredFolds()(0, 1),
 #ifdef __APPLE__
 841
 #else
@@ -189,7 +194,7 @@ TEST(GridCV, scoreModels) {
 
 	grid_ql.scoreModels(BIC);
 	EXPECT_EQ(grid_ql.bestEta(), 4);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
+	EXPECT_NEAR(grid_ql.scoredFolds()(0, 1),
 #ifdef __APPLE__
 839
 #else
@@ -199,7 +204,7 @@ TEST(GridCV, scoreModels) {
 
 	grid_ql.scoreModels(AICc);
 	EXPECT_EQ(grid_ql.bestEta(), 4);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1),
+	EXPECT_NEAR(grid_ql.scoredFolds()(0, 1),
 #ifdef __APPLE__
 838
 #else
@@ -209,7 +214,7 @@ TEST(GridCV, scoreModels) {
 
 	grid_ql.scoreModels(CONSISTENCY);
 	EXPECT_EQ(grid_ql.bestEta(), 4);
-	EXPECT_NEAR(grid_ql.scoredFolds()(1, 1), 1, 0.01);
+	EXPECT_NEAR(grid_ql.scoredFolds()(0, 1), 1, 0.01);
 
 	// TODO check BIC, AIC, CONSISTENCY for continuous when SKAT is implemented
 	// y <<    0.97,0.98,0.94,0.75,0.8,0.77,0.25,0.4,0.25,0.4,0.25,0.3;

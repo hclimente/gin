@@ -49,6 +49,9 @@ void GridCV::initFolds(VectorXd etas, VectorXd lambdas, uint associationScore) {
 	__lambdas = lambdas;
 	__scoredFolds = MatrixXd::Zero(__etas.rows(), __lambdas.rows());
 
+	// sort etas decreasingly
+	std::sort(__etas.data(), __etas.data() + __etas.size(), [](int a, int b){return a > b;});
+
 	initFolds(associationScore);
 
 }
@@ -114,8 +117,8 @@ void GridCV::runFolds() {
 
 void GridCV::scoreModels(uint scoring_function) {
 
-	for (uint e = 0; e < __etas.rows(); e++ ) {
-		for (uint l = 0; l < __lambdas.rows(); l++ ) {
+	for (uint l = 0; l < __lambdas.rows(); l++ ) {
+		for (uint e = 0; e < __etas.rows(); e++ ) {
 
 			__setAggregatedFolds(e, l, VectorXd::Zero(__X->cols()));
 
@@ -125,7 +128,8 @@ void GridCV::scoreModels(uint scoring_function) {
 			}
 			__setAggregatedFolds(e, l, aggregatedFolds(e,l) / __folds);
 
-			if (aggregatedFolds(e,l).array().sum() > (__X->cols() * 0.05) | aggregatedFolds(e,l).array().sum() == 0) {
+			int solutionSize = aggregatedFolds(e,l).array().sum();
+			if (solutionSize > (__X->cols() * 0.05) | solutionSize == 0) {
 				__scoredFolds(e, l) = -1e31;
 			} else {
 				if (scoring_function == CONSISTENCY) {
@@ -135,6 +139,7 @@ void GridCV::scoreModels(uint scoring_function) {
 					__scoredFolds(e, l) = -__computeInformation(aggregatedFolds(e, l), scoring_function);
 				}
 			}
+
 		}
 	}
 

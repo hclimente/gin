@@ -37,6 +37,7 @@ private:
 
 	void __initGrid();
 	void __computeUnivariate(uint const&);
+	bool __trivial(double const&);
 
 	};
 
