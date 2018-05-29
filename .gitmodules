@@ -3,4 +3,4 @@
 	url = https://github.com/google/googletest.git
 [submodule "lib/eigen"]
 	path = lib/eigen
-	url = https://github.com/RLovelett/eigen.git
+	url = git@github.com:eigenteam/eigen-git-mirror.git
